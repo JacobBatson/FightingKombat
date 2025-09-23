@@ -51,8 +51,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             case RUNNING:
                 fighter1.update();
                 fighter2.update();
-                // For fighting game, we don't need map scrolling
-                // map.update() is for platformer camera following
+                
+                
                 break;
             // if level has been completed, bring up level cleared screen
             case LEVEL_COMPLETED:
