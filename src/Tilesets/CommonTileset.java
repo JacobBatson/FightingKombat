@@ -15,252 +15,199 @@ import java.util.ArrayList;
 public class CommonTileset extends Tileset {
 
     public CommonTileset() {
-        super(ImageLoader.load("CommonTileset.png"), 16, 16, 3);
+        super(ImageLoader.load("MapTileset.png"), 16, 16, 3);
     }
 
     @Override
     public ArrayList<MapTileBuilder> defineTiles() {
         ArrayList<MapTileBuilder> mapTiles = new ArrayList<>();
 
-        // grass
-        Frame grassFrame = new FrameBuilder(getSubImage(0, 0))
+        // Back ground block
+        Frame skyhellFrame = new FrameBuilder(getSubImage(0, 0))
                 .withScale(tileScale)
                 .build();
 
-        MapTileBuilder grassTile = new MapTileBuilder(grassFrame)
+        MapTileBuilder skyhellTile = new MapTileBuilder(skyhellFrame);
+
+        mapTiles.add(skyhellTile);
+
+        //lava block 1
+        Frame Lava1Frame = new FrameBuilder(getSubImage(0, 1))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Lava1Tile = new MapTileBuilder(Lava1Frame);
+
+        mapTiles.add(Lava1Tile);
+
+        //lava block 2
+        Frame Lava2Frame = new FrameBuilder(getSubImage(0, 2))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Lava2Tile = new MapTileBuilder(Lava2Frame);
+
+        mapTiles.add(Lava2Tile);
+
+        //lava block waterfall bottom
+        Frame Lava3Frame = new FrameBuilder(getSubImage(0, 3))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Lava3Tile = new MapTileBuilder(Lava3Frame);
+
+        mapTiles.add(Lava3Tile);
+
+        //lava block waterfall top1
+        Frame Waterfall1Frame = new FrameBuilder(getSubImage(0, 4))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Waterfall1Tile = new MapTileBuilder(Waterfall1Frame)
                 .withTileType(TileType.NOT_PASSABLE);
 
-        mapTiles.add(grassTile);
+        mapTiles.add(Waterfall1Tile);
 
-        // sky
-        Frame skyFrame = new FrameBuilder(getSubImage(0, 1))
+        //lava block waterfall top2
+        Frame Waterfall2Frame = new FrameBuilder(getSubImage(0, 5))
                 .withScale(tileScale)
                 .build();
 
-        MapTileBuilder skyTile = new MapTileBuilder(skyFrame);
-
-        mapTiles.add(skyTile);
-
-        // dirt
-        Frame dirtFrame = new FrameBuilder(getSubImage(0, 2))
-                .withScale(tileScale)
-                .build();
-
-        MapTileBuilder dirtTile = new MapTileBuilder(dirtFrame)
+        MapTileBuilder Waterfall2Tile = new MapTileBuilder(Waterfall2Frame)
                 .withTileType(TileType.NOT_PASSABLE);
 
-        mapTiles.add(dirtTile);
+        mapTiles.add(Waterfall2Tile);
 
-        // sun
-        Frame[] sunFrames = new Frame[]{
-                new FrameBuilder(getSubImage(2, 0), 50)
-                        .withScale(tileScale)
-                        .build(),
-                new FrameBuilder(getSubImage(2, 1), 50)
-                        .withScale(tileScale)
-                        .build()
-        };
-
-        MapTileBuilder sunTile = new MapTileBuilder(sunFrames);
-
-        mapTiles.add(sunTile);
-
-        // tree trunk with full hole
-        Frame treeTrunkWithFullHoleFrame = new FrameBuilder(getSubImage(2, 2))
+        //platform Left corner hell
+        Frame LefthellplatFrame = new FrameBuilder(getSubImage(1, 0))
                 .withScale(tileScale)
                 .build();
 
-        MapTileBuilder treeTrunkWithFullHoleTile = new MapTileBuilder(treeTrunkWithFullHoleFrame)
+        MapTileBuilder LefthellplatTile = new MapTileBuilder(LefthellplatFrame)
                 .withTileType(TileType.NOT_PASSABLE);
 
-        mapTiles.add(treeTrunkWithFullHoleTile);
+        mapTiles.add(LefthellplatTile);
 
-        // left end branch
-        Frame leftEndBranchFrame = new FrameBuilder(getSubImage(1, 5))
-                .withScale(tileScale)
-                .withBounds(0, 6, 16, 4)
-                .build();
-
-        MapTileBuilder leftEndBranchTile = new MapTileBuilder(leftEndBranchFrame)
-                .withTileType(TileType.JUMP_THROUGH_PLATFORM);
-
-        mapTiles.add(leftEndBranchTile);
-
-        // right end branch
-        Frame rightEndBranchFrame = new FrameBuilder(getSubImage(1, 5))
-                .withScale(tileScale)
-                .withBounds(0, 6, 16, 4)
-                .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                .build();
-
-        MapTileBuilder rightEndBranchTile = new MapTileBuilder(rightEndBranchFrame)
-                .withTileType(TileType.JUMP_THROUGH_PLATFORM);
-
-        mapTiles.add(rightEndBranchTile);
-
-        // tree trunk
-        Frame treeTrunkFrame = new FrameBuilder(getSubImage(1, 0))
+        //platform middle 1
+        Frame hellplat1Frame = new FrameBuilder(getSubImage(1, 1))
                 .withScale(tileScale)
                 .build();
 
-        MapTileBuilder treeTrunkTile = new MapTileBuilder(treeTrunkFrame)
+        MapTileBuilder hellplat1Tile = new MapTileBuilder(hellplat1Frame)
                 .withTileType(TileType.NOT_PASSABLE);
 
-        mapTiles.add(treeTrunkTile);
+        mapTiles.add(hellplat1Tile);
 
-        // tree top leaves
-        Frame treeTopLeavesFrame = new FrameBuilder(getSubImage(1, 1))
+        //platform middle 2
+        Frame hellplat2Frame = new FrameBuilder(getSubImage(1, 2))
                 .withScale(tileScale)
                 .build();
 
-        MapTileBuilder treeTopLeavesTile = new MapTileBuilder(treeTopLeavesFrame)
+        MapTileBuilder hellplat2Tile = new MapTileBuilder(hellplat2Frame)
                 .withTileType(TileType.NOT_PASSABLE);
 
-        mapTiles.add(treeTopLeavesTile);
+        mapTiles.add(hellplat2Tile);
 
-        // yellow flower
-        Frame[] yellowFlowerFrames = new Frame[] {
-                new FrameBuilder(getSubImage(1, 2), 65)
-                        .withScale(tileScale)
-                        .build(),
-                new FrameBuilder(getSubImage(1, 3), 65)
-                        .withScale(tileScale)
-                        .build(),
-                new FrameBuilder(getSubImage(1, 2), 65)
-                        .withScale(tileScale)
-                        .build(),
-                new FrameBuilder(getSubImage(1, 4), 65)
-                        .withScale(tileScale)
-                        .build()
-        };
-
-        MapTileBuilder yellowFlowerTile = new MapTileBuilder(yellowFlowerFrames);
-
-        mapTiles.add(yellowFlowerTile);
-
-        // purple flower
-        Frame[] purpleFlowerFrames = new Frame[] {
-                new FrameBuilder(getSubImage(0, 3), 65)
-                        .withScale(tileScale)
-                        .build(),
-                new FrameBuilder(getSubImage(0, 4), 65)
-                        .withScale(tileScale)
-                        .build(),
-                new FrameBuilder(getSubImage(0, 3), 65)
-                        .withScale(tileScale)
-                        .build(),
-                new FrameBuilder(getSubImage(0, 5), 65)
-                        .withScale(tileScale)
-                        .build()
-        };
-
-        MapTileBuilder purpleFlowerTile = new MapTileBuilder(purpleFlowerFrames);
-
-        mapTiles.add(purpleFlowerTile);
-
-        // middle branch
-        Frame middleBranchFrame = new FrameBuilder(getSubImage(2, 3))
-                .withScale(tileScale)
-                .withBounds(0, 6, 16, 4)
-                .build();
-
-        MapTileBuilder middleBranchTile = new MapTileBuilder(middleBranchFrame)
-                .withTileType(TileType.JUMP_THROUGH_PLATFORM);
-
-        mapTiles.add(middleBranchTile);
-
-        // tree trunk hole top
-        Frame treeTrunkHoleTopFrame = new FrameBuilder(getSubImage(2, 4))
+        //platform middle 3
+        Frame hellplat3Frame = new FrameBuilder(getSubImage(1, 3))
                 .withScale(tileScale)
                 .build();
 
-        MapTileBuilder treeTrunkHoleTopTile = new MapTileBuilder(treeTrunkHoleTopFrame)
+        MapTileBuilder hellplat3Tile = new MapTileBuilder(hellplat3Frame)
                 .withTileType(TileType.NOT_PASSABLE);
 
-        mapTiles.add(treeTrunkHoleTopTile);
+        mapTiles.add(hellplat3Tile);
 
-        // tree trunk hole bottom
-        Frame treeTrunkHoleBottomFrame = new FrameBuilder(getSubImage(2, 5))
+        //platform Right corner hell
+        Frame RighthellplatFrame = new FrameBuilder(getSubImage(1, 4))
                 .withScale(tileScale)
                 .build();
 
-        MapTileBuilder treeTrunkHoleBottomTile = new MapTileBuilder(treeTrunkHoleBottomFrame)
+        MapTileBuilder RighthellplatTile = new MapTileBuilder(RighthellplatFrame)
                 .withTileType(TileType.NOT_PASSABLE);
 
-        mapTiles.add(treeTrunkHoleBottomTile);
+        mapTiles.add(RighthellplatTile);
 
-        // top water
-        Frame topWaterFrame = new FrameBuilder(getSubImage(3, 0))
+        //Floating platform small
+        Frame SmallplatFrame = new FrameBuilder(getSubImage(1, 5))
+               .withScale(tileScale)
+               .withBounds(0, 6, 16, 4)
+               .build();
+
+
+       MapTileBuilder SmallplatTile = new MapTileBuilder(SmallplatFrame)
+               .withTileType(TileType.JUMP_THROUGH_PLATFORM);
+
+
+       mapTiles.add(SmallplatTile);
+
+       //Tourch head 1
+       Frame Tourch1Frame = new FrameBuilder(getSubImage(2, 0))
                 .withScale(tileScale)
                 .build();
 
-        MapTileBuilder topWaterTile = new MapTileBuilder(topWaterFrame);
+        MapTileBuilder Tourch1Tile = new MapTileBuilder(Tourch1Frame);
 
-        mapTiles.add(topWaterTile);
+        mapTiles.add(Tourch1Tile);
 
-        // water
-        Frame waterFrame = new FrameBuilder(getSubImage(3, 1))
+        //Tourch head 2
+        Frame Tourch2Frame = new FrameBuilder(getSubImage(2, 1))
                 .withScale(tileScale)
                 .build();
 
-        MapTileBuilder waterTile = new MapTileBuilder(waterFrame)
-                .withTileType(TileType.WATER);
+        MapTileBuilder Tourch2Tile = new MapTileBuilder(Tourch2Frame);
 
-        mapTiles.add(waterTile);
+        mapTiles.add(Tourch2Tile);
 
-        // grey rock
-        Frame greyRockFrame = new FrameBuilder(getSubImage(3, 2))
+        //Tourch bottom 1
+        Frame Tourch3Frame = new FrameBuilder(getSubImage(2, 2))
                 .withScale(tileScale)
                 .build();
 
-        MapTileBuilder greyRockTile = new MapTileBuilder(greyRockFrame)
-                .withTileType(TileType.NOT_PASSABLE);
+        MapTileBuilder Tourch3Tile = new MapTileBuilder(Tourch3Frame);
 
-        mapTiles.add(greyRockTile);
+        mapTiles.add(Tourch3Tile);
 
-        // left 45 degree slope
-        Frame leftSlopeFrame = new FrameBuilder(getSubImage(3, 3))
+        //Tourch bottom 2
+        Frame Tourch4Frame = new FrameBuilder(getSubImage(2, 3))
                 .withScale(tileScale)
                 .build();
 
-        MapTileBuilder leftSlopeTile = new MapTileBuilder(leftSlopeFrame)
-                .withTileType(TileType.SLOPE)
-                .withTileLayout(SlopeTileLayoutUtils.createLeft45SlopeLayout(spriteWidth, (int) tileScale));
+        MapTileBuilder Tourch4Tile = new MapTileBuilder(Tourch4Frame);
 
-        mapTiles.add(leftSlopeTile);
+        mapTiles.add(Tourch4Tile);
 
-        // right 45 degree slope
-        Frame rightSlopeFrame = new FrameBuilder(getSubImage(3, 4))
-                .withScale(tileScale)
-                .build();
+        //platform left
+        Frame platleftFrame = new FrameBuilder(getSubImage(2, 4))
+               .withScale(tileScale)
+               .withBounds(0, 6, 16, 4)
+               .build();
 
-        MapTileBuilder rightSlopeTile = new MapTileBuilder(rightSlopeFrame)
-                .withTileType(TileType.SLOPE)
-                .withTileLayout(SlopeTileLayoutUtils.createRight45SlopeLayout(spriteWidth, (int) tileScale));
 
-        mapTiles.add(rightSlopeTile);
+       MapTileBuilder platleftTile = new MapTileBuilder(platleftFrame)
+               .withTileType(TileType.JUMP_THROUGH_PLATFORM);
 
-        // left 30 degree slope bottom
-        Frame leftStairsBottomFrame = new FrameBuilder(getSubImage(4, 0))
-                .withScale(tileScale)
-                .build();
 
-        MapTileBuilder leftStairsBottomTile = new MapTileBuilder(leftStairsBottomFrame)
-                .withTileType(TileType.SLOPE)
-                .withTileLayout(SlopeTileLayoutUtils.createBottomLeft30SlopeLayout(spriteWidth, (int) tileScale));
+       mapTiles.add(platleftTile);
 
-        mapTiles.add(leftStairsBottomTile);
+       //platform right
+       Frame platrightFrame = new FrameBuilder(getSubImage(2, 5))
+               .withScale(tileScale)
+               .withBounds(0, 6, 16, 4)
+               .build();
 
-        // left 30 degree slope top
-        Frame leftStairsTopFrame = new FrameBuilder(getSubImage(4, 1))
-                .withScale(tileScale)
-                .build();
 
-        MapTileBuilder leftStairsTopTile = new MapTileBuilder(leftStairsTopFrame)
-                .withTileType(TileType.SLOPE)
-                .withTileLayout(SlopeTileLayoutUtils.createTopLeft30SlopeLayout(spriteWidth, (int) tileScale));
+       MapTileBuilder platrightTile = new MapTileBuilder(platrightFrame)
+               .withTileType(TileType.JUMP_THROUGH_PLATFORM);
 
-        mapTiles.add(leftStairsTopTile);
+
+       mapTiles.add(platrightTile);
+
+
+
+
+
+
 
         return mapTiles;
     }
