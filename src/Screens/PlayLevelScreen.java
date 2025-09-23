@@ -5,17 +5,17 @@ import Engine.Screen;
 import Game.GameState;
 import Game.ScreenCoordinator;
 import Level.Map;
-import Level.Player;
 import Level.PlayerListener;
 import Maps.TestMap;
-import Players.Cat;
-import Utils.Point;
+import Players.Fighter1;
+import Players.Fighter2;
 
 // This class is for when the platformer game is actually being played
 public class PlayLevelScreen extends Screen implements PlayerListener {
     protected ScreenCoordinator screenCoordinator;
     protected Map map;
-    protected Player player;
+    protected Fighter1 fighter1;
+    protected Fighter2 fighter2;
     protected PlayLevelScreenState playLevelScreenState;
     protected int screenTimer;
     protected LevelClearedScreen levelClearedScreen;
@@ -30,10 +30,12 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         // define/setup map
         this.map = new TestMap();
 
-        // setup player
-        this.player = new Cat(map.getPlayerStartPosition().x, map.getPlayerStartPosition().y);
-        this.player.setMap(map);
-        this.player.addListener(this);
+        // setup fighters for fighting game
+        this.fighter1 = new Fighter1(100, 200); // Position Fighter1
+        this.fighter1.setMap(map);
+
+        this.fighter2 = new Fighter2(300, 200); // Position Fighter2
+        this.fighter2.setMap(map);
 
         levelClearedScreen = new LevelClearedScreen();
         levelLoseScreen = new LevelLoseScreen(this);
@@ -44,10 +46,13 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     public void update() {
         // based on screen state, perform specific actions
         switch (playLevelScreenState) {
-            // if level is "running" update player and map to keep game logic for the platformer level going
+            // if level is "running" update player and map to keep game logic for the
+            // platformer level going
             case RUNNING:
-                player.update();
-                map.update(player);
+                fighter1.update();
+                fighter2.update();
+                
+                
                 break;
             // if level has been completed, bring up level cleared screen
             case LEVEL_COMPLETED:
@@ -62,7 +67,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     }
                 }
                 break;
-            // wait on level lose screen to make a decision (either resets level or sends player back to main menu)
+            // wait on level lose screen to make a decision (either resets level or sends
+            // player back to main menu)
             case LEVEL_LOSE:
                 levelLoseScreen.update();
                 break;
@@ -74,7 +80,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         switch (playLevelScreenState) {
             case RUNNING:
                 map.draw(graphicsHandler);
-                player.draw(graphicsHandler);
+                fighter1.draw(graphicsHandler);
+                fighter2.draw(graphicsHandler);
                 break;
             case LEVEL_COMPLETED:
                 levelClearedScreen.draw(graphicsHandler);
