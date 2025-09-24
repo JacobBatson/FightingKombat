@@ -60,7 +60,7 @@ public class Player1 extends MapEntity {
     }
     
     public Player1(float x, float y) {
-        this(x, y, "Cat.png", 24, 24);
+        this(x, y, "New Piskel(1).png", 24, 24);
     }
 
     public void update() {
@@ -286,41 +286,41 @@ public class Player1 extends MapEntity {
                 });
 
                 put("WALK_RIGHT", new Frame[] {
-                        new FrameBuilder(spriteSheet.getSprite(1, 0), 14)
+                        new FrameBuilder(spriteSheet.getSprite(0, 1), 14)
                                 .withScale(3)
                                 .withBounds(8, 9, 8, 9)
                                 .build(),
-                        new FrameBuilder(spriteSheet.getSprite(1, 1), 14)
+                        new FrameBuilder(spriteSheet.getSprite(0, 1), 14)
                                 .withScale(3)
                                 .withBounds(8, 9, 8, 9)
                                 .build(),
-                        new FrameBuilder(spriteSheet.getSprite(1, 2), 14)
+                        new FrameBuilder(spriteSheet.getSprite(0, 1), 14)
                                 .withScale(3)
                                 .withBounds(8, 9, 8, 9)
                                 .build(),
-                        new FrameBuilder(spriteSheet.getSprite(1, 3), 14)
+                        new FrameBuilder(spriteSheet.getSprite(0, 1), 14)
                                 .withScale(3)
                                 .withBounds(8, 9, 8, 9)
                                 .build()
                 });
 
                 put("WALK_LEFT", new Frame[] {
-                        new FrameBuilder(spriteSheet.getSprite(1, 0), 14)
+                        new FrameBuilder(spriteSheet.getSprite(0, 1), 14)
                                 .withScale(3)
                                 .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
                                 .withBounds(8, 9, 8, 9)
                                 .build(),
-                        new FrameBuilder(spriteSheet.getSprite(1, 1), 14)
+                        new FrameBuilder(spriteSheet.getSprite(0, 1), 14)
                                 .withScale(3)
                                 .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
                                 .withBounds(8, 9, 8, 9)
                                 .build(),
-                        new FrameBuilder(spriteSheet.getSprite(1, 2), 14)
+                        new FrameBuilder(spriteSheet.getSprite(0, 1), 14)
                                 .withScale(3)
                                 .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
                                 .withBounds(8, 9, 8, 9)
                                 .build(),
-                        new FrameBuilder(spriteSheet.getSprite(1, 3), 14)
+                        new FrameBuilder(spriteSheet.getSprite(0, 1), 14)
                                 .withScale(3)
                                 .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
                                 .withBounds(8, 9, 8, 9)
@@ -328,14 +328,14 @@ public class Player1 extends MapEntity {
                 });
 
                 put("JUMP_RIGHT", new Frame[] {
-                        new FrameBuilder(spriteSheet.getSprite(2, 0))
+                        new FrameBuilder(spriteSheet.getSprite(1, 0))
                                 .withScale(3)
                                 .withBounds(8, 9, 8, 9)
                                 .build()
                 });
 
                 put("JUMP_LEFT", new Frame[] {
-                        new FrameBuilder(spriteSheet.getSprite(2, 0))
+                        new FrameBuilder(spriteSheet.getSprite(1, 0))
                                 .withScale(3)
                                 .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
                                 .withBounds(8, 9, 8, 9)
@@ -343,14 +343,14 @@ public class Player1 extends MapEntity {
                 });
 
                 put("FALL_RIGHT", new Frame[] {
-                        new FrameBuilder(spriteSheet.getSprite(3, 0))
+                        new FrameBuilder(spriteSheet.getSprite(1, 0))
                                 .withScale(3)
                                 .withBounds(8, 9, 8, 9)
                                 .build()
                 });
 
                 put("FALL_LEFT", new Frame[] {
-                        new FrameBuilder(spriteSheet.getSprite(3, 0))
+                        new FrameBuilder(spriteSheet.getSprite(1, 0))
                                 .withScale(3)
                                 .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
                                 .withBounds(8, 9, 8, 9)
