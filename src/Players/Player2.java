@@ -10,6 +10,8 @@ import GameObject.Frame;
 import GameObject.ImageEffect;
 import GameObject.SpriteSheet;
 import Level.MapEntity;
+import Enemies.Fireball;
+import Utils.Point;
 import Level.PlayerState;
 import Utils.AirGroundState;
 import Utils.Direction;
@@ -18,6 +20,9 @@ import java.util.HashMap;
 
 // Player2 - Uses arrow key controls for movement
 public class Player2 extends MapEntity {
+    // Fireball support
+    protected Key FIREBALL_KEY = Key.ENTER;
+    protected java.util.List<Fireball> fireballs = new java.util.ArrayList<>();
     // Movement values
     protected float walkSpeed = 2.3f;
     protected float gravity = 0.5f;
@@ -79,6 +84,30 @@ public class Player2 extends MapEntity {
 
         handlePlayerAnimation();
         updateLockedKeys();
+
+        // Fireball firing
+        if (Keyboard.isKeyDown(FIREBALL_KEY) && !keyLocker.isKeyLocked(FIREBALL_KEY)) {
+            keyLocker.lockKey(FIREBALL_KEY);
+            float fbSpeed = 4.0f;
+            int fbFrames = 60;
+            float fbX = this.x + (facingDirection == Direction.RIGHT ? 24 : -7); // spawn at edge
+            float fbY = this.y + 8; // roughly center vertically
+            float speed = facingDirection == Direction.RIGHT ? fbSpeed : -fbSpeed;
+            fireballs.add(new Fireball(new Point(fbX, fbY), speed, fbFrames));
+        }
+        if (Keyboard.isKeyUp(FIREBALL_KEY)) {
+            keyLocker.unlockKey(FIREBALL_KEY);
+        }
+
+        // Update fireballs
+        java.util.Iterator<Fireball> it = fireballs.iterator();
+        while (it.hasNext()) {
+            Fireball fb = it.next();
+            fb.update(null); // no player needed for update
+            if (fb.getMapEntityStatus() == Level.MapEntityStatus.REMOVED) {
+                it.remove();
+            }
+        }
 
         // Update animation
         super.update();
@@ -233,6 +262,9 @@ public class Player2 extends MapEntity {
 
     public void draw(GraphicsHandler graphicsHandler) {
         super.draw(graphicsHandler);
+        for (Fireball fb : fireballs) {
+            fb.draw(graphicsHandler);
+        }
     }
 
     @Override
