@@ -90,7 +90,7 @@ public class Player1 extends MapEntity {
             float fbSpeed = 4.0f;
             int fbFrames = 60;
             float fbX = this.x + (facingDirection == Direction.RIGHT ? 24 : -7); // spawn at edge
-            float fbY = this.y + 8; // roughly center vertically
+            float fbY = this.y + -60; // roughly center vertically
             float speed = facingDirection == Direction.RIGHT ? fbSpeed : -fbSpeed;
             fireballs.add(new Fireball(new Point(fbX, fbY), speed, fbFrames));
         }
