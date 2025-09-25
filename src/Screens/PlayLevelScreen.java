@@ -9,6 +9,7 @@ import Level.PlayerListener;
 import Maps.TestMap;
 import Players.Fighter1;
 import Players.Fighter2;
+import Screens.CharacterSelectionScreen; // lets us read the selected character
 
 // This class is for when the platformer game is actually being played
 public class PlayLevelScreen extends Screen implements PlayerListener {
@@ -26,12 +27,21 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         this.screenCoordinator = screenCoordinator;
     }
 
+    @Override
     public void initialize() {
         // define/setup map
         this.map = new TestMap();
 
-        // setup fighters for fighting game
-        this.fighter1 = new Fighter1(100, 200); // Position Fighter1
+        // get character choice from selection screen
+        String pick = CharacterSelectionScreen.getLastSelectedCharacter();
+        System.out.println("Selected character: " + pick);
+
+        // setup fighter1 based on selected character
+        if ("Fire Dude".equals(pick)) {
+            this.fighter1 = new Fighter1(100, 200);
+        } else {
+            this.fighter1 = new Fighter1(100, 200); // fallback for now
+        }
         this.fighter1.setMap(map);
 
         this.fighter2 = new Fighter2(300, 200); // Position Fighter2
@@ -43,6 +53,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         this.playLevelScreenState = PlayLevelScreenState.RUNNING;
     }
 
+    @Override
     public void update() {
         // based on screen state, perform specific actions
         switch (playLevelScreenState) {
@@ -51,9 +62,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             case RUNNING:
                 fighter1.update();
                 fighter2.update();
-                
-                
                 break;
+
             // if level has been completed, bring up level cleared screen
             case LEVEL_COMPLETED:
                 if (levelCompletedStateChangeStart) {
@@ -67,6 +77,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     }
                 }
                 break;
+
             // wait on level lose screen to make a decision (either resets level or sends
             // player back to main menu)
             case LEVEL_LOSE:
@@ -75,6 +86,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         }
     }
 
+    @Override
     public void draw(GraphicsHandler graphicsHandler) {
         // based on screen state, draw appropriate graphics
         switch (playLevelScreenState) {

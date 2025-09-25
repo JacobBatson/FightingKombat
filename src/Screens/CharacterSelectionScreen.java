@@ -7,6 +7,7 @@ import Level.Map;
 import SpriteFont.SpriteFont;
 
 import java.awt.*;
+import java.awt.image.BufferedImage; // <-- added
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,9 +34,12 @@ public class CharacterSelectionScreen extends Screen {
     private static final int GRID_START_X = 28;
     private static final int GRID_START_Y = 95;
 
-    // Simple global handoff so other screens can read the pick without engine changes
-    private static String lastSelectedCharacter = "Cat";
+    private static String lastSelectedCharacter = "Fire Dude";
     public static String getLastSelectedCharacter() { return lastSelectedCharacter; }
+
+    // --- minimal image fields ---
+    private BufferedImage fireDudeSheet;   // full sprite sheet
+    private BufferedImage fireDudeThumb;   // 1 standing frame
 
     public CharacterSelectionScreen(ScreenCoordinator screenCoordinator) {
         this.screenCoordinator = screenCoordinator;
@@ -44,27 +48,22 @@ public class CharacterSelectionScreen extends Screen {
 
     private void initializeCharacters() {
         characterNames = new ArrayList<>();
-
         // 4 rows × 5 columns = 20 total characters
-        // Row 1
-        characterNames.add("Cat");
+        characterNames.add("Fire Dude");
         characterNames.add("Bug");
         characterNames.add("Dinosaur");
         characterNames.add("Walrus");
         characterNames.add("Fireball");
-        // Row 2
         characterNames.add("Gold Box");
         characterNames.add("Bug");
         characterNames.add("Dinosaur");
         characterNames.add("Walrus");
         characterNames.add("Fireball");
-        // Row 3
         characterNames.add("Gold Box");
         characterNames.add("Bug");
         characterNames.add("Dinosaur");
         characterNames.add("Walrus");
         characterNames.add("Fireball");
-        // Row 4
         characterNames.add("Gold Box");
         characterNames.add("Bug");
         characterNames.add("Dinosaur");
@@ -94,6 +93,15 @@ public class CharacterSelectionScreen extends Screen {
         keyLocker.lockKey(Key.SPACE);
         keyLocker.lockKey(Key.ENTER);
         keyLocker.lockKey(Key.ESC);
+
+        // --- load Fire Dude & crop one standing frame (keep it SIMPLE) ---
+        // Adjust the path if your engine expects "Resources/New Piskel(1).png"
+        fireDudeSheet = ImageLoader.load("New Piskel(1).png");
+        if (fireDudeSheet != null) {
+            // assume frames are 16x16 and standing frame is at (0,0). Change if needed.
+            int fx = 0, fy = 0, fw = 16, fh = 16;
+            fireDudeThumb = fireDudeSheet.getSubimage(fx, fy, fw, fh);
+        }
     }
 
     public void update() {
@@ -128,42 +136,33 @@ public class CharacterSelectionScreen extends Screen {
             if (keyPressTimer > 0) keyPressTimer--;
         }
 
-        // Horizontal wrap
         if (currentCharacterHovered >= characterNames.size()) currentCharacterHovered = 0;
         else if (currentCharacterHovered < 0) currentCharacterHovered = characterNames.size() - 1;
 
-        // Unlock keys after initial frame so a fresh press counts
         if (Keyboard.isKeyUp(Key.SPACE)) keyLocker.unlockKey(Key.SPACE);
         if (Keyboard.isKeyUp(Key.ENTER)) keyLocker.unlockKey(Key.ENTER);
         if (Keyboard.isKeyUp(Key.ESC))   keyLocker.unlockKey(Key.ESC);
 
-        // Select (only "Cat" is selectable)
+        // Select (only "Fire Dude" is selectable)
         if ((!keyLocker.isKeyLocked(Key.SPACE) && Keyboard.isKeyDown(Key.SPACE)) ||
             (!keyLocker.isKeyLocked(Key.ENTER) && Keyboard.isKeyDown(Key.ENTER))) {
 
             if (currentCharacterHovered < characterNames.size()
-                && characterNames.get(currentCharacterHovered).equals("Cat")) {
+                && characterNames.get(currentCharacterHovered).equals("Fire Dude")) {
 
                 characterSelected = currentCharacterHovered;
-                lastSelectedCharacter = getSelectedCharacter(); // handoff
-
-                // If you added an API, you can also do:
-                // screenCoordinator.setSelectedCharacter(lastSelectedCharacter);
-
+                lastSelectedCharacter = getSelectedCharacter();
                 screenCoordinator.setGameState(GameState.LEVEL);
             }
         }
 
-        // Back to menu
         if (!keyLocker.isKeyLocked(Key.ESC) && Keyboard.isKeyDown(Key.ESC)) {
             screenCoordinator.setGameState(GameState.MENU);
         }
 
-        // Update hint text (only when a selectable card is hovered)
-        boolean hoverIsSelectable = characterNames.get(currentCharacterHovered).equals("Cat");
+        boolean hoverIsSelectable = characterNames.get(currentCharacterHovered).equals("Fire Dude");
         if (hoverIsSelectable) {
             selectText.setText("Press ENTER/SPACE to select");
-            // Position hint just under the hovered card
             int row = currentCharacterHovered / GRID_COLS;
             int col = currentCharacterHovered % GRID_COLS;
             int x = GRID_START_X + col * (CARD_WIDTH + CARD_SPACING_X);
@@ -171,37 +170,30 @@ public class CharacterSelectionScreen extends Screen {
             selectText.setX(x + 6);
             selectText.setY(y + CARD_HEIGHT + 18);
         } else {
-            selectText.setText(""); // hide when not selectable
+            selectText.setText("");
         }
     }
 
     public void draw(GraphicsHandler graphicsHandler) {
-        // NOTE: these are hard-coded; change if your engine exposes screen size getters
         drawElementBackground(graphicsHandler, 800, 600);
-
         drawAnimatedTitle(graphicsHandler);
         backText.draw(graphicsHandler);
 
-        // Draw character grid
         for (int i = 0; i < characterNames.size(); i++) {
             String characterName = characterNames.get(i);
             int row = i / GRID_COLS;
             int col = i % GRID_COLS;
-
             int x = GRID_START_X + col * (CARD_WIDTH + CARD_SPACING_X);
             int y = GRID_START_Y + row * (CARD_HEIGHT + CARD_SPACING_Y);
-
             drawCharacterCard(graphicsHandler, characterName, x, y, i == currentCharacterHovered);
         }
 
-        // Draw contextual hint if any
         if (selectText.getText() != null && !selectText.getText().isEmpty()) {
             selectText.draw(graphicsHandler);
         }
     }
 
     private void drawElementBackground(GraphicsHandler g, int screenWidth, int screenHeight) {
-        // Simple vertical gradient
         for (int y = 0; y < screenHeight; y++) {
             float ratio = (float) y / screenHeight;
             int r = (int) (30 + ratio * 30);
@@ -209,8 +201,6 @@ public class CharacterSelectionScreen extends Screen {
             int b = (int) (80 + ratio * 60);
             g.drawFilledRectangle(0, y, screenWidth, 1, new Color(r, gg, b));
         }
-
-        // Subtle corner accents
         g.drawFilledRectangle(0, 0, 200, 3, new Color(100, 150, 255, 150));
         g.drawFilledRectangle(screenWidth - 200, 0, 200, 3, new Color(100, 150, 255, 150));
         g.drawFilledRectangle(0, screenHeight - 3, 200, 3, new Color(100, 150, 255, 150));
@@ -220,34 +210,24 @@ public class CharacterSelectionScreen extends Screen {
     private void drawAnimatedTitle(GraphicsHandler graphicsHandler) {
         int baseX = 180;
         int baseY = 35;
-
         int jitterX = (int) (Math.sin(animationTimer * 0.25) * 2) + (int) (Math.sin(animationTimer * 0.6) * 1);
         int jitterY = (int) (Math.cos(animationTimer * 0.35) * 1) + (int) (Math.sin(animationTimer * 0.5) * 1);
-
-        SpriteFont animatedTitle = new SpriteFont(
-                "SELECT CHARACTER",
-                baseX + jitterX,
-                baseY + jitterY,
-                "Arial",
-                34,
-                new Color(49, 207, 240)
-        );
+        SpriteFont animatedTitle = new SpriteFont("SELECT CHARACTER",
+                baseX + jitterX, baseY + jitterY, "Arial", 34, new Color(49, 207, 240));
         animatedTitle.setOutlineColor(Color.black);
         animatedTitle.setOutlineThickness(4);
         animatedTitle.draw(graphicsHandler);
     }
 
     private void drawCharacterCard(GraphicsHandler g, String characterName, int x, int y, boolean isHovered) {
-        boolean isSelectable = characterName.equals("Cat");
+        boolean isSelectable = characterName.equals("Fire Dude");
 
-        // Hover glow drawn first so card/text render above it
         if (isHovered) {
             Color glowFill = isSelectable ? new Color(255, 255, 255, 100) : new Color(200, 200, 200, 80);
             Color glowBorder = isSelectable ? Color.white : new Color(150, 150, 150);
             g.drawFilledRectangleWithBorder(x - 5, y - 5, CARD_WIDTH + 10, CARD_HEIGHT + 10, glowFill, glowBorder, 3);
         }
 
-        // Card
         Color cardColor;
         Color borderColor;
         if (isSelectable) {
@@ -259,23 +239,25 @@ public class CharacterSelectionScreen extends Screen {
         }
         g.drawFilledRectangleWithBorder(x, y, CARD_WIDTH, CARD_HEIGHT, cardColor, borderColor, 3);
 
-        // Text
+        // --- tiny Fire Dude thumbnail (bottom-right), keeps labels readable ---
+        if (characterName.equals("Fire Dude") && fireDudeThumb != null) {
+            int size = 32; // thumbnail size on screen
+            int drawX = x + CARD_WIDTH - size - 8; // 8px margin from right
+            int drawY = y + CARD_HEIGHT - size - 8; // 8px margin from bottom
+            g.drawImage(fireDudeThumb, drawX, drawY, size, size);
+        }
+
         int textX = x + 8;
         int textY = y + 12;
         Color nameColor = isSelectable ? Color.black : new Color(100, 100, 100);
-        SpriteFont nameText = new SpriteFont(characterName, textX, textY, "Arial", 12, nameColor);
-        nameText.draw(g);
-
-        String role = isSelectable ? "Agile Fighter" : "Coming Soon";
+        new SpriteFont(characterName, textX, textY, "Arial", 12, nameColor).draw(g);
+        String role = isSelectable ? "Fire User" : "Coming Soon";
         Color roleColor = isSelectable ? new Color(100, 100, 100) : new Color(150, 150, 150);
-        SpriteFont roleText = new SpriteFont(role, textX, textY + 16, "Arial", 10, roleColor);
-        roleText.draw(g);
+        new SpriteFont(role, textX, textY + 16, "Arial", 10, roleColor).draw(g);
 
-        // Non-selectable overlay (BUG FIX: width now card-relative, not absolute)
         if (!isSelectable) {
             g.drawFilledRectangle(x + 8, y + 34, CARD_WIDTH - 16, 14, new Color(0, 0, 0, 150));
-            SpriteFont comingSoonText = new SpriteFont("COMING SOON", x + 11, y + 45, "Arial", 9, Color.white);
-            comingSoonText.draw(g);
+            new SpriteFont("COMING SOON", x + 11, y + 45, "Arial", 9, Color.white).draw(g);
         }
     }
 
@@ -283,6 +265,6 @@ public class CharacterSelectionScreen extends Screen {
         if (characterSelected >= 0 && characterSelected < characterNames.size()) {
             return characterNames.get(characterSelected);
         }
-        return characterNames.get(0); // Default to first character
+        return characterNames.get(0);
     }
 }
