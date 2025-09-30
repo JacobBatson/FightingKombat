@@ -18,18 +18,57 @@ public class SpriteSheet {
 		this.rowLength = image.getHeight() / spriteHeight;
 		this.columnLength = image.getWidth() / spriteWidth;
 	}
+
+	/*
+	 * image.getSubimage((animationNumber * spriteWidth) + animationNumber, (spriteNumber * spriteHeight) + spriteNumber, spriteWidth, spriteHeight);
+	 * image.getSubimage(column * spriteWidth, row * spriteHeight, spriteWidth, spriteHeight);
+	 */
 	
 	// returns a subimage from the sprite sheet image based on the row and column
-	public BufferedImage getSprite(int spriteNumber, int animationNumber) { //There is a problem with the return statement here in which need to fix
-		// spriteNumber is the row, animationNumber is the column
-		return image.getSubimage(animationNumber * spriteWidth, spriteNumber * spriteHeight, spriteWidth, spriteHeight); // The pixels are off by a few pixels due to having to change the return statement also dont delete this either
-		//The original return statement and only worked for some reason with getting 0,0 in sprite sheet or at least not getting the last sprite in the row: image.getSubimage((animationNumber * spriteWidth) + animationNumber, (spriteNumber * spriteHeight) + spriteNumber, spriteWidth, spriteHeight); 
+	public BufferedImage getSprite(int spriteNumber, int animationNumber) { 
+		int x1 = animationNumber * spriteWidth;
+		int y1 = spriteNumber * spriteHeight;
+		
+		int x3 = (animationNumber * spriteWidth) + animationNumber;
+		int y3 = (spriteNumber * spriteHeight) + spriteNumber;
+		
+		try {
+			if (x3 + spriteWidth <= image.getWidth() && y3 + spriteHeight <= image.getHeight()) {
+				return image.getSubimage(x3, y3, spriteWidth, spriteHeight);
+			} else {
+				return image.getSubimage(x1, y1, spriteWidth, spriteHeight);
+			}
+		} catch (Exception e) {
+			return image.getSubimage(0, 0, spriteWidth, spriteHeight);
+		} 
+		
 	}
+
+	/*
+	 * image.getSubimage((column * spriteWidth) + column, (row * spriteHeight) + row, spriteWidth, spriteHeight);
+	 * image.getSubimage(column * spriteWidth, row * spriteHeight, spriteWidth, spriteHeight);
+	 */
+
 
 	// returns a subimage from the sprite sheet image based on the row and column
 	// this does the same as "getSprite", I added two methods that do the same thing for some reason
-	public BufferedImage getSubImage(int row, int column) { // DO NOT DELETE THIS YET DO NOT DELETE THIS YET and there is still problem with return statement with pixels will find fix, and the game will crash if delete this will find fix as well
-		return image.getSubimage(column * spriteWidth, row * spriteHeight, spriteWidth, spriteHeight); // Original return statement: image.getSubimage((column * spriteWidth) + column, (row * spriteHeight) + row, spriteWidth, spriteHeight);
+	public BufferedImage getSubImage(int row, int column) { // It is now working properly had to add try and catch block and if else statements
+
+		int x1 = column * spriteWidth;
+		int y1 = row * spriteHeight;
+
+		int x3 = (column * spriteWidth) + column;
+		int y3 = (row * spriteHeight) + row;
+		
+		try {
+			if (x3 + spriteWidth <= image.getWidth() && y3 + spriteHeight <= image.getHeight()) {
+				return image.getSubimage(x3, y3, spriteWidth, spriteHeight);
+			} else {
+				return image.getSubimage(x1, y1, spriteWidth, spriteHeight);
+			}
+		} catch (Exception e) {
+			return image.getSubimage(0, 0, spriteWidth, spriteHeight);
+		}
 	}
 
 	public BufferedImage getImage() {

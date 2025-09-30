@@ -329,7 +329,7 @@ public class Player2 extends MapEntity {
                 });
 
                 put("JUMP_RIGHT", new Frame[] {
-                        new FrameBuilder(spriteSheet.getSprite(1,0))
+                        new FrameBuilder(spriteSheet.getSprite(1, 0))
                                 .withScale(3)
                                 .withBounds(8, 9, 8, 9)
                                 .build()
