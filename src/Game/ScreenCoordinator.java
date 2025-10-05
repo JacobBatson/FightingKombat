@@ -1,17 +1,15 @@
 package Game;
 
+
 import Engine.DefaultScreen;
 import Engine.GraphicsHandler;
 import Engine.Screen;
 import Screens.CreditsScreen;
 import Screens.MenuScreen;
 import Screens.PlayLevelScreen;
-import Screens.CharacterSelectionScreen; // <— added
+import Screens.CharacterSelectionScreen;
+import Screens.ControlsScreen; // <— added
 
-/*
- * Based on the current game state, this class determines which Screen should be shown
- * There can only be one "currentScreen", although screens can have "nested" screens
- */
 public class ScreenCoordinator extends Screen {
     // currently shown Screen
     protected Screen currentScreen = new DefaultScreen();
@@ -43,7 +41,7 @@ public class ScreenCoordinator extends Screen {
                     case MENU:
                         currentScreen = new MenuScreen(this);
                         break;
-                    case CHARACTER_SELECT: // <— new state shows your selector
+                    case CHARACTER_SELECT:
                         currentScreen = new CharacterSelectionScreen(this);
                         break;
                     case LEVEL:
@@ -52,14 +50,18 @@ public class ScreenCoordinator extends Screen {
                     case CREDITS:
                         currentScreen = new CreditsScreen(this);
                         break;
+                    case Controls:   // <--- new case
+                        currentScreen = new ControlsScreen(this);
+                        break;
                 }
                 currentScreen.initialize();
             }
             previousGameState = gameState;
-
+    
             currentScreen.update();
         } while (previousGameState != gameState);
     }
+    
 
     @Override
     public void draw(GraphicsHandler graphicsHandler) {

@@ -7,16 +7,15 @@ import Game.ScreenCoordinator;
 import Level.Map;
 import Level.PlayerListener;
 import Maps.TestMap;
-import Players.Fighter1;
-import Players.Fighter2;
-import Screens.CharacterSelectionScreen; // lets us read the selected character
+import Players.Player1;   // WASD/E controls
+import Players.Player2;   // Arrow/Enter controls
+import Screens.CharacterSelectionScreen;
 
-// This class is for when the platformer game is actually being played
 public class PlayLevelScreen extends Screen implements PlayerListener {
     protected ScreenCoordinator screenCoordinator;
     protected Map map;
-    protected Fighter1 fighter1;
-    protected Fighter2 fighter2;
+    protected Player1 player1;
+    protected Player2 player2;
     protected PlayLevelScreenState playLevelScreenState;
     protected int screenTimer;
     protected LevelClearedScreen levelClearedScreen;
@@ -29,42 +28,51 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
     @Override
     public void initialize() {
-        // define/setup map
+        // Map
         this.map = new TestMap();
 
-        // get character choice from selection screen
-        String pick = CharacterSelectionScreen.getLastSelectedCharacter();
-        System.out.println("Selected character: " + pick);
+        // Read both picks from the selection screen
+        String p1Pick = CharacterSelectionScreen.getP1SelectedCharacter();
+        String p2Pick = CharacterSelectionScreen.getP2SelectedCharacter();
+        System.out.println("[Level] P1=" + p1Pick + "  P2=" + p2Pick);
 
-        // setup fighter1 based on selected character
-        if ("Fire Dude".equals(pick)) {
-            this.fighter1 = new Fighter1(100, 200);
-        } else {
-            this.fighter1 = new Fighter1(100, 200); // fallback for now
-        }
-        this.fighter1.setMap(map);
+        // Spawn positions
+        int p1StartX = 100, p1StartY = 200;
+        int p2StartX = 300, p2StartY = 200;
 
-        this.fighter2 = new Fighter2(300, 200); // Position Fighter2
-        this.fighter2.setMap(map);
+        // Build each player from their pick (both can be Fire or Water)
+        String p1Sprite = spriteFor(p1Pick);
+        String p2Sprite = spriteFor(p2Pick);
+
+        this.player1 = new Player1(p1StartX, p1StartY, p1Sprite, 64, 64);
+        this.player1.setMap(map);
+        System.out.println("[Spawn] P1 -> " + p1Sprite);
+
+        this.player2 = new Player2(p2StartX, p2StartY, p2Sprite, 64, 64);
+        this.player2.setMap(map);
+        System.out.println("[Spawn] P2 -> " + p2Sprite);
 
         levelClearedScreen = new LevelClearedScreen();
-        levelLoseScreen = new LevelLoseScreen(this);
+        levelLoseScreen   = new LevelLoseScreen(this);
 
         this.playLevelScreenState = PlayLevelScreenState.RUNNING;
     }
 
+    // Map character name -> sprite file
+    private String spriteFor(String name) {
+        if ("Water Dude".equals(name)) return "Water_Sprite.png";
+        // default/fallback
+        return "Fire_Sprite.png";
+    }
+
     @Override
     public void update() {
-        // based on screen state, perform specific actions
         switch (playLevelScreenState) {
-            // if level is "running" update player and map to keep game logic for the
-            // platformer level going
             case RUNNING:
-                fighter1.update();
-                fighter2.update();
+                player1.update();
+                player2.update();
                 break;
 
-            // if level has been completed, bring up level cleared screen
             case LEVEL_COMPLETED:
                 if (levelCompletedStateChangeStart) {
                     screenTimer = 130;
@@ -78,8 +86,6 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 }
                 break;
 
-            // wait on level lose screen to make a decision (either resets level or sends
-            // player back to main menu)
             case LEVEL_LOSE:
                 levelLoseScreen.update();
                 break;
@@ -88,12 +94,11 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
     @Override
     public void draw(GraphicsHandler graphicsHandler) {
-        // based on screen state, draw appropriate graphics
         switch (playLevelScreenState) {
             case RUNNING:
                 map.draw(graphicsHandler);
-                fighter1.draw(graphicsHandler);
-                fighter2.draw(graphicsHandler);
+                player1.draw(graphicsHandler);
+                player2.draw(graphicsHandler);
                 break;
             case LEVEL_COMPLETED:
                 levelClearedScreen.draw(graphicsHandler);
@@ -104,9 +109,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         }
     }
 
-    public PlayLevelScreenState getPlayLevelScreenState() {
-        return playLevelScreenState;
-    }
+    public PlayLevelScreenState getPlayLevelScreenState() { return playLevelScreenState; }
 
     @Override
     public void onLevelCompleted() {
@@ -123,16 +126,11 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         }
     }
 
-    public void resetLevel() {
-        initialize();
-    }
+    public void resetLevel() { initialize(); }
 
     public void goBackToMenu() {
         screenCoordinator.setGameState(GameState.MENU);
     }
 
-    // This enum represents the different states this screen can be in
-    private enum PlayLevelScreenState {
-        RUNNING, LEVEL_COMPLETED, LEVEL_LOSE
-    }
+    private enum PlayLevelScreenState { RUNNING, LEVEL_COMPLETED, LEVEL_LOSE }
 }
