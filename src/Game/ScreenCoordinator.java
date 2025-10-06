@@ -8,7 +8,7 @@ import Screens.CreditsScreen;
 import Screens.MenuScreen;
 import Screens.PlayLevelScreen;
 import Screens.CharacterSelectionScreen;
-import Screens.ControlsScreen; // <— added
+// ...existing code...
 
 public class ScreenCoordinator extends Screen {
     // currently shown Screen
@@ -51,7 +51,7 @@ public class ScreenCoordinator extends Screen {
                         currentScreen = new CreditsScreen(this);
                         break;
                     case Controls:   // <--- new case
-                        currentScreen = new ControlsScreen(this);
+                        // ...existing code...
                         break;
                 }
                 currentScreen.initialize();

@@ -1,13 +1,11 @@
 package Players;
 
-import Builders.FrameBuilder;
 import Engine.GraphicsHandler;
 import Engine.ImageLoader;
 import Engine.Key;
 import Engine.KeyLocker;
 import Engine.Keyboard;
 import GameObject.Frame;
-import GameObject.ImageEffect;
 import GameObject.SpriteSheet;
 import Level.MapEntity;
 import Enemies.Fireball;
@@ -26,6 +24,12 @@ public class Player1 extends MapEntity {
     // Fireball support
     protected Key FIREBALL_KEY = Key.E;
     protected java.util.List<Fireball> fireballs = new java.util.ArrayList<>();
+    protected Key PUNCH_KEY =  Key.F;
+    
+    // Punch support
+    protected int punchDuration = 0;
+    protected final int MAX_PUNCH_DURATION = 20; // frames
+    protected PlayerState previousNonPunchState = PlayerState.STANDING;
     // Movement values
     protected float walkSpeed = 2.3f;
     protected float gravity = 0.5f;
@@ -133,12 +137,22 @@ public class Player1 extends MapEntity {
             case CROUCHING:
                 // Crouching not implemented for simplified player
                 break;
+            case PUNCHING: 
+                playerPunching();
+                break;
         }
     }
 
     protected void playerStanding() {
+        // If punch key is pressed, enter PUNCHING state
+        if (Keyboard.isKeyDown(PUNCH_KEY) && !keyLocker.isKeyLocked(PUNCH_KEY)) {
+            keyLocker.lockKey(PUNCH_KEY);
+            previousNonPunchState = PlayerState.STANDING;
+            playerState = PlayerState.PUNCHING;
+            punchDuration = 0;
+        }
         // If walk left or walk right key is pressed, enter WALKING state
-        if (Keyboard.isKeyDown(MOVE_LEFT_KEY) || Keyboard.isKeyDown(MOVE_RIGHT_KEY)) {
+        else if (Keyboard.isKeyDown(MOVE_LEFT_KEY) || Keyboard.isKeyDown(MOVE_RIGHT_KEY)) {
             playerState = PlayerState.WALKING;
         }
         // If jump key is pressed, enter JUMPING state
@@ -149,8 +163,15 @@ public class Player1 extends MapEntity {
     }
 
     protected void playerWalking() {
+        // If punch key is pressed, enter PUNCHING state
+        if (Keyboard.isKeyDown(PUNCH_KEY) && !keyLocker.isKeyLocked(PUNCH_KEY)) {
+            keyLocker.lockKey(PUNCH_KEY);
+            previousNonPunchState = PlayerState.WALKING;
+            playerState = PlayerState.PUNCHING;
+            punchDuration = 0;
+        }
         // Move left
-        if (Keyboard.isKeyDown(MOVE_LEFT_KEY)) {
+        else if (Keyboard.isKeyDown(MOVE_LEFT_KEY)) {
             moveAmountX -= walkSpeed;
             facingDirection = Direction.LEFT;
         }
@@ -170,6 +191,14 @@ public class Player1 extends MapEntity {
     }
 
     protected void playerJumping() {
+        // If punch key is pressed while jumping, enter PUNCHING state
+        if (Keyboard.isKeyDown(PUNCH_KEY) && !keyLocker.isKeyLocked(PUNCH_KEY)) {
+            keyLocker.lockKey(PUNCH_KEY);
+            previousNonPunchState = PlayerState.JUMPING;
+            playerState = PlayerState.PUNCHING;
+            punchDuration = 0;
+        }
+        
         // Setup jump if on ground
         if (previousAirGroundState == AirGroundState.GROUND && airGroundState == AirGroundState.GROUND) {
             currentAnimationName = facingDirection == Direction.RIGHT ? "JUMP_RIGHT" : "JUMP_LEFT";
@@ -211,6 +240,24 @@ public class Player1 extends MapEntity {
         }
     }
 
+    protected void playerPunching() { 
+        
+        punchDuration++;
+        
+        if (punchDuration >= MAX_PUNCH_DURATION) {
+            punchDuration = 0;
+            playerState = previousNonPunchState;
+        }
+        
+        if (Keyboard.isKeyDown(MOVE_LEFT_KEY)) {
+            moveAmountX -= walkSpeed * 0.5f; 
+            facingDirection = Direction.LEFT;
+        } else if (Keyboard.isKeyDown(MOVE_RIGHT_KEY)) {
+            moveAmountX += walkSpeed * 0.5f; 
+            facingDirection = Direction.RIGHT;
+        }
+    }
+
     protected void increaseMomentum() {
         momentumY += momentumYIncrease;
         if (momentumY > terminalVelocityY) {
@@ -221,6 +268,9 @@ public class Player1 extends MapEntity {
     protected void updateLockedKeys() {
         if (Keyboard.isKeyUp(JUMP_KEY)) {
             keyLocker.unlockKey(JUMP_KEY);
+        }
+        if (Keyboard.isKeyUp(PUNCH_KEY)) {
+            keyLocker.unlockKey(PUNCH_KEY);
         }
     }
 
@@ -235,6 +285,8 @@ public class Player1 extends MapEntity {
             } else {
                 this.currentAnimationName = facingDirection == Direction.RIGHT ? "FALL_RIGHT" : "FALL_LEFT";
             }
+        } else if (playerState == PlayerState.PUNCHING) {
+            this.currentAnimationName = facingDirection == Direction.RIGHT ? "PUNCH_RIGHT" : "PUNCH_LEFT";
         }
     }
 
@@ -308,6 +360,9 @@ public class Player1 extends MapEntity {
 
                 put("FALL_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 4, 20, true));
 
+                put("PUNCH_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 0,0,1,15,false));
+
+                put("PUNCH_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 0,0,1,15,true));
             }
         };
     }
