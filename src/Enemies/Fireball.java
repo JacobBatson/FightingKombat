@@ -61,12 +61,6 @@ public class Fireball extends Enemy {
 
     // Method to handle collision with MapEntity (Player1/Player2)
     public void handleMapEntityCollision(MapEntity mapEntity) {
-        if (mapEntity instanceof Players.Player1) {
-            ((Players.Player1) mapEntity).takeDamage(20); // Deal 20 damage
-        } else if (mapEntity instanceof Players.Player2) {
-            ((Players.Player2) mapEntity).takeDamage(20); // Deal 20 damage
-        }
-
         // Remove fireball after hitting player
         this.mapEntityStatus = MapEntityStatus.REMOVED;
     }
