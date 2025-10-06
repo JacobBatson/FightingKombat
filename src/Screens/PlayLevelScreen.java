@@ -7,8 +7,8 @@ import Game.ScreenCoordinator;
 import Level.Map;
 import Level.PlayerListener;
 import Maps.TestMap;
-import Players.Player1;   // WASD/E controls
-import Players.Player2;   // Arrow/Enter controls
+import Players.Player1; // WASD/E controls
+import Players.Player2; // Arrow/Enter controls
 import Screens.CharacterSelectionScreen;
 
 public class PlayLevelScreen extends Screen implements PlayerListener {
@@ -53,14 +53,15 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         System.out.println("[Spawn] P2 -> " + p2Sprite);
 
         levelClearedScreen = new LevelClearedScreen();
-        levelLoseScreen   = new LevelLoseScreen(this);
+        levelLoseScreen = new LevelLoseScreen(this);
 
         this.playLevelScreenState = PlayLevelScreenState.RUNNING;
     }
 
     // Map character name -> sprite file
     private String spriteFor(String name) {
-        if ("Water Dude".equals(name)) return "Water_Sprite.png";
+        if ("Water Dude".equals(name))
+            return "Water_Sprite.png";
         // default/fallback
         return "Fire_Sprite.png";
     }
@@ -109,7 +110,9 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         }
     }
 
-    public PlayLevelScreenState getPlayLevelScreenState() { return playLevelScreenState; }
+    public PlayLevelScreenState getPlayLevelScreenState() {
+        return playLevelScreenState;
+    }
 
     @Override
     public void onLevelCompleted() {
@@ -126,11 +129,15 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         }
     }
 
-    public void resetLevel() { initialize(); }
+    public void resetLevel() {
+        initialize();
+    }
 
     public void goBackToMenu() {
         screenCoordinator.setGameState(GameState.MENU);
     }
 
-    private enum PlayLevelScreenState { RUNNING, LEVEL_COMPLETED, LEVEL_LOSE }
+    private enum PlayLevelScreenState {
+        RUNNING, LEVEL_COMPLETED, LEVEL_LOSE
+    }
 }

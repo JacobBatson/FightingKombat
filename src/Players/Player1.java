@@ -16,7 +16,10 @@ import Level.PlayerState;
 import Utils.AirGroundState;
 import Utils.Direction;
 
+import java.awt.Color;
+
 import java.util.HashMap;
+import GameObject.Rectangle;
 
 // Player1 - Uses WASD controls for movement
 public class Player1 extends MapEntity {
@@ -58,7 +61,7 @@ public class Player1 extends MapEntity {
         playerState = PlayerState.STANDING;
         previousPlayerState = playerState;
     }
-    
+
     public Player1(float x, float y) {
         this(x, y, "Fire_Sprite.png", 64, 64);
     }
@@ -98,7 +101,7 @@ public class Player1 extends MapEntity {
             keyLocker.unlockKey(FIREBALL_KEY);
         }
 
-        // Update fireballs
+        // Update fireballs and check for collision with this player
         java.util.Iterator<Fireball> it = fireballs.iterator();
         while (it.hasNext()) {
             Fireball fb = it.next();
@@ -261,30 +264,49 @@ public class Player1 extends MapEntity {
 
     public void draw(GraphicsHandler graphicsHandler) {
         super.draw(graphicsHandler);
+
+        // Draw custom taller hitbox around the player
+        drawCustomHitbox(graphicsHandler, new Color(255, 0, 0, 100)); // Red semi-transparent hitbox
+
         for (Fireball fb : fireballs) {
             fb.draw(graphicsHandler);
         }
     }
-    
+
+    // Custom method to draw a taller hitbox
+    private void drawCustomHitbox(GraphicsHandler graphicsHandler, Color color) {
+        Rectangle bounds = getBounds();
+        int hitboxHeight = bounds.getHeight() + 40; // Make hitbox 20 pixels taller
+        int hitboxY = Math.round(bounds.getY()) - 125; // Center the extra height above the player
+
+        // Draw the taller hitbox
+        graphicsHandler.drawFilledRectangle(
+                Math.round(bounds.getX()) + 20,
+                hitboxY,
+                bounds.getWidth(),
+                hitboxHeight,
+                color);
+    }
+
     @Override
     public HashMap<String, Frame[]> loadAnimations(SpriteSheet spriteSheet) {
         return new HashMap<String, Frame[]>() {
             {
                 put("STAND_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0, 4, 30, false));
 
-                put("STAND_LEFT", SpriteSheet.createSequentialFrames(spriteSheet,0,0,4,30,true));
+                put("STAND_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0, 4, 30, true));
 
-                put("WALK_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet,2,0,4,30,false));
+                put("WALK_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 0, 4, 30, false));
 
-                put("WALK_LEFT", SpriteSheet.createSequentialFrames(spriteSheet,2,0,4,30,true));
+                put("WALK_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 0, 4, 30, true));
 
-                put("JUMP_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 3,0,4,20,false));
+                put("JUMP_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 3, 0, 4, 20, false));
 
-                put("JUMP_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 3,0,4,20,true));
+                put("JUMP_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 3, 0, 4, 20, true));
 
-                put("FALL_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet,4,0,4,20,false));
+                put("FALL_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 4, 20, false));
 
-                put("FALL_LEFT", SpriteSheet.createSequentialFrames(spriteSheet,4,0,4,20,true));
+                put("FALL_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 4, 20, true));
 
             }
         };

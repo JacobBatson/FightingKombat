@@ -31,20 +31,6 @@ public class Fireball extends Enemy {
     }
 
     @Override
-    public void update(Player player) {
-        // if timer is up, set map entity status to REMOVED
-        // the camera class will see this next frame and remove it permanently from the map
-        if (existenceFrames == 0) {
-            this.mapEntityStatus = MapEntityStatus.REMOVED;
-        } else {
-            // move fireball forward
-            moveXHandleCollision(movementSpeed);
-            super.update(player);
-        }
-        existenceFrames--;
-    }
-
-    @Override
     public void onEndCollisionCheckX(boolean hasCollided, Direction direction, MapEntity entityCollidedWith) {
         // if fireball collides with anything solid on the x axis, it is removed
         if (hasCollided) {
@@ -59,15 +45,43 @@ public class Fireball extends Enemy {
         this.mapEntityStatus = MapEntityStatus.REMOVED;
     }
 
+    // Override the update method to handle collision with MapEntity objects
+    @Override
+    public void update(Player player) {
+        // if timer is up, set map entity status to REMOVED
+        if (existenceFrames == 0) {
+            this.mapEntityStatus = MapEntityStatus.REMOVED;
+        } else {
+            // move fireball forward
+            moveXHandleCollision(movementSpeed);
+            super.update(player);
+        }
+        existenceFrames--;
+    }
+
+    // Method to handle collision with MapEntity (Player1/Player2)
+    public void handleMapEntityCollision(MapEntity mapEntity) {
+        if (mapEntity instanceof Players.Player1) {
+            ((Players.Player1) mapEntity).takeDamage(20); // Deal 20 damage
+        } else if (mapEntity instanceof Players.Player2) {
+            ((Players.Player2) mapEntity).takeDamage(20); // Deal 20 damage
+        }
+
+        // Remove fireball after hitting player
+        this.mapEntityStatus = MapEntityStatus.REMOVED;
+    }
+
     @Override
     public HashMap<String, Frame[]> loadAnimations(SpriteSheet spriteSheet) {
-        return new HashMap<String, Frame[]>() {{
-            put("DEFAULT", new Frame[]{
-                    new FrameBuilder(spriteSheet.getSprite(0, 0))
-                            .withScale(3)
-                            .withBounds(1, 1, 5, 5)
-                            .build()
-            });
-        }};
+        return new HashMap<String, Frame[]>() {
+            {
+                put("DEFAULT", new Frame[] {
+                        new FrameBuilder(spriteSheet.getSprite(0, 0))
+                                .withScale(3)
+                                .withBounds(1, 1, 5, 5)
+                                .build()
+                });
+            }
+        };
     }
 }

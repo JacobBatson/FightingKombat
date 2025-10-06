@@ -14,7 +14,10 @@ import Level.PlayerState;
 import Utils.AirGroundState;
 import Utils.Direction;
 
+import java.awt.Color;
+
 import java.util.HashMap;
+import GameObject.Rectangle;
 
 // Player2 - Uses arrow key controls for movement
 public class Player2 extends MapEntity {
@@ -57,7 +60,6 @@ public class Player2 extends MapEntity {
         previousPlayerState = playerState;
     }
 
-    
     public Player2(float x, float y) {
         this(x, y, "Water_Sprite.png", 64, 64);
     }
@@ -260,9 +262,25 @@ public class Player2 extends MapEntity {
 
     public void draw(GraphicsHandler graphicsHandler) {
         super.draw(graphicsHandler);
+
+        drawCustomHitbox(graphicsHandler, new Color(0, 0, 255, 100));
+
         for (Fireball fb : fireballs) {
             fb.draw(graphicsHandler);
         }
+    }
+
+    private void drawCustomHitbox(GraphicsHandler graphicsHandler, Color color) {
+        Rectangle bounds = getBounds();
+        int hitboxHeight = bounds.getHeight() + 40;
+        int hitboxY = Math.round(bounds.getY()) - 125;
+
+        graphicsHandler.drawFilledRectangle(
+                Math.round(bounds.getX()) + 20,
+                hitboxY,
+                bounds.getWidth(),
+                hitboxHeight,
+                color);
     }
 
     @Override
@@ -271,19 +289,19 @@ public class Player2 extends MapEntity {
             {
                 put("STAND_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0, 4, 30, false));
 
-                put("STAND_LEFT", SpriteSheet.createSequentialFrames(spriteSheet,0,0,4,30,true));
+                put("STAND_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0, 4, 30, true));
 
-                put("WALK_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet,2,0,4,30,false));
+                put("WALK_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 0, 4, 30, false));
 
-                put("WALK_LEFT", SpriteSheet.createSequentialFrames(spriteSheet,2,0,4,30,true));
+                put("WALK_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 0, 4, 30, true));
 
-                put("JUMP_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 3,0,4,20,false));
+                put("JUMP_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 3, 0, 4, 20, false));
 
-                put("JUMP_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 3,0,4,20,true));
+                put("JUMP_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 3, 0, 4, 20, true));
 
-                put("FALL_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet,4,0,4,20,false));
+                put("FALL_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 4, 20, false));
 
-                put("FALL_LEFT", SpriteSheet.createSequentialFrames(spriteSheet,4,0,4,20,true));
+                put("FALL_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 4, 20, true));
             }
         };
     }
