@@ -1,7 +1,7 @@
 package GameObject;
 
 import java.awt.image.BufferedImage;
-import GameObject.Frame;
+// ...existing code...
 import Builders.FrameBuilder;
 
 // This class is for reading in a SpriteSheet (collection of images laid out in a specific way)

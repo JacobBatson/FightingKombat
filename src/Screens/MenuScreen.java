@@ -47,7 +47,7 @@ public class MenuScreen extends Screen {
 
     @Override
     public void initialize() {
-        // --- Title text (cursive-like) ---
+    // --- Title text (cursive-like) ---
         titleText = new SpriteFont("Fighting Kombat", 120, 60, "Brush Script MT", 100, new Color(255, 215, 0));
         titleText.setOutlineColor(Color.black);
         titleText.setOutlineThickness(4);
@@ -74,9 +74,9 @@ public class MenuScreen extends Screen {
         try {
             BufferedImage src = ImageIO.read(new File("Resources/mainpage.png"));
 
+            // Calculate width and height for scaling
             int w = (GamePanel.WIDTH  >= 320) ? GamePanel.WIDTH  : FALLBACK_W;
             int h = (GamePanel.HEIGHT >= 240) ? GamePanel.HEIGHT : FALLBACK_H;
-
             BufferedImage scaled = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2 = scaled.createGraphics();
             g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
