@@ -7,9 +7,9 @@ import Game.ScreenCoordinator;
 import Level.Map;
 import Level.PlayerListener;
 import Maps.TestMap;
-import Players.Player1;   // WASD/E controls
-import Players.Player2;   // Arrow/Enter controls
-                            // ...existing code...
+import Players.Player1; // WASD/E controls
+import Players.Player2; // Arrow/Enter controls
+                        // ...existing code...
 import SpriteFont.SpriteFont; // Importing SpriteFont for timer display
 import UI.HeartsHUD;
 import UI.HealthBar;
@@ -68,15 +68,13 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         this.player2.setMap(map);
         System.out.println("[Spawn] P2 -> " + p2Sprite);
 
-    // Initialize HUDs for players (visual only for now)
-    this.p1HUD = new HeartsHUD(HeartsHUD.Anchor.LEFT, 12, 12);
-    this.p2HUD = new HeartsHUD(HeartsHUD.Anchor.RIGHT, 12, 12);
+        // Initialize HUDs for players (visual only for now)
+        this.p1HUD = new HeartsHUD(HeartsHUD.Anchor.LEFT, 12, 12);
+        this.p2HUD = new HeartsHUD(HeartsHUD.Anchor.RIGHT, 12, 12);
 
-    // Health bars (per-heart HP)
-    this.p1HealthBar = new HealthBar(new Color(0, 192, 64), new Color(0,0,0,160));
-    this.p2HealthBar = new HealthBar(new Color(192, 32, 32), new Color(0,0,0,160));
-
-        
+        // Health bars (per-heart HP)
+        this.p1HealthBar = new HealthBar(new Color(0, 192, 64), new Color(0, 0, 0, 160));
+        this.p2HealthBar = new HealthBar(new Color(192, 32, 32), new Color(0, 0, 0, 160));
 
         levelClearedScreen = new LevelClearedScreen();
         levelLoseScreen = new LevelLoseScreen(this);
@@ -86,15 +84,15 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         lastTimerUpdate = System.currentTimeMillis();
         showGameOver = false;
         gameOverFrames = 0;
-    timerFont = new SpriteFont("", 0, 10, "Arial", 44, java.awt.Color.YELLOW);
-    timerFont.setOutlineColor(java.awt.Color.BLACK);
-    timerFont.setOutlineThickness(2f);
-    int gameOverTextLength = "Time's Up!".length();
-    int gameOverFontSize = 64;
-    int gameOverCenterX = 400 - (gameOverTextLength * gameOverFontSize / 4); // estimate 32px per char
-    gameOverFont = new SpriteFont("Time's Up!", gameOverCenterX, 180, "Arial", 64, java.awt.Color.RED);
-    gameOverFont.setOutlineColor(java.awt.Color.BLACK);
-    gameOverFont.setOutlineThickness(3f);
+        timerFont = new SpriteFont("", 0, 10, "Arial", 44, java.awt.Color.YELLOW);
+        timerFont.setOutlineColor(java.awt.Color.BLACK);
+        timerFont.setOutlineThickness(2f);
+        int gameOverTextLength = "Time's Up!".length();
+        int gameOverFontSize = 64;
+        int gameOverCenterX = 400 - (gameOverTextLength * gameOverFontSize / 4); // estimate 32px per char
+        gameOverFont = new SpriteFont("Time's Up!", gameOverCenterX, 180, "Arial", 64, java.awt.Color.RED);
+        gameOverFont.setOutlineColor(java.awt.Color.BLACK);
+        gameOverFont.setOutlineThickness(3f);
     }
 
     // Map character name -> sprite file
@@ -116,28 +114,30 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 while (it1.hasNext()) {
                     Fireball fb = it1.next();
                     try {
-                        if (fb.getBounds() != null && player2.getBounds() != null) {
-                            if (fb.getBounds().intersects(player2.getBounds())) {
+                        if (fb.getBounds() != null && player2.getCustomHitboxBounds() != null) {
+                            if (fb.getBounds().intersects(player2.getCustomHitboxBounds())) {
                                 player2.takeDamage(25);
                                 fb.handleMapEntityCollision(player2);
                                 it1.remove();
                             }
                         }
-                    } catch (Exception ex) { }
+                    } catch (Exception ex) {
+                    }
                 }
 
                 java.util.Iterator<Fireball> it2 = player2.getFireballs().iterator();
                 while (it2.hasNext()) {
                     Fireball fb = it2.next();
                     try {
-                        if (fb.getBounds() != null && player1.getBounds() != null) {
-                            if (fb.getBounds().intersects(player1.getBounds())) {
+                        if (fb.getBounds() != null && player1.getCustomHitboxBounds() != null) {
+                            if (fb.getBounds().intersects(player1.getCustomHitboxBounds())) {
                                 player1.takeDamage(25);
                                 fb.handleMapEntityCollision(player1);
                                 it2.remove();
                             }
                         }
-                    } catch (Exception ex) { }
+                    } catch (Exception ex) {
+                    }
                 }
                 // Timer logic
                 long now = System.currentTimeMillis();
@@ -190,8 +190,10 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 timerFont.setX(centerX - timerText.length() * 14); // better centering for larger font
                 timerFont.draw(graphicsHandler);
                 int screenW = ScreenManager.getScreenWidth();
-                if (p1HUD != null) p1HUD.draw(graphicsHandler, screenW, player1.getHearts(), player1.getMaxHearts());
-                if (p2HUD != null) p2HUD.draw(graphicsHandler, screenW, player2.getHearts(), player2.getMaxHearts());
+                if (p1HUD != null)
+                    p1HUD.draw(graphicsHandler, screenW, player1.getHearts(), player1.getMaxHearts());
+                if (p2HUD != null)
+                    p2HUD.draw(graphicsHandler, screenW, player2.getHearts(), player2.getMaxHearts());
 
                 // Draw health bars under each player's hearts HUD
                 if (p1HealthBar != null) {
@@ -224,8 +226,10 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 timerFont.draw(graphicsHandler);
                 gameOverFont.draw(graphicsHandler);
                 int screenW2 = ScreenManager.getScreenWidth();
-                if (p1HUD != null) p1HUD.draw(graphicsHandler, screenW2, player1.getHearts(), player1.getMaxHearts());
-                if (p2HUD != null) p2HUD.draw(graphicsHandler, screenW2, player2.getHearts(), player2.getMaxHearts());
+                if (p1HUD != null)
+                    p1HUD.draw(graphicsHandler, screenW2, player1.getHearts(), player1.getMaxHearts());
+                if (p2HUD != null)
+                    p2HUD.draw(graphicsHandler, screenW2, player2.getHearts(), player2.getMaxHearts());
 
                 if (p1HealthBar != null) {
                     int x = 12;
@@ -275,6 +279,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     public void goBackToCharacterSelect() {
         screenCoordinator.setGameState(GameState.CHARACTER_SELECT);
     }
+
     // This enum represents the different states this screen can be in
     private enum PlayLevelScreenState {
         RUNNING, LEVEL_COMPLETED, LEVEL_LOSE, GAME_OVER

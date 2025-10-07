@@ -24,14 +24,14 @@ public class Player1 extends MapEntity {
     // Fireball support
     protected Key FIREBALL_KEY = Key.E;
     protected java.util.List<Fireball> fireballs = new java.util.ArrayList<>();
-    protected Key PUNCH_KEY =  Key.F;
+    protected Key PUNCH_KEY = Key.F;
     // Health =
     private static final int HEART_HP = 100;
     private int maxHearts = 3;
-    private int hearts = maxHearts;      
-    private int heartHP = HEART_HP;      
-    private int invulnFrames = 0;        
-    
+    private int hearts = maxHearts;
+    private int heartHP = HEART_HP;
+    private int invulnFrames = 0;
+
     // Punch support
     protected int punchDuration = 0;
     protected final int MAX_PUNCH_DURATION = 20; // frames
@@ -102,7 +102,7 @@ public class Player1 extends MapEntity {
             keyLocker.lockKey(FIREBALL_KEY);
             float fbSpeed = 4.0f;
             int fbFrames = 60;
-            float fbX = this.x + (facingDirection == Direction.RIGHT ? 24 : -7); // spawn at edge
+            float fbX = this.x + (facingDirection == Direction.RIGHT ? 50 : 50); // spawn at edge
             float fbY = this.y + -60; // roughly center vertically
             float speed = facingDirection == Direction.RIGHT ? fbSpeed : -fbSpeed;
             fireballs.add(new Fireball(new Point(fbX, fbY), speed, fbFrames));
@@ -148,7 +148,7 @@ public class Player1 extends MapEntity {
             case CROUCHING:
                 // Crouching not implemented for simplified player
                 break;
-            case PUNCHING: 
+            case PUNCHING:
                 playerPunching();
                 break;
         }
@@ -209,7 +209,7 @@ public class Player1 extends MapEntity {
             playerState = PlayerState.PUNCHING;
             punchDuration = 0;
         }
-        
+
         // Setup jump if on ground
         if (previousAirGroundState == AirGroundState.GROUND && airGroundState == AirGroundState.GROUND) {
             currentAnimationName = facingDirection == Direction.RIGHT ? "JUMP_RIGHT" : "JUMP_LEFT";
@@ -251,20 +251,20 @@ public class Player1 extends MapEntity {
         }
     }
 
-    protected void playerPunching() { 
-        
+    protected void playerPunching() {
+
         punchDuration++;
-        
+
         if (punchDuration >= MAX_PUNCH_DURATION) {
             punchDuration = 0;
             playerState = previousNonPunchState;
         }
-        
+
         if (Keyboard.isKeyDown(MOVE_LEFT_KEY)) {
-            moveAmountX -= walkSpeed * 0.5f; 
+            moveAmountX -= walkSpeed * 0.5f;
             facingDirection = Direction.LEFT;
         } else if (Keyboard.isKeyDown(MOVE_RIGHT_KEY)) {
-            moveAmountX += walkSpeed * 0.5f; 
+            moveAmountX += walkSpeed * 0.5f;
             facingDirection = Direction.RIGHT;
         }
     }
@@ -329,7 +329,7 @@ public class Player1 extends MapEntity {
         super.draw(graphicsHandler);
 
         // Draw custom taller hitbox around the player
-        drawCustomHitbox(graphicsHandler, new Color(255, 0, 0, 100)); // Red semi-transparent hitbox
+        //drawCustomHitbox(graphicsHandler, new Color(255, 0, 0, 100)); // Red semi-transparent hitbox
 
         for (Fireball fb : fireballs) {
             fb.draw(graphicsHandler);
@@ -337,17 +337,35 @@ public class Player1 extends MapEntity {
     }
 
     // Health API
-    public int getMaxHearts() { return maxHearts; }
-    public int getHearts() { return hearts; }
-    public int getHeartHP() { return heartHP; }
-    public int getHeartHpMax() { return HEART_HP; }
-    public boolean isKO() { return hearts <= 0 && heartHP <= 0; }
+    public int getMaxHearts() {
+        return maxHearts;
+    }
 
-    public java.util.List<Fireball> getFireballs() { return this.fireballs; }
+    public int getHearts() {
+        return hearts;
+    }
+
+    public int getHeartHP() {
+        return heartHP;
+    }
+
+    public int getHeartHpMax() {
+        return HEART_HP;
+    }
+
+    public boolean isKO() {
+        return hearts <= 0 && heartHP <= 0;
+    }
+
+    public java.util.List<Fireball> getFireballs() {
+        return this.fireballs;
+    }
 
     public void takeDamage(int amount) {
-        if (amount <= 0) return;
-        if (invulnFrames > 0) return; // ignore while invulnerable
+        if (amount <= 0)
+            return;
+        if (invulnFrames > 0)
+            return; // ignore while invulnerable
 
         int remaining = amount;
 
@@ -374,29 +392,46 @@ public class Player1 extends MapEntity {
             }
 
             if (hearts <= 0 && heartHP <= 0) {
-                heartHP = 0; hearts = 0; break;
+                heartHP = 0;
+                hearts = 0;
+                break;
             }
         }
 
-        if (hearts < 0) hearts = 0;
-        if (heartHP < 0) heartHP = 0;
+        if (hearts < 0)
+            hearts = 0;
+        if (heartHP < 0)
+            heartHP = 0;
 
-    invulnFrames = 3; // short invulnerability after hit]
+        invulnFrames = 3; // short invulnerability after hit]
     }
 
     // Custom method to draw a taller hitbox
-    private void drawCustomHitbox(GraphicsHandler graphicsHandler, Color color) {
-        Rectangle bounds = getBounds();
-        int hitboxHeight = bounds.getHeight() + 40; // Make hitbox 20 pixels taller
-        int hitboxY = Math.round(bounds.getY()) - 125; // Center the extra height above the player
+    // private void drawCustomHitbox(GraphicsHandler graphicsHandler, Color color) {
+    //     Rectangle bounds = getBounds();
+    //     int hitboxHeight = bounds.getHeight() + 40; // Make hitbox 20 pixels taller
+    //     int hitboxY = Math.round(bounds.getY()) - 125; // Center the extra height above the player
 
-        // Draw the taller hitbox
-        graphicsHandler.drawFilledRectangle(
+    //     // Draw the taller hitbox
+    //     graphicsHandler.drawFilledRectangle(
+    //             Math.round(bounds.getX()) + 20,
+    //             hitboxY,
+    //             bounds.getWidth(),
+    //             hitboxHeight,
+    //             color);
+    // }
+
+    // Method to get custom hitbox bounds for collision detection
+    public Rectangle getCustomHitboxBounds() {
+        Rectangle bounds = getBounds();
+        int hitboxHeight = bounds.getHeight() + 40;
+        int hitboxY = Math.round(bounds.getY()) - 125;
+
+        return new Rectangle(
                 Math.round(bounds.getX()) + 20,
                 hitboxY,
                 bounds.getWidth(),
-                hitboxHeight,
-                color);
+                hitboxHeight);
     }
 
     @Override
@@ -419,9 +454,9 @@ public class Player1 extends MapEntity {
 
                 put("FALL_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 4, 20, true));
 
-                put("PUNCH_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 0,0,1,15,false));
+                put("PUNCH_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0, 1, 15, false));
 
-                put("PUNCH_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 0,0,1,15,true));
+                put("PUNCH_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0, 1, 15, true));
             }
         };
     }
