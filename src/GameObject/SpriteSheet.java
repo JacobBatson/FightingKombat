@@ -46,31 +46,33 @@ public class SpriteSheet {
 		
 	}
 	
-	//Dont know why have this method in spritesheet but might create a seperate class/file for it later
-	//This is a helped method so then you dont have to just copy and paste put submethod constantly
+	// Helper: create sequential frames that advance across columns and wrap to the next row when needed
+	// This version walks columns and when it reaches the end of a row it moves to the next row at column 0.
 	public static Frame[] createSequentialFrames(SpriteSheet spriteSheet, int column, int row, int count, int delay, boolean flip) {
         final int out_of_bounds = 4; //The max bounds for current sprite sheet this could change if need to create new sprite sheet
         final int y_axis_bounds = 30; //Proper y-axis bounds
         final int x_axis_bounds = 16; //Proper x-axis bounds
 
-        Frame[] frames = new Frame[count]; 
+
+        Frame[] frames = new Frame[count];
         int x = column, y = row; // Row and Column in sprite sheet
         for (int i = 0; i < count; i++) {
             FrameBuilder builder = new FrameBuilder(spriteSheet.getSprite(x, y), delay)
-                    .withScale(2) // 2 is the proper scale factor for 64x64 
+                    .withScale(2) // 2 is the proper scale factor for 64x64
                     .withBounds(x_axis_bounds, y_axis_bounds, 16, 18); //The 16 and 18 are width and height of collision bounds
             if (flip)  {
                builder.withImageEffect(ImageEffect.FLIP_HORIZONTAL);
             }
             frames[i] = builder.build();
             y++;
-            if (y > out_of_bounds) { 
+            if (y > out_of_bounds) {
                 y = 0;
                 x++;
             }
         }
         return frames;
     }
+
 
 
 	/*
