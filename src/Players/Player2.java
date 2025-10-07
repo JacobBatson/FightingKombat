@@ -56,7 +56,7 @@ public class Player2 extends MapEntity {
     protected Key JUMP_KEY = Key.UP;
     protected Key MOVE_LEFT_KEY = Key.LEFT;
     protected Key MOVE_RIGHT_KEY = Key.RIGHT;
-    protected Key PUNCH_KEY = Key.SPACE;
+    protected Key PUNCH_KEY = Key.L;
     // Punch support
     protected int punchDuration = 0;
     protected final int MAX_PUNCH_DURATION = 20; // frames
@@ -144,11 +144,11 @@ public class Player2 extends MapEntity {
             case JUMPING:
                 playerJumping();
                 break;
-            case PUNCHING:
-                playerPunching();
-                break;
             case CROUCHING:
                 // Crouching not implemented for simplified player
+                break;
+            case PUNCHING:
+                playerPunching();
                 break;
         }
     }
@@ -216,7 +216,7 @@ public class Player2 extends MapEntity {
                 }
             }
         }
-        // Continue jump in air
+    // Continue jump in air
         else if (airGroundState == AirGroundState.AIR) {
             if (jumpForce > 0) {
                 moveAmountY -= jumpForce;
@@ -241,6 +241,13 @@ public class Player2 extends MapEntity {
         // Land on ground
         else if (previousAirGroundState == AirGroundState.AIR && airGroundState == AirGroundState.GROUND) {
             playerState = PlayerState.STANDING;
+        }
+        // Allow punching while jumping (mirror Player1)
+        if (Keyboard.isKeyDown(PUNCH_KEY) && !keyLocker.isKeyLocked(PUNCH_KEY)) {
+            keyLocker.lockKey(PUNCH_KEY);
+            previousNonPunchState = PlayerState.JUMPING;
+            playerState = PlayerState.PUNCHING;
+            punchDuration = 0;
         }
     }
 
@@ -272,6 +279,9 @@ public class Player2 extends MapEntity {
         if (Keyboard.isKeyUp(JUMP_KEY)) {
             keyLocker.unlockKey(JUMP_KEY);
         }
+        if (Keyboard.isKeyUp(PUNCH_KEY)) {
+            keyLocker.unlockKey(PUNCH_KEY);
+        }
     }
 
     protected void handlePlayerAnimation() {
@@ -285,6 +295,8 @@ public class Player2 extends MapEntity {
             } else {
                 this.currentAnimationName = facingDirection == Direction.RIGHT ? "FALL_RIGHT" : "FALL_LEFT";
             }
+        } else if (playerState == PlayerState.PUNCHING) {
+            this.currentAnimationName = facingDirection == Direction.RIGHT ? "PUNCH_RIGHT" : "PUNCH_LEFT";
         }
     }
 
@@ -424,9 +436,9 @@ public class Player2 extends MapEntity {
             {
                 put("STAND_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0, 4, 30, false));
 
-                put("STAND_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0, 4, 30, true));
+                put("STAND_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0,4, 30, true));
 
-                put("WALK_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 0, 4, 30, false));
+                put("WALK_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 2, 4, 30, false));
 
                 put("WALK_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 0, 4, 30, true));
 
@@ -434,9 +446,13 @@ public class Player2 extends MapEntity {
 
                 put("JUMP_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 3, 0, 4, 20, true));
 
-                put("FALL_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 4, 20, false));
+                put("FALL_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 3, 20, false));
 
-                put("FALL_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 4, 20, true));
+                put("FALL_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 3, 20, true));
+                
+                put("PUNCH_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 5,0,2,15,false));
+
+                put("PUNCH_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 5,0,2,15,true));
             }
         };
     }

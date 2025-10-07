@@ -440,21 +440,21 @@ public class Player1 extends MapEntity {
 
                 put("STAND_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0, 4, 30, true));
 
-                put("WALK_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 0, 4, 30, false));
+                put("WALK_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 1, 1, 3, 30, false));
 
-                put("WALK_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 0, 4, 30, true));
+                put("WALK_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 1, 1, 3, 30, true));
 
-                put("JUMP_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 3, 0, 4, 20, false));
+                put("JUMP_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 0, 4, 20, false));
 
-                put("JUMP_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 3, 0, 4, 20, true));
+                put("JUMP_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 0, 4, 20, true));
 
-                put("FALL_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 4, 20, false));
+                put("FALL_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 4, 1, 20, false));
 
-                put("FALL_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 4, 20, true));
+                put("FALL_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 4, 1, 20, true));
 
-                put("PUNCH_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0, 1, 15, false));
+                put("PUNCH_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 3, 4, 1, 15, false));
 
-                put("PUNCH_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0, 1, 15, true));
+                put("PUNCH_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 3, 4, 1, 15, true));
             }
         };
     }
