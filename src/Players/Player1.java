@@ -102,7 +102,7 @@ public class Player1 extends MapEntity {
             keyLocker.lockKey(FIREBALL_KEY);
             float fbSpeed = 4.0f;
             int fbFrames = 60;
-            float fbX = this.x + (facingDirection == Direction.RIGHT ? 24 : -7); // spawn at edge
+            float fbX = this.x + (facingDirection == Direction.RIGHT ? 50 : 50); // spawn at edge
             float fbY = this.y + -60; // roughly center vertically
             float speed = facingDirection == Direction.RIGHT ? fbSpeed : -fbSpeed;
             fireballs.add(new Fireball(new Point(fbX, fbY), speed, fbFrames));
@@ -329,7 +329,7 @@ public class Player1 extends MapEntity {
         super.draw(graphicsHandler);
 
         // Draw custom taller hitbox around the player
-        drawCustomHitbox(graphicsHandler, new Color(255, 0, 0, 100)); // Red semi-transparent hitbox
+        //drawCustomHitbox(graphicsHandler, new Color(255, 0, 0, 100)); // Red semi-transparent hitbox
 
         for (Fireball fb : fireballs) {
             fb.draw(graphicsHandler);
@@ -407,19 +407,19 @@ public class Player1 extends MapEntity {
     }
 
     // Custom method to draw a taller hitbox
-    private void drawCustomHitbox(GraphicsHandler graphicsHandler, Color color) {
-        Rectangle bounds = getBounds();
-        int hitboxHeight = bounds.getHeight() + 40; // Make hitbox 20 pixels taller
-        int hitboxY = Math.round(bounds.getY()) - 125; // Center the extra height above the player
+    // private void drawCustomHitbox(GraphicsHandler graphicsHandler, Color color) {
+    //     Rectangle bounds = getBounds();
+    //     int hitboxHeight = bounds.getHeight() + 40; // Make hitbox 20 pixels taller
+    //     int hitboxY = Math.round(bounds.getY()) - 125; // Center the extra height above the player
 
-        // Draw the taller hitbox
-        graphicsHandler.drawFilledRectangle(
-                Math.round(bounds.getX()) + 20,
-                hitboxY,
-                bounds.getWidth(),
-                hitboxHeight,
-                color);
-    }
+    //     // Draw the taller hitbox
+    //     graphicsHandler.drawFilledRectangle(
+    //             Math.round(bounds.getX()) + 20,
+    //             hitboxY,
+    //             bounds.getWidth(),
+    //             hitboxHeight,
+    //             color);
+    // }
 
     // Method to get custom hitbox bounds for collision detection
     public Rectangle getCustomHitboxBounds() {

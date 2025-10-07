@@ -101,7 +101,7 @@ public class Player2 extends MapEntity {
             keyLocker.lockKey(FIREBALL_KEY);
             float fbSpeed = 4.0f;
             int fbFrames = 60;
-            float fbX = this.x + (facingDirection == Direction.RIGHT ? 24 : -7); // spawn at edge
+            float fbX = this.x + (facingDirection == Direction.RIGHT ? 50 : 50); // spawn at edge
             float fbY = this.y + -60; // roughly center vertically
             float speed = facingDirection == Direction.RIGHT ? fbSpeed : -fbSpeed;
             fireballs.add(new Fireball(new Point(fbX, fbY), speed, fbFrames));
@@ -315,7 +315,7 @@ public class Player2 extends MapEntity {
     public void draw(GraphicsHandler graphicsHandler) {
         super.draw(graphicsHandler);
 
-        drawCustomHitbox(graphicsHandler, new Color(0, 0, 255, 100));
+        //drawCustomHitbox(graphicsHandler, new Color(0, 0, 255, 100));
 
         for (Fireball fb : fireballs) {
             fb.draw(graphicsHandler);
@@ -392,18 +392,18 @@ public class Player2 extends MapEntity {
         invulnFrames = 30; // short invulnerability after hit
     }
 
-    private void drawCustomHitbox(GraphicsHandler graphicsHandler, Color color) {
-        Rectangle bounds = getBounds();
-        int hitboxHeight = bounds.getHeight() + 40;
-        int hitboxY = Math.round(bounds.getY()) - 125;
+    // private void drawCustomHitbox(GraphicsHandler graphicsHandler, Color color) {
+    //     Rectangle bounds = getBounds();
+    //     int hitboxHeight = bounds.getHeight() + 40;
+    //     int hitboxY = Math.round(bounds.getY()) - 125;
 
-        graphicsHandler.drawFilledRectangle(
-                Math.round(bounds.getX()) + 20,
-                hitboxY,
-                bounds.getWidth(),
-                hitboxHeight,
-                color);
-    }
+    //     graphicsHandler.drawFilledRectangle(
+    //             Math.round(bounds.getX()) + 20,
+    //             hitboxY,
+    //             bounds.getWidth(),
+    //             hitboxHeight,
+    //             color);
+    // }
 
     // Method to get custom hitbox bounds for collision detection
     public Rectangle getCustomHitboxBounds() {
