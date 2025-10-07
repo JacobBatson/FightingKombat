@@ -24,6 +24,12 @@ public class Player2 extends MapEntity {
     // Fireball support
     protected Key FIREBALL_KEY = Key.ENTER;
     protected java.util.List<Fireball> fireballs = new java.util.ArrayList<>();
+    // Health model (segmented hearts)
+    private static final int HEART_HP = 100;
+    private int maxHearts = 3;
+    private int hearts = maxHearts;      // number of full hearts remaining (0..maxHearts)
+    private int heartHP = HEART_HP;      // current HP inside the active (last) heart
+    private int invulnFrames = 0;        // frames remaining of invulnerability after taking damage
     // Movement values
     protected float walkSpeed = 2.3f;
     protected float gravity = 0.5f;
@@ -50,6 +56,11 @@ public class Player2 extends MapEntity {
     protected Key JUMP_KEY = Key.UP;
     protected Key MOVE_LEFT_KEY = Key.LEFT;
     protected Key MOVE_RIGHT_KEY = Key.RIGHT;
+    protected Key PUNCH_KEY = Key.SPACE;
+    // Punch support
+    protected int punchDuration = 0;
+    protected final int MAX_PUNCH_DURATION = 20; // frames
+    protected PlayerState previousNonPunchState = PlayerState.STANDING;
 
     public Player2(float x, float y, String characterSpritePath, int spriteWidth, int spriteHeight) {
         super(x, y, new SpriteSheet(ImageLoader.load(characterSpritePath), spriteWidth, spriteHeight), "STAND_RIGHT");
@@ -109,6 +120,11 @@ public class Player2 extends MapEntity {
             }
         }
 
+        // invulnerability countdown
+        if (invulnFrames > 0) {
+            invulnFrames--;
+        }
+
         // Update animation
         super.update();
     }
@@ -128,6 +144,9 @@ public class Player2 extends MapEntity {
             case JUMPING:
                 playerJumping();
                 break;
+            case PUNCHING:
+                playerPunching();
+                break;
             case CROUCHING:
                 // Crouching not implemented for simplified player
                 break;
@@ -135,6 +154,14 @@ public class Player2 extends MapEntity {
     }
 
     protected void playerStanding() {
+        // If punch key is pressed, enter PUNCHING state
+        if (Keyboard.isKeyDown(PUNCH_KEY) && !keyLocker.isKeyLocked(PUNCH_KEY)) {
+            keyLocker.lockKey(PUNCH_KEY);
+            previousNonPunchState = PlayerState.STANDING;
+            playerState = PlayerState.PUNCHING;
+            punchDuration = 0;
+        }
+        // Otherwise continue existing logic
         // If walk left or walk right key is pressed, enter WALKING state
         if (Keyboard.isKeyDown(MOVE_LEFT_KEY) || Keyboard.isKeyDown(MOVE_RIGHT_KEY)) {
             playerState = PlayerState.WALKING;
@@ -147,6 +174,14 @@ public class Player2 extends MapEntity {
     }
 
     protected void playerWalking() {
+        // If punch key is pressed, enter PUNCHING state
+        if (Keyboard.isKeyDown(PUNCH_KEY) && !keyLocker.isKeyLocked(PUNCH_KEY)) {
+            keyLocker.lockKey(PUNCH_KEY);
+            previousNonPunchState = PlayerState.WALKING;
+            playerState = PlayerState.PUNCHING;
+            punchDuration = 0;
+        }
+        // Otherwise continue existing walking logic
         // Move left
         if (Keyboard.isKeyDown(MOVE_LEFT_KEY)) {
             moveAmountX -= walkSpeed;
@@ -209,6 +244,23 @@ public class Player2 extends MapEntity {
         }
     }
 
+    protected void playerPunching() {
+        punchDuration++;
+
+        if (punchDuration >= MAX_PUNCH_DURATION) {
+            punchDuration = 0;
+            playerState = previousNonPunchState;
+        }
+
+        if (Keyboard.isKeyDown(MOVE_LEFT_KEY)) {
+            moveAmountX -= walkSpeed * 0.5f;
+            facingDirection = Direction.LEFT;
+        } else if (Keyboard.isKeyDown(MOVE_RIGHT_KEY)) {
+            moveAmountX += walkSpeed * 0.5f;
+            facingDirection = Direction.RIGHT;
+        }
+    }
+
     protected void increaseMomentum() {
         momentumY += momentumYIncrease;
         if (momentumY > terminalVelocityY) {
@@ -268,6 +320,54 @@ public class Player2 extends MapEntity {
         for (Fireball fb : fireballs) {
             fb.draw(graphicsHandler);
         }
+    }
+
+    // Health API
+    public int getMaxHearts() { return maxHearts; }
+    public int getHearts() { return hearts; }
+    public int getHeartHP() { return heartHP; }
+    public int getHeartHpMax() { return HEART_HP; }
+    public boolean isKO() { return hearts <= 0 && heartHP <= 0; }
+
+    public java.util.List<Fireball> getFireballs() { return this.fireballs; }
+
+    public void takeDamage(int amount) {
+        if (amount <= 0) return;
+        if (invulnFrames > 0) return; // ignore while invulnerable
+
+        int remaining = amount;
+
+        while (remaining > 0 && (hearts > 0 || heartHP > 0)) {
+            if (heartHP <= 0) {
+                if (hearts > 0) {
+                    hearts--;
+                    heartHP = HEART_HP;
+                } else {
+                    break;
+                }
+            }
+
+            if (remaining >= heartHP) {
+                remaining -= heartHP;
+                heartHP = 0;
+                if (hearts > 0) {
+                    hearts--;
+                    heartHP = HEART_HP;
+                }
+            } else {
+                heartHP -= remaining;
+                remaining = 0;
+            }
+
+            if (hearts <= 0 && heartHP <= 0) {
+                heartHP = 0; hearts = 0; break;
+            }
+        }
+
+        if (hearts < 0) hearts = 0;
+        if (heartHP < 0) heartHP = 0;
+
+    invulnFrames = 30; // short invulnerability after hit
     }
 
     private void drawCustomHitbox(GraphicsHandler graphicsHandler, Color color) {

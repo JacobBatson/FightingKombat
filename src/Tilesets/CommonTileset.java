@@ -201,12 +201,197 @@ public class CommonTileset extends Tileset {
 
        mapTiles.add(platrightTile);
 
+//Water map tiles
+
+// Water background block 
+        Frame skywaterFrame = new FrameBuilder(getSubImage(3, 0))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder skywaterTile = new MapTileBuilder(skywaterFrame);
+
+        mapTiles.add(skywaterTile);
+
+        //Water block 1
+        Frame Water1Frame = new FrameBuilder(getSubImage(3, 1))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Water1Tile = new MapTileBuilder(Water1Frame);
+
+        mapTiles.add(Water1Tile);
+
+        //Water block 2
+        Frame Water2Frame = new FrameBuilder(getSubImage(3, 2))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Water2Tile = new MapTileBuilder(Water2Frame);
+
+        mapTiles.add(Water2Tile);
+
+        //Water block waterfall bottom
+        Frame Water3Frame = new FrameBuilder(getSubImage(3, 3))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Water3Tile = new MapTileBuilder(Water3Frame);
+
+        mapTiles.add(Water3Tile);
+
+        //platform left water
+        Frame platleftWaterFrame = new FrameBuilder(getSubImage(3, 4))
+               .withScale(tileScale)
+               .withBounds(0, 6, 16, 4)
+               .build();
 
 
+       MapTileBuilder platleftWaterTile = new MapTileBuilder(platleftWaterFrame)
+               .withTileType(TileType.JUMP_THROUGH_PLATFORM);
 
 
+       mapTiles.add(platleftWaterTile);
+
+       //platform right water
+       Frame platrightWaterFrame = new FrameBuilder(getSubImage(3, 5))
+               .withScale(tileScale)
+               .withBounds(0, 6, 16, 4)
+               .build();
+
+
+       MapTileBuilder platrightWaterTile = new MapTileBuilder(platrightWaterFrame)
+               .withTileType(TileType.JUMP_THROUGH_PLATFORM);
+
+
+       mapTiles.add(platrightWaterTile);
+
+
+ //platform Left corner Water
+        Frame LeftwaterplatFrame = new FrameBuilder(getSubImage(4, 0))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder LeftwaterplatTile = new MapTileBuilder(LeftwaterplatFrame)
+                .withTileType(TileType.NOT_PASSABLE);
+
+        mapTiles.add(LeftwaterplatTile);
+
+
+//platform middle water 1
+        Frame Waterplat1Frame = new FrameBuilder(getSubImage(4, 1))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Waterplat1Tile = new MapTileBuilder(Waterplat1Frame)
+                .withTileType(TileType.NOT_PASSABLE);
+
+        mapTiles.add(Waterplat1Tile);
+
+
+ //platform middle 2
+        Frame Waterplat2Frame = new FrameBuilder(getSubImage(4, 2))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Waterplat2Tile = new MapTileBuilder(Waterplat2Frame)
+                .withTileType(TileType.NOT_PASSABLE);
+
+        mapTiles.add(Waterplat2Tile);
+
+
+//platform middle 3
+        Frame Waterplat3Frame = new FrameBuilder(getSubImage(4, 3))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Waterplat3Tile = new MapTileBuilder(Waterplat3Frame)
+                .withTileType(TileType.NOT_PASSABLE);
+
+        mapTiles.add(Waterplat3Tile);
+
+
+//platform Right corner water
+        Frame RightwaterplatFrame = new FrameBuilder(getSubImage(4, 4))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder RightwaterplatTile = new MapTileBuilder(RightwaterplatFrame)
+                .withTileType(TileType.NOT_PASSABLE);
+
+        mapTiles.add(RightwaterplatTile);
+
+//Floating platform small water
+        Frame SmallplatwaterFrame = new FrameBuilder(getSubImage(4, 5))
+               .withScale(tileScale)
+               .withBounds(0, 6, 16, 4)
+               .build();
+
+
+       MapTileBuilder SmallplatwaterTile = new MapTileBuilder(SmallplatwaterFrame)
+               .withTileType(TileType.JUMP_THROUGH_PLATFORM);
+
+
+       mapTiles.add(SmallplatwaterTile);
+
+       //Seaweed 1
+       Frame Seaweed1Frame = new FrameBuilder(getSubImage(5, 0))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Seaweed1Tile = new MapTileBuilder(Seaweed1Frame);
+
+        mapTiles.add(Seaweed1Tile);
+
+        //Seaweed 2
+        Frame Seaweed2Frame = new FrameBuilder(getSubImage(5, 1))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Seaweed2Tile = new MapTileBuilder(Seaweed2Frame);
+
+        mapTiles.add(Seaweed2Tile);
+
+        //Coral bottom 1
+        Frame Coral1Frame = new FrameBuilder(getSubImage(5, 2))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Coral1Tile = new MapTileBuilder(Coral1Frame);
+
+        mapTiles.add(Coral1Tile);
+
+        //Coral bottom 2
+        Frame Coral2Frame = new FrameBuilder(getSubImage(5, 3))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Coral2Tile = new MapTileBuilder(Coral2Frame);
+
+        mapTiles.add(Coral2Tile);
+
+
+        //Bubbles bottom 1
+        Frame Bubbles1Frame = new FrameBuilder(getSubImage(5, 4))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Bubbles1Tile = new MapTileBuilder(Bubbles1Frame);
+
+        mapTiles.add(Bubbles1Tile);
+
+        //Bubbles bottom 2
+        Frame Bubbles2Frame = new FrameBuilder(getSubImage(5, 5))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Bubbles2Tile = new MapTileBuilder(Bubbles2Frame);
+
+        mapTiles.add(Bubbles2Tile);
 
 
         return mapTiles;
+
+
+
     }
 }

@@ -25,6 +25,12 @@ public class Player1 extends MapEntity {
     protected Key FIREBALL_KEY = Key.E;
     protected java.util.List<Fireball> fireballs = new java.util.ArrayList<>();
     protected Key PUNCH_KEY =  Key.F;
+    // Health =
+    private static final int HEART_HP = 100;
+    private int maxHearts = 3;
+    private int hearts = maxHearts;      
+    private int heartHP = HEART_HP;      
+    private int invulnFrames = 0;        
     
     // Punch support
     protected int punchDuration = 0;
@@ -113,6 +119,11 @@ public class Player1 extends MapEntity {
             if (fb.getMapEntityStatus() == Level.MapEntityStatus.REMOVED) {
                 it.remove();
             }
+        }
+
+        // invulnerability countdown
+        if (invulnFrames > 0) {
+            invulnFrames--;
         }
 
         // Update animation
@@ -323,6 +334,54 @@ public class Player1 extends MapEntity {
         for (Fireball fb : fireballs) {
             fb.draw(graphicsHandler);
         }
+    }
+
+    // Health API
+    public int getMaxHearts() { return maxHearts; }
+    public int getHearts() { return hearts; }
+    public int getHeartHP() { return heartHP; }
+    public int getHeartHpMax() { return HEART_HP; }
+    public boolean isKO() { return hearts <= 0 && heartHP <= 0; }
+
+    public java.util.List<Fireball> getFireballs() { return this.fireballs; }
+
+    public void takeDamage(int amount) {
+        if (amount <= 0) return;
+        if (invulnFrames > 0) return; // ignore while invulnerable
+
+        int remaining = amount;
+
+        while (remaining > 0 && (hearts > 0 || heartHP > 0)) {
+            if (heartHP <= 0) {
+                if (hearts > 0) {
+                    hearts--;
+                    heartHP = HEART_HP;
+                } else {
+                    break;
+                }
+            }
+
+            if (remaining >= heartHP) {
+                remaining -= heartHP;
+                heartHP = 0;
+                if (hearts > 0) {
+                    hearts--;
+                    heartHP = HEART_HP;
+                }
+            } else {
+                heartHP -= remaining;
+                remaining = 0;
+            }
+
+            if (hearts <= 0 && heartHP <= 0) {
+                heartHP = 0; hearts = 0; break;
+            }
+        }
+
+        if (hearts < 0) hearts = 0;
+        if (heartHP < 0) heartHP = 0;
+
+    invulnFrames = 3; // short invulnerability after hit]
     }
 
     // Custom method to draw a taller hitbox
