@@ -434,17 +434,17 @@ public class Player2 extends MapEntity {
     public HashMap<String, Frame[]> loadAnimations(SpriteSheet spriteSheet) {
         return new HashMap<String, Frame[]>() {
             {
-                put("STAND_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0, 3, 30, false));
+                put("STAND_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0, 4, 30, false));
 
-                put("STAND_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0,3, 30, true));
+                put("STAND_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0,4, 30, true));
 
-                put("WALK_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 0, 3, 30, false));
+                put("WALK_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 2, 4, 30, false));
 
-                put("WALK_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 0, 3, 30, true));
+                put("WALK_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 0, 4, 30, true));
 
-                put("JUMP_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 3, 0, 3, 20, false));
+                put("JUMP_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 3, 0, 4, 20, false));
 
-                put("JUMP_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 3, 0, 3, 20, true));
+                put("JUMP_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 3, 0, 4, 20, true));
 
                 put("FALL_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 3, 20, false));
 

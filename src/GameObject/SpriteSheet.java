@@ -52,14 +52,16 @@ public class SpriteSheet {
         final int out_of_bounds = 4; //The max bounds for current sprite sheet this could change if need to create new sprite sheet
         final int y_axis_bounds = 30; //Proper y-axis bounds
         final int x_axis_bounds = 16; //Proper x-axis bounds
-
+		final int last_row_sprite = spriteSheet.rowLength - 1;
 
         Frame[] frames = new Frame[count];
         int x = column, y = row; // Row and Column in sprite sheet
-        for (int i = 0; i < count; i++) {
-            FrameBuilder builder = new FrameBuilder(spriteSheet.getSprite(x, y), delay)
+        
+		for (int i = 0; i < count; i++) {
+			FrameBuilder builder = new FrameBuilder(spriteSheet.getSprite(x, y), delay)
                     .withScale(2) // 2 is the proper scale factor for 64x64
-                    .withBounds(x_axis_bounds, y_axis_bounds, 16, 18); //The 16 and 18 are width and height of collision bounds
+                    .withBounds(x_axis_bounds, y_axis_bounds, 16, 18); //The 16 and 18 are width and height of collision bounds	
+            
             if (flip)  {
                builder.withImageEffect(ImageEffect.FLIP_HORIZONTAL);
             }
