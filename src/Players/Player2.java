@@ -16,6 +16,7 @@ import Utils.Direction;
 
 import java.awt.Color;
 
+import java.util.Collections;
 import java.util.HashMap;
 import GameObject.Rectangle;
 
@@ -45,6 +46,12 @@ public class Player2 extends MapEntity {
     protected AirGroundState airGroundState;
     protected AirGroundState previousAirGroundState;
 
+    // Health handling
+    protected int maxHealth = 5;
+    protected int currentHealth = maxHealth;
+    protected int invincibilityFrames = 0;
+    protected static final int MAX_INVINCIBILITY_FRAMES = 45;
+
     // Input handling
     protected KeyLocker keyLocker = new KeyLocker();
     protected Key JUMP_KEY = Key.UP;
@@ -70,6 +77,10 @@ public class Player2 extends MapEntity {
 
         applyGravity();
 
+        if (invincibilityFrames > 0) {
+            invincibilityFrames--;
+        }
+
         // Update player state
         do {
             previousPlayerState = playerState;
@@ -93,7 +104,9 @@ public class Player2 extends MapEntity {
             float fbX = this.x + (facingDirection == Direction.RIGHT ? 24 : -7); // spawn at edge
             float fbY = this.y + -60; // roughly center vertically
             float speed = facingDirection == Direction.RIGHT ? fbSpeed : -fbSpeed;
-            fireballs.add(new Fireball(new Point(fbX, fbY), speed, fbFrames));
+            Fireball fireball = new Fireball(new Point(fbX, fbY), speed, fbFrames);
+            fireball.setMap(map);
+            fireballs.add(fireball);
         }
         if (Keyboard.isKeyUp(FIREBALL_KEY)) {
             keyLocker.unlockKey(FIREBALL_KEY);
@@ -111,6 +124,42 @@ public class Player2 extends MapEntity {
 
         // Update animation
         super.update();
+    }
+
+    public java.util.List<Fireball> getFireballs() {
+        return Collections.unmodifiableList(fireballs);
+    }
+
+    public int getCurrentHealth() {
+        return currentHealth;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public boolean isInvincible() {
+        return invincibilityFrames > 0;
+    }
+
+    public void takeDamage(int amount) {
+        if (amount <= 0 || isInvincible()) {
+            return;
+        }
+
+        currentHealth = Math.max(0, currentHealth - amount);
+        invincibilityFrames = MAX_INVINCIBILITY_FRAMES;
+    }
+
+    public void heal(int amount) {
+        if (amount <= 0) {
+            return;
+        }
+        currentHealth = Math.min(maxHealth, currentHealth + amount);
+    }
+
+    public boolean isDead() {
+        return currentHealth <= 0;
     }
 
     protected void applyGravity() {
