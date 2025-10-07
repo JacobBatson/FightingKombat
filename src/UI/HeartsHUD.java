@@ -56,11 +56,6 @@ public class HeartsHUD {
 
     /**
      * Draw hearts on screen.
-     *
-     * @param g          GraphicsHandler to draw with
-     * @param screenWidth current screen width (used for RIGHT anchor alignment)
-     * @param hearts     number of filled hearts to draw
-     * @param maxHearts  number of heart slots to draw
      */
     public void draw(GraphicsHandler g, int screenWidth, int hearts, int maxHearts) {
         if (maxHearts <= 0) return;

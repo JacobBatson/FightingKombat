@@ -13,9 +13,7 @@ import Utils.Point;
 import Level.PlayerState;
 import Utils.AirGroundState;
 import Utils.Direction;
-
 import java.awt.Color;
-
 import java.util.HashMap;
 import GameObject.Rectangle;
 

@@ -6,6 +6,7 @@ import Game.GameState;
 import Game.ScreenCoordinator;
 import Level.Map;
 import Level.PlayerListener;
+import Maps.Map1;
 import Maps.TestMap;
 import Players.Player1; // WASD/E controls
 import Players.Player2; // Arrow/Enter controls
@@ -45,7 +46,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     @Override
     public void initialize() {
         // Map
-        this.map = new TestMap();
+        this.map = new Map1();
 
         // Read both picks from the selection screen
         String p1Pick = CharacterSelectionScreen.getP1SelectedCharacter();
