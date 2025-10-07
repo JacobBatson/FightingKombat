@@ -27,9 +27,9 @@ public class Player2 extends MapEntity {
     // Health model (segmented hearts)
     private static final int HEART_HP = 100;
     private int maxHearts = 3;
-    private int hearts = maxHearts;      // number of full hearts remaining (0..maxHearts)
-    private int heartHP = HEART_HP;      // current HP inside the active (last) heart
-    private int invulnFrames = 0;        // frames remaining of invulnerability after taking damage
+    private int hearts = maxHearts; // number of full hearts remaining (0..maxHearts)
+    private int heartHP = HEART_HP; // current HP inside the active (last) heart
+    private int invulnFrames = 0; // frames remaining of invulnerability after taking damage
     // Movement values
     protected float walkSpeed = 2.3f;
     protected float gravity = 0.5f;
@@ -323,17 +323,35 @@ public class Player2 extends MapEntity {
     }
 
     // Health API
-    public int getMaxHearts() { return maxHearts; }
-    public int getHearts() { return hearts; }
-    public int getHeartHP() { return heartHP; }
-    public int getHeartHpMax() { return HEART_HP; }
-    public boolean isKO() { return hearts <= 0 && heartHP <= 0; }
+    public int getMaxHearts() {
+        return maxHearts;
+    }
 
-    public java.util.List<Fireball> getFireballs() { return this.fireballs; }
+    public int getHearts() {
+        return hearts;
+    }
+
+    public int getHeartHP() {
+        return heartHP;
+    }
+
+    public int getHeartHpMax() {
+        return HEART_HP;
+    }
+
+    public boolean isKO() {
+        return hearts <= 0 && heartHP <= 0;
+    }
+
+    public java.util.List<Fireball> getFireballs() {
+        return this.fireballs;
+    }
 
     public void takeDamage(int amount) {
-        if (amount <= 0) return;
-        if (invulnFrames > 0) return; // ignore while invulnerable
+        if (amount <= 0)
+            return;
+        if (invulnFrames > 0)
+            return; // ignore while invulnerable
 
         int remaining = amount;
 
@@ -360,14 +378,18 @@ public class Player2 extends MapEntity {
             }
 
             if (hearts <= 0 && heartHP <= 0) {
-                heartHP = 0; hearts = 0; break;
+                heartHP = 0;
+                hearts = 0;
+                break;
             }
         }
 
-        if (hearts < 0) hearts = 0;
-        if (heartHP < 0) heartHP = 0;
+        if (hearts < 0)
+            hearts = 0;
+        if (heartHP < 0)
+            heartHP = 0;
 
-    invulnFrames = 30; // short invulnerability after hit
+        invulnFrames = 30; // short invulnerability after hit
     }
 
     private void drawCustomHitbox(GraphicsHandler graphicsHandler, Color color) {
@@ -381,6 +403,19 @@ public class Player2 extends MapEntity {
                 bounds.getWidth(),
                 hitboxHeight,
                 color);
+    }
+
+    // Method to get custom hitbox bounds for collision detection
+    public Rectangle getCustomHitboxBounds() {
+        Rectangle bounds = getBounds();
+        int hitboxHeight = bounds.getHeight() + 40; // Make hitbox 20 pixels taller
+        int hitboxY = Math.round(bounds.getY()) - 125; // Center the extra height above the player
+
+        return new Rectangle(
+                Math.round(bounds.getX()) + 20,
+                hitboxY,
+                bounds.getWidth(),
+                hitboxHeight);
     }
 
     @Override
