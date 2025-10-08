@@ -100,7 +100,8 @@ public class Player1 extends MapEntity {
             keyLocker.lockKey(FIREBALL_KEY);
             float fbSpeed = 4.0f;
             int fbFrames = 60;
-            // compute spawn offset from current animation / facing so splash aligns with hand
+            // compute spawn offset from current animation / facing so splash aligns with
+            // hand
             Utils.Point offset = getFireballSpawnOffset();
             float fbX = this.x + (facingDirection == Direction.RIGHT ? 50 : 50);
             float fbY = this.y + offset.y;
@@ -130,7 +131,8 @@ public class Player1 extends MapEntity {
         super.update();
     }
 
-    // Return a spawn offset (relative to this.x,this.y) for where a fireball should originate.
+    // Return a spawn offset (relative to this.x,this.y) for where a fireball should
+    // originate.
     private Utils.Point getFireballSpawnOffset() {
         float dx = facingDirection == Direction.RIGHT ? this.getWidth() - 8f : -8f;
         float dy = (this.getHeight() / 2f) - 8f;
@@ -345,7 +347,8 @@ public class Player1 extends MapEntity {
         super.draw(graphicsHandler);
 
         // Draw custom taller hitbox around the player
-        //drawCustomHitbox(graphicsHandler, new Color(255, 0, 0, 100)); // Red semi-transparent hitbox
+        // drawCustomHitbox(graphicsHandler, new Color(255, 0, 0, 100)); // Red
+        // semi-transparent hitbox
 
         for (Fireball fb : fireballs) {
             fb.draw(graphicsHandler);
@@ -373,8 +376,39 @@ public class Player1 extends MapEntity {
         return hearts <= 0 && heartHP <= 0;
     }
 
+    // Method to get punch hitbox bounds for collision detection
+    public Rectangle getPunchHitbox() {
+        if (playerState != PlayerState.PUNCHING) {
+            return null;
+        }
+
+        Rectangle bounds = getBounds();
+        float punchRange = 40f;
+        float punchHeight = 30f;
+
+        float punchX, punchY;
+
+        if (facingDirection == Direction.RIGHT) {
+            punchX = bounds.getX() + bounds.getWidth();
+        } else {
+            punchX = bounds.getX() - punchRange;
+        }
+
+        punchY = bounds.getY() + (bounds.getHeight() - punchHeight) / 2;
+
+        return new Rectangle(punchX, punchY, (int) punchRange, (int) punchHeight);
+    }
+
     public java.util.List<Fireball> getFireballs() {
         return this.fireballs;
+    }
+
+    public PlayerState getPlayerState() {
+        return playerState;
+    }
+
+    public int getPunchDuration() {
+        return punchDuration;
     }
 
     public void takeDamage(int amount) {
@@ -383,75 +417,49 @@ public class Player1 extends MapEntity {
         if (invulnFrames > 0)
             return; // ignore while invulnerable
 
-        int remaining = amount;
+        // Health damage does not carry over between hearts
+        heartHP -= amount;
 
-        while (remaining > 0 && (hearts > 0 || heartHP > 0)) {
-            if (heartHP <= 0) {
-                if (hearts > 1) {
-                    // consume one heart and reset HP to full for the next heart
-                    hearts--;
-                    heartHP = HEART_HP;
-                } else if (hearts == 1) {
-                    // consuming the last heart -> player will have 0 hearts and 0 HP
-                    hearts = 0;
-                    heartHP = 0;
-                    break;
-                } else {
-                    break;
-                }
-            }
-
-            if (remaining >= heartHP) {
-                remaining -= heartHP;
-                heartHP = 0;
-                if (hearts > 1) {
-                    hearts--;
-                    heartHP = HEART_HP;
-                } else if (hearts == 1) {
-                    // consumed last heart
-                    hearts = 0;
-                    heartHP = 0;
-                    break;
-                }
-            } else {
-                heartHP -= remaining;
-                remaining = 0;
-            }
-
-            if (hearts <= 0 && heartHP <= 0) {
-                heartHP = 0;
-                hearts = 0;
-                break;
-            }
+        // If current heart is depleted, consume it and reset to full HP
+        if (heartHP <= 0 && hearts > 1) {
+            hearts--;
+            heartHP = HEART_HP; // Reset to full HP for new heart
+        } else if (heartHP <= 0 && hearts == 1) {
+            // Last heart consumed
+            hearts = 0;
+            heartHP = 0;
         }
 
+        // Ensure values don't go negative
         if (hearts < 0)
             hearts = 0;
         if (heartHP < 0)
             heartHP = 0;
 
-        invulnFrames = 3; // short invulnerability after hit]
+        invulnFrames = 3;
     }
 
     // Custom method to draw a taller hitbox
     // private void drawCustomHitbox(GraphicsHandler graphicsHandler, Color color) {
-    //     Rectangle bounds = getBounds();
-    //     int hitboxHeight = bounds.getHeight() + 40; // Make hitbox 20 pixels taller
-    //     int hitboxY = Math.round(bounds.getY()) - 125; // Center the extra height above the player
+    // Rectangle bounds = getBounds();
+    // int hitboxHeight = bounds.getHeight() + 40; // Make hitbox 20 pixels taller
+    // int hitboxY = Math.round(bounds.getY()) - 125; // Center the extra height
+    // above the player
 
-    //     // Draw the taller hitbox
-    //     graphicsHandler.drawFilledRectangle(
-    //             Math.round(bounds.getX()) + 20,
-    //             hitboxY,
-    //             bounds.getWidth(),
-    //             hitboxHeight,
-    //             color);
+    // // Draw the taller hitbox
+    // graphicsHandler.drawFilledRectangle(
+    // Math.round(bounds.getX()) + 20,
+    // hitboxY,
+    // bounds.getWidth(),
+    // hitboxHeight,
+    // color);
     // }
 
     // Method to get custom hitbox bounds for collision detection
     public Rectangle getCustomHitboxBounds() {
         Rectangle bounds = getBounds();
-        // Make hitbox slightly taller and centered on the player; avoid large negative offsets
+        // Make hitbox slightly taller and centered on the player; avoid large negative
+        // offsets
         int extra = 20;
         int hitboxHeight = bounds.getHeight() + extra;
         int hitboxY = Math.round(bounds.getY()) - (extra / 2);

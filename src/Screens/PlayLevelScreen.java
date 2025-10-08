@@ -116,7 +116,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     try {
                         if (fb.getBounds() != null && player2.getCustomHitboxBounds() != null) {
                             if (fb.getBounds().intersects(player2.getCustomHitboxBounds())) {
-                                player2.takeDamage(25);
+                                player2.takeDamage(20);
                                 fb.handleMapEntityCollision(player2);
                                 it1.remove();
                             }
@@ -131,7 +131,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     try {
                         if (fb.getBounds() != null && player1.getCustomHitboxBounds() != null) {
                             if (fb.getBounds().intersects(player1.getCustomHitboxBounds())) {
-                                player1.takeDamage(25);
+                                player1.takeDamage(20);
                                 fb.handleMapEntityCollision(player1);
                                 it2.remove();
                             }
@@ -139,6 +139,28 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     } catch (Exception ex) {
                     }
                 }
+
+                // Punch collision checks
+                // Player 1 punching Player 2
+                if (player1.getPlayerState() == Level.PlayerState.PUNCHING &&
+                        player1.getPunchDuration() == 5) { 
+                    if (player1.getPunchHitbox() != null && player2.getCustomHitboxBounds() != null) {
+                        if (player1.getPunchHitbox().intersects(player2.getCustomHitboxBounds())) {
+                            player2.takeDamage(10); 
+                        }
+                    }
+                }
+
+                // Player 2 punching Player 1
+                if (player2.getPlayerState() == Level.PlayerState.PUNCHING &&
+                        player2.getPunchDuration() == 5) {
+                    if (player2.getPunchHitbox() != null && player1.getCustomHitboxBounds() != null) {
+                        if (player2.getPunchHitbox().intersects(player1.getCustomHitboxBounds())) {
+                            player1.takeDamage(10);
+                        }
+                    }
+                }
+
                 // Timer logic
                 long now = System.currentTimeMillis();
                 if (now - lastTimerUpdate >= 1000) {
@@ -208,9 +230,11 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 timerFont.draw(graphicsHandler);
                 int screenW = ScreenManager.getScreenWidth();
                 if (p1HUD != null)
-                    p1HUD.draw(graphicsHandler, screenW, player1.getHearts(), player1.getMaxHearts(), player1.getHeartHP(), player1.getHeartHpMax());
+                    p1HUD.draw(graphicsHandler, screenW, player1.getHearts(), player1.getMaxHearts(),
+                            player1.getHeartHP(), player1.getHeartHpMax());
                 if (p2HUD != null)
-                    p2HUD.draw(graphicsHandler, screenW, player2.getHearts(), player2.getMaxHearts(), player2.getHeartHP(), player2.getHeartHpMax());
+                    p2HUD.draw(graphicsHandler, screenW, player2.getHearts(), player2.getMaxHearts(),
+                            player2.getHeartHP(), player2.getHeartHpMax());
 
                 // Draw health bars under each player's hearts HUD
                 if (p1HealthBar != null) {
@@ -244,9 +268,11 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 gameOverFont.draw(graphicsHandler);
                 int screenW2 = ScreenManager.getScreenWidth();
                 if (p1HUD != null)
-                    p1HUD.draw(graphicsHandler, screenW2, player1.getHearts(), player1.getMaxHearts(), player1.getHeartHP(), player1.getHeartHpMax());
+                    p1HUD.draw(graphicsHandler, screenW2, player1.getHearts(), player1.getMaxHearts(),
+                            player1.getHeartHP(), player1.getHeartHpMax());
                 if (p2HUD != null)
-                    p2HUD.draw(graphicsHandler, screenW2, player2.getHearts(), player2.getMaxHearts(), player2.getHeartHP(), player2.getHeartHpMax());
+                    p2HUD.draw(graphicsHandler, screenW2, player2.getHearts(), player2.getMaxHearts(),
+                            player2.getHeartHP(), player2.getHeartHpMax());
 
                 if (p1HealthBar != null) {
                     int x = 12;

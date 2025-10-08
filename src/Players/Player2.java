@@ -100,7 +100,8 @@ public class Player2 extends MapEntity {
             float fbSpeed = 4.0f;
             int fbFrames = 60;
             Utils.Point offset = getFireballSpawnOffset();
-            float fbX = this.x + (facingDirection == Direction.RIGHT ? 50 : 50);;
+            float fbX = this.x + (facingDirection == Direction.RIGHT ? 50 : 50);
+            ;
             float fbY = this.y + offset.y;
             float speed = facingDirection == Direction.RIGHT ? fbSpeed : -fbSpeed;
             fireballs.add(new Fireball(new Point(fbX, fbY), speed, fbFrames));
@@ -339,7 +340,7 @@ public class Player2 extends MapEntity {
     public void draw(GraphicsHandler graphicsHandler) {
         super.draw(graphicsHandler);
 
-        //drawCustomHitbox(graphicsHandler, new Color(0, 0, 255, 100));
+        // drawCustomHitbox(graphicsHandler, new Color(0, 0, 255, 100));
 
         for (Fireball fb : fireballs) {
             fb.draw(graphicsHandler);
@@ -367,8 +368,39 @@ public class Player2 extends MapEntity {
         return hearts <= 0 && heartHP <= 0;
     }
 
+    // Method to get punch hitbox bounds for collision detection
+    public Rectangle getPunchHitbox() {
+        if (playerState != PlayerState.PUNCHING) {
+            return null;
+        }
+
+        Rectangle bounds = getBounds();
+        float punchRange = 40f;
+        float punchHeight = 30f;
+
+        float punchX, punchY;
+
+        if (facingDirection == Direction.RIGHT) {
+            punchX = bounds.getX() + bounds.getWidth();
+        } else {
+            punchX = bounds.getX() - punchRange;
+        }
+
+        punchY = bounds.getY() + (bounds.getHeight() - punchHeight) / 2;
+
+        return new Rectangle(punchX, punchY, (int) punchRange, (int) punchHeight);
+    }
+
     public java.util.List<Fireball> getFireballs() {
         return this.fireballs;
+    }
+
+    public PlayerState getPlayerState() {
+        return playerState;
+    }
+
+    public int getPunchDuration() {
+        return punchDuration;
     }
 
     public void takeDamage(int amount) {
@@ -377,43 +409,17 @@ public class Player2 extends MapEntity {
         if (invulnFrames > 0)
             return; // ignore while invulnerable
 
-        int remaining = amount;
+        // No carryover between hearts
+        heartHP -= amount;
 
-        while (remaining > 0 && (hearts > 0 || heartHP > 0)) {
-            if (heartHP <= 0) {
-                if (hearts > 1) {
-                    hearts--;
-                    heartHP = HEART_HP;
-                } else if (hearts == 1) {
-                    hearts = 0;
-                    heartHP = 0;
-                    break;
-                } else {
-                    break;
-                }
-            }
-
-            if (remaining >= heartHP) {
-                remaining -= heartHP;
-                heartHP = 0;
-                if (hearts > 1) {
-                    hearts--;
-                    heartHP = HEART_HP;
-                } else if (hearts == 1) {
-                    hearts = 0;
-                    heartHP = 0;
-                    break;
-                }
-            } else {
-                heartHP -= remaining;
-                remaining = 0;
-            }
-
-            if (hearts <= 0 && heartHP <= 0) {
-                heartHP = 0;
-                hearts = 0;
-                break;
-            }
+        
+        if (heartHP <= 0 && hearts > 1) {
+            hearts--;
+            heartHP = HEART_HP;
+        } else if (heartHP <= 0 && hearts == 1) {
+            // Last heart consumed
+            hearts = 0;
+            heartHP = 0;
         }
 
         if (hearts < 0)
@@ -421,20 +427,20 @@ public class Player2 extends MapEntity {
         if (heartHP < 0)
             heartHP = 0;
 
-        invulnFrames = 30; // short invulnerability after hit
+        invulnFrames = 30;
     }
 
     // private void drawCustomHitbox(GraphicsHandler graphicsHandler, Color color) {
-    //     Rectangle bounds = getBounds();
-    //     int hitboxHeight = bounds.getHeight() + 40;
-    //     int hitboxY = Math.round(bounds.getY()) - 125;
+    // Rectangle bounds = getBounds();
+    // int hitboxHeight = bounds.getHeight() + 40;
+    // int hitboxY = Math.round(bounds.getY()) - 125;
 
-    //     graphicsHandler.drawFilledRectangle(
-    //             Math.round(bounds.getX()) + 20,
-    //             hitboxY,
-    //             bounds.getWidth(),
-    //             hitboxHeight,
-    //             color);
+    // graphicsHandler.drawFilledRectangle(
+    // Math.round(bounds.getX()) + 20,
+    // hitboxY,
+    // bounds.getWidth(),
+    // hitboxHeight,
+    // color);
     // }
 
     // Method to get custom hitbox bounds for collision detection

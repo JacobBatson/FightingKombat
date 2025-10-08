@@ -41,13 +41,13 @@ public class ControlsScreen extends Screen {
         // Player 1 lines (W = jump; A/S/D move; E special; attack not assigned)
         p1Move    = new SpriteFont("Move:    A / S / D", 60, 150, "Arial", 24, Color.WHITE);
         p1Jump    = new SpriteFont("Jump:    W",          60, 180, "Arial", 24, Color.WHITE);
-        p1Attack  = new SpriteFont("Attack:  Not Assigned", 60, 210, "Arial", 24, Color.WHITE);
+        p1Attack  = new SpriteFont("Attack:  F", 60, 210, "Arial", 24, Color.WHITE);
         p1Special = new SpriteFont("Special: E",          60, 240, "Arial", 24, Color.WHITE);
 
         // Player 2 lines (Up = jump; Left/Down/Right move; Enter special; attack not assigned)
         p2Move    = new SpriteFont("Move:    Left / Down / Right Arrows", 420, 150, "Arial", 24, Color.WHITE);
         p2Jump    = new SpriteFont("Jump:    Up Arrow",                   420, 180, "Arial", 24, Color.WHITE);
-        p2Attack  = new SpriteFont("Attack:  Not Assigned",               420, 210, "Arial", 24, Color.WHITE);
+        p2Attack  = new SpriteFont("Attack:  L",               420, 210, "Arial", 24, Color.WHITE);
         p2Special = new SpriteFont("Special: Enter",                      420, 240, "Arial", 24, Color.WHITE);
 
         // Footer / hint
