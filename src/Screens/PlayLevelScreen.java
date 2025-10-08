@@ -148,14 +148,23 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 if (timerSeconds <= 0) {
                     showGameOver = true;
                     playLevelScreenState = PlayLevelScreenState.GAME_OVER;
+                    // set on-screen message for timeout
+                    String timeoutText = "Time's Up!";
+                    int centerXTimeout = ScreenManager.getScreenWidth() / 2;
+                    gameOverFont.setText(timeoutText);
+                    gameOverFont.setX(centerXTimeout - timeoutText.length() * 16);
                 }
 
                 // Check for KO (player out of hearts and HP)
                 if (player1.isKO() || player2.isKO()) {
                     String winner = player1.isKO() ? "Player 2" : "Player 1";
-                    System.out.println("Game Over - Winner: " + winner);
+                    String winnerText = "Game Winner: " + winner;
+                    System.out.println(winnerText);
                     playLevelScreenState = PlayLevelScreenState.GAME_OVER;
                     gameOverFrames = 0;
+                    int centerX = ScreenManager.getScreenWidth() / 2;
+                    gameOverFont.setText(winnerText);
+                    gameOverFont.setX(centerX - winnerText.length() * 18);
                 }
                 break;
 
