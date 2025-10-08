@@ -56,7 +56,7 @@ public class Player2 extends MapEntity {
     protected Key JUMP_KEY = Key.UP;
     protected Key MOVE_LEFT_KEY = Key.LEFT;
     protected Key MOVE_RIGHT_KEY = Key.RIGHT;
-    protected Key PUNCH_KEY = Key.SPACE;
+    protected Key PUNCH_KEY = Key.L;
     // Punch support
     protected int punchDuration = 0;
     protected final int MAX_PUNCH_DURATION = 20; // frames
@@ -242,6 +242,13 @@ public class Player2 extends MapEntity {
         else if (previousAirGroundState == AirGroundState.AIR && airGroundState == AirGroundState.GROUND) {
             playerState = PlayerState.STANDING;
         }
+        // If punch key is pressed while jumping, enter PUNCHING state
+        if (Keyboard.isKeyDown(PUNCH_KEY) && !keyLocker.isKeyLocked(PUNCH_KEY)) {
+            keyLocker.lockKey(PUNCH_KEY);
+            previousNonPunchState = PlayerState.JUMPING;
+            playerState = PlayerState.PUNCHING;
+            punchDuration = 0;
+        }
     }
 
     protected void playerPunching() {
@@ -272,6 +279,9 @@ public class Player2 extends MapEntity {
         if (Keyboard.isKeyUp(JUMP_KEY)) {
             keyLocker.unlockKey(JUMP_KEY);
         }
+        if (Keyboard.isKeyUp(PUNCH_KEY)) {
+            keyLocker.unlockKey(PUNCH_KEY);
+        }
     }
 
     protected void handlePlayerAnimation() {
@@ -285,6 +295,8 @@ public class Player2 extends MapEntity {
             } else {
                 this.currentAnimationName = facingDirection == Direction.RIGHT ? "FALL_RIGHT" : "FALL_LEFT";
             }
+        } else if (playerState == PlayerState.PUNCHING) {
+            this.currentAnimationName = facingDirection == Direction.RIGHT ? "PUNCH_RIGHT" : "PUNCH_LEFT";
         }
     }
 
@@ -422,21 +434,25 @@ public class Player2 extends MapEntity {
     public HashMap<String, Frame[]> loadAnimations(SpriteSheet spriteSheet) {
         return new HashMap<String, Frame[]>() {
             {
-                put("STAND_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0, 4, 30, false));
+                put("STAND_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0, 3, 30, false));
 
-                put("STAND_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0, 4, 30, true));
+                put("STAND_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0, 3, 30, true));
 
-                put("WALK_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 0, 4, 30, false));
+                put("WALK_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 1, 0, 3, 30, false));
 
-                put("WALK_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 0, 4, 30, true));
+                put("WALK_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 1, 0, 3, 30, true));
 
-                put("JUMP_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 3, 0, 4, 20, false));
+                put("JUMP_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 0, 3, 20, false));
 
-                put("JUMP_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 3, 0, 4, 20, true));
+                put("JUMP_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 0, 3, 20, true));
 
-                put("FALL_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 4, 20, false));
+                put("FALL_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 3, 0, 3, 20, false));
 
-                put("FALL_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 4, 20, true));
+                put("FALL_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 3, 0, 3, 20, true));
+
+                put("PUNCH_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 1, 15, false));
+
+                put("PUNCH_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 1, 15, true));
             }
         };
     }
