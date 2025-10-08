@@ -14,8 +14,6 @@ import Level.PlayerState;
 import Utils.AirGroundState;
 import Utils.Direction;
 
-import java.awt.Color;
-
 import java.util.HashMap;
 import GameObject.Rectangle;
 
@@ -97,13 +95,15 @@ public class Player1 extends MapEntity {
         handlePlayerAnimation();
         updateLockedKeys();
 
-        // Fireball firing
+        // Fireball firing (spawn relative to player bounds so it aligns across maps)
         if (Keyboard.isKeyDown(FIREBALL_KEY) && !keyLocker.isKeyLocked(FIREBALL_KEY)) {
             keyLocker.lockKey(FIREBALL_KEY);
             float fbSpeed = 4.0f;
             int fbFrames = 60;
-            float fbX = this.x + (facingDirection == Direction.RIGHT ? 50 : 50); // spawn at edge
-            float fbY = this.y + -60; // roughly center vertically
+            // compute spawn offset from current animation / facing so splash aligns with hand
+            Utils.Point offset = getFireballSpawnOffset();
+            float fbX = this.x + (facingDirection == Direction.RIGHT ? 50 : 50);
+            float fbY = this.y + offset.y;
             float speed = facingDirection == Direction.RIGHT ? fbSpeed : -fbSpeed;
             fireballs.add(new Fireball(new Point(fbX, fbY), speed, fbFrames));
         }
@@ -128,6 +128,22 @@ public class Player1 extends MapEntity {
 
         // Update animation
         super.update();
+    }
+
+    // Return a spawn offset (relative to this.x,this.y) for where a fireball should originate.
+    private Utils.Point getFireballSpawnOffset() {
+        float dx = facingDirection == Direction.RIGHT ? this.getWidth() - 8f : -8f;
+        float dy = (this.getHeight() / 2f) - 8f;
+        String anim = this.currentAnimationName == null ? "" : this.currentAnimationName;
+        // if punching, spawn slightly higher (near fist)
+        if (anim.contains("PUNCH")) {
+            dy -= 6f;
+        }
+        // if jumping, raise spawn point more
+        if (anim.contains("JUMP") || anim.contains("FALL")) {
+            dy -= 10f;
+        }
+        return new Utils.Point(Math.round(dx), Math.round(dy));
     }
 
     protected void applyGravity() {
@@ -371,9 +387,15 @@ public class Player1 extends MapEntity {
 
         while (remaining > 0 && (hearts > 0 || heartHP > 0)) {
             if (heartHP <= 0) {
-                if (hearts > 0) {
+                if (hearts > 1) {
+                    // consume one heart and reset HP to full for the next heart
                     hearts--;
                     heartHP = HEART_HP;
+                } else if (hearts == 1) {
+                    // consuming the last heart -> player will have 0 hearts and 0 HP
+                    hearts = 0;
+                    heartHP = 0;
+                    break;
                 } else {
                     break;
                 }
@@ -382,9 +404,14 @@ public class Player1 extends MapEntity {
             if (remaining >= heartHP) {
                 remaining -= heartHP;
                 heartHP = 0;
-                if (hearts > 0) {
+                if (hearts > 1) {
                     hearts--;
                     heartHP = HEART_HP;
+                } else if (hearts == 1) {
+                    // consumed last heart
+                    hearts = 0;
+                    heartHP = 0;
+                    break;
                 }
             } else {
                 heartHP -= remaining;
@@ -424,11 +451,13 @@ public class Player1 extends MapEntity {
     // Method to get custom hitbox bounds for collision detection
     public Rectangle getCustomHitboxBounds() {
         Rectangle bounds = getBounds();
-        int hitboxHeight = bounds.getHeight() + 40;
-        int hitboxY = Math.round(bounds.getY()) - 125;
+        // Make hitbox slightly taller and centered on the player; avoid large negative offsets
+        int extra = 20;
+        int hitboxHeight = bounds.getHeight() + extra;
+        int hitboxY = Math.round(bounds.getY()) - (extra / 2);
 
         return new Rectangle(
-                Math.round(bounds.getX()) + 20,
+                Math.round(bounds.getX()) + 10,
                 hitboxY,
                 bounds.getWidth(),
                 hitboxHeight);

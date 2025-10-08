@@ -6,7 +6,7 @@ import Game.GameState;
 import Game.ScreenCoordinator;
 import Level.Map;
 import Level.PlayerListener;
-import Maps.TestMap;
+import Maps.Map1;
 import Players.Player1; // WASD/E controls
 import Players.Player2; // Arrow/Enter controls
                         // ...existing code...
@@ -45,7 +45,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     @Override
     public void initialize() {
         // Map
-        this.map = new TestMap();
+        this.map = new Map1();
 
         // Read both picks from the selection screen
         String p1Pick = CharacterSelectionScreen.getP1SelectedCharacter();
@@ -148,6 +148,23 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 if (timerSeconds <= 0) {
                     showGameOver = true;
                     playLevelScreenState = PlayLevelScreenState.GAME_OVER;
+                    // set on-screen message for timeout
+                    String timeoutText = "Time's Up!";
+                    int centerXTimeout = ScreenManager.getScreenWidth() / 2;
+                    gameOverFont.setText(timeoutText);
+                    gameOverFont.setX(centerXTimeout - timeoutText.length() * 16);
+                }
+
+                // Check for KO (player out of hearts and HP)
+                if (player1.isKO() || player2.isKO()) {
+                    String winner = player1.isKO() ? "Player 2" : "Player 1";
+                    String winnerText = "Game Winner: " + winner;
+                    System.out.println(winnerText);
+                    playLevelScreenState = PlayLevelScreenState.GAME_OVER;
+                    gameOverFrames = 0;
+                    int centerX = ScreenManager.getScreenWidth() / 2;
+                    gameOverFont.setText(winnerText);
+                    gameOverFont.setX(centerX - winnerText.length() * 18);
                 }
                 break;
 
@@ -191,9 +208,9 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 timerFont.draw(graphicsHandler);
                 int screenW = ScreenManager.getScreenWidth();
                 if (p1HUD != null)
-                    p1HUD.draw(graphicsHandler, screenW, player1.getHearts(), player1.getMaxHearts());
+                    p1HUD.draw(graphicsHandler, screenW, player1.getHearts(), player1.getMaxHearts(), player1.getHeartHP(), player1.getHeartHpMax());
                 if (p2HUD != null)
-                    p2HUD.draw(graphicsHandler, screenW, player2.getHearts(), player2.getMaxHearts());
+                    p2HUD.draw(graphicsHandler, screenW, player2.getHearts(), player2.getMaxHearts(), player2.getHeartHP(), player2.getHeartHpMax());
 
                 // Draw health bars under each player's hearts HUD
                 if (p1HealthBar != null) {
@@ -227,9 +244,9 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 gameOverFont.draw(graphicsHandler);
                 int screenW2 = ScreenManager.getScreenWidth();
                 if (p1HUD != null)
-                    p1HUD.draw(graphicsHandler, screenW2, player1.getHearts(), player1.getMaxHearts());
+                    p1HUD.draw(graphicsHandler, screenW2, player1.getHearts(), player1.getMaxHearts(), player1.getHeartHP(), player1.getHeartHpMax());
                 if (p2HUD != null)
-                    p2HUD.draw(graphicsHandler, screenW2, player2.getHearts(), player2.getMaxHearts());
+                    p2HUD.draw(graphicsHandler, screenW2, player2.getHearts(), player2.getMaxHearts(), player2.getHeartHP(), player2.getHeartHpMax());
 
                 if (p1HealthBar != null) {
                     int x = 12;
