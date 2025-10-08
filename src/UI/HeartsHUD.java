@@ -54,28 +54,13 @@ public class HeartsHUD {
         this.heartImage = img;
     }
 
-    /**
-     * Draw hearts on screen.
-     *
-     * @param g          GraphicsHandler to draw with
-     * @param screenWidth current screen width (used for RIGHT anchor alignment)
-     * @param hearts     number of filled hearts to draw
-     * @param maxHearts  number of heart slots to draw
-     */
+
     public void draw(GraphicsHandler g, int screenWidth, int hearts, int maxHearts) {
         // default: treat all partial hearts as full (backwards-compatible)
         draw(g, screenWidth, hearts, maxHearts, -1, -1);
     }
 
-    /**
-     * Draw hearts with knowledge of the current partial heart HP.
-     * @param g graphics handler
-     * @param screenWidth screen width for right anchor
-     * @param hearts number of full hearts
-     * @param maxHearts total heart slots
-     * @param currentHeartHP current HP within the active (last) heart, or -1 if unknown
-     * @param heartHPMax maximum HP per heart, or -1 if unknown
-     */
+
     public void draw(GraphicsHandler g, int screenWidth, int hearts, int maxHearts, int currentHeartHP, int heartHPMax) {
         if (maxHearts <= 0) return;
 
@@ -88,28 +73,42 @@ public class HeartsHUD {
             startX = screenWidth - marginX - heartWidth - (maxHearts - 1) * slotStride;
         }
 
+        // Determine filled vs partial mapping.
+        int fullSlots = hearts;
+        int partialIndex = -1;
+        boolean hasPartial = false;
+        if (currentHeartHP >= 0 && heartHPMax > 0) {
+            if (currentHeartHP < heartHPMax) {
+                // active heart is partial
+                hasPartial = true;
+                partialIndex = Math.max(0, hearts - 1);
+                fullSlots = Math.max(0, hearts - 1);
+            } else {
+                // active heart is full
+                hasPartial = false;
+                partialIndex = -1;
+                fullSlots = hearts;
+            }
+        }
+
         for (int i = 0; i < maxHearts; i++) {
             int x = startX + i * slotStride;
-            boolean fullyFilled = i < hearts; // full stocks
-            boolean isCurrentPartial = (i == hearts) && (currentHeartHP >= 0 && heartHPMax > 0);
+            boolean fullyFilled = i < fullSlots; // truly full stocks
+            boolean isCurrentPartial = hasPartial && i == partialIndex;
 
             if (heartImage != null) {
                 if (fullyFilled) {
                     g.drawImage(heartImage, x, posY, heartWidth, heartHeight);
                 } else if (isCurrentPartial) {
-                    // draw heart image but darken if empty
                     if (currentHeartHP <= 0) {
-                        // draw a black rectangle to indicate empty
                         g.drawFilledRectangle(x, posY, heartWidth, heartHeight, Color.BLACK);
                     } else {
                         g.drawImage(heartImage, x, posY, heartWidth, heartHeight);
                     }
                 } else {
-                    // empty slot
                     g.drawFilledRectangle(x, posY, heartWidth, heartHeight, Color.BLACK);
                 }
             } else {
-                // fallback: draw red for full, black for empty, gray for unknown partial
                 Color fill;
                 if (fullyFilled) fill = Color.RED;
                 else if (isCurrentPartial) fill = currentHeartHP <= 0 ? Color.BLACK : Color.LIGHT_GRAY;

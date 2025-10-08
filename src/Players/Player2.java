@@ -369,9 +369,13 @@ public class Player2 extends MapEntity {
 
         while (remaining > 0 && (hearts > 0 || heartHP > 0)) {
             if (heartHP <= 0) {
-                if (hearts > 0) {
+                if (hearts > 1) {
                     hearts--;
                     heartHP = HEART_HP;
+                } else if (hearts == 1) {
+                    hearts = 0;
+                    heartHP = 0;
+                    break;
                 } else {
                     break;
                 }
@@ -380,9 +384,13 @@ public class Player2 extends MapEntity {
             if (remaining >= heartHP) {
                 remaining -= heartHP;
                 heartHP = 0;
-                if (hearts > 0) {
+                if (hearts > 1) {
                     hearts--;
                     heartHP = HEART_HP;
+                } else if (hearts == 1) {
+                    hearts = 0;
+                    heartHP = 0;
+                    break;
                 }
             } else {
                 heartHP -= remaining;

@@ -387,9 +387,15 @@ public class Player1 extends MapEntity {
 
         while (remaining > 0 && (hearts > 0 || heartHP > 0)) {
             if (heartHP <= 0) {
-                if (hearts > 0) {
+                if (hearts > 1) {
+                    // consume one heart and reset HP to full for the next heart
                     hearts--;
                     heartHP = HEART_HP;
+                } else if (hearts == 1) {
+                    // consuming the last heart -> player will have 0 hearts and 0 HP
+                    hearts = 0;
+                    heartHP = 0;
+                    break;
                 } else {
                     break;
                 }
@@ -398,9 +404,14 @@ public class Player1 extends MapEntity {
             if (remaining >= heartHP) {
                 remaining -= heartHP;
                 heartHP = 0;
-                if (hearts > 0) {
+                if (hearts > 1) {
                     hearts--;
                     heartHP = HEART_HP;
+                } else if (hearts == 1) {
+                    // consumed last heart
+                    hearts = 0;
+                    heartHP = 0;
+                    break;
                 }
             } else {
                 heartHP -= remaining;
