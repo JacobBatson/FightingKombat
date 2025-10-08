@@ -102,7 +102,7 @@ public class Player1 extends MapEntity {
             int fbFrames = 60;
             // compute spawn offset from current animation / facing so splash aligns with hand
             Utils.Point offset = getFireballSpawnOffset();
-            float fbX = this.x + offset.x;
+            float fbX = this.x + (facingDirection == Direction.RIGHT ? 50 : 50);
             float fbY = this.y + offset.y;
             float speed = facingDirection == Direction.RIGHT ? fbSpeed : -fbSpeed;
             fireballs.add(new Fireball(new Point(fbX, fbY), speed, fbFrames));
