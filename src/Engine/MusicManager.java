@@ -1,9 +1,9 @@
 package Engine;
 
-import javax.sound.sampled.*;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import javax.sound.sampled.*;
 
 public class MusicManager {
     private static MusicManager instance;
@@ -27,7 +27,7 @@ public class MusicManager {
     }
 
     private void initializeScreenMusic() {
-        String defaultMusic = "Resources/Baby Keem, Kendrick Lamar - family ties (Lyrics).wav";
+        String defaultMusic = "Resources/Baby Keem, Kendrick Lamar - family ties (Clean - Lyrics) (2).wav";
 
         screenMusicMap.put("MENU", defaultMusic);
         screenMusicMap.put("CHARACTER_SELECT", defaultMusic);
