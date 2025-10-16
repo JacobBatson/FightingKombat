@@ -168,13 +168,26 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     lastTimerUpdate = now;
                 }
                 if (timerSeconds <= 0) {
+                    // Determine winner by comparing total remaining health for each player.
+                    // Total health = (full hearts * per-heart max) + current heart HP.
+                    int p1Total = player1.getHearts() * player1.getHeartHpMax() + player1.getHeartHP();
+                    int p2Total = player2.getHearts() * player2.getHeartHpMax() + player2.getHeartHP();
+
+                    String timeoutText;
+                    if (p1Total > p2Total) {
+                        timeoutText = "Game Winner: Player 1";
+                    } else if (p2Total > p1Total) {
+                        timeoutText = "Game Winner: Player 2";
+                    } else {
+                        timeoutText = "Draw!";
+                    }
+
                     showGameOver = true;
                     playLevelScreenState = PlayLevelScreenState.GAME_OVER;
-                    // set on-screen message for timeout
-                    String timeoutText = "Time's Up!";
                     int centerXTimeout = ScreenManager.getScreenWidth() / 2;
                     gameOverFont.setText(timeoutText);
-                    gameOverFont.setX(centerXTimeout - timeoutText.length() * 16);
+                    // approximate centering using characters; keep existing heuristic
+                    gameOverFont.setX(centerXTimeout - timeoutText.length() * 18);
                 }
 
                 // Check for KO (player out of hearts and HP)
