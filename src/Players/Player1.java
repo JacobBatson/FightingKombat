@@ -17,6 +17,9 @@ import Utils.Direction;
 import java.util.HashMap;
 import GameObject.Rectangle;
 
+// NEW
+import Enemies.WaterShot; // NEW: projectile that draws with "Water droplet.png"
+
 // Player1 - Uses WASD controls for movement
 public class Player1 extends MapEntity {
     // Fireball support
@@ -61,6 +64,9 @@ public class Player1 extends MapEntity {
     protected Key MOVE_LEFT_KEY = Key.A;
     protected Key MOVE_RIGHT_KEY = Key.D;
 
+    // NEW: remember which sprite path this player was created with (to detect "water" skin)
+    private String characterSpritePathUsed; // NEW
+
     public Player1(float x, float y, String characterSpritePath, int spriteWidth, int spriteHeight) {
         super(x, y, new SpriteSheet(ImageLoader.load(characterSpritePath), spriteWidth, spriteHeight), "STAND_RIGHT");
         facingDirection = Direction.RIGHT;
@@ -68,6 +74,8 @@ public class Player1 extends MapEntity {
         previousAirGroundState = airGroundState;
         playerState = PlayerState.STANDING;
         previousPlayerState = playerState;
+
+        this.characterSpritePathUsed = characterSpritePath; // NEW
     }
 
     public Player1(float x, float y) {
@@ -107,6 +115,12 @@ public class Player1 extends MapEntity {
             float fbY = this.y + offset.y;
             float speed = facingDirection == Direction.RIGHT ? fbSpeed : -fbSpeed;
             fireballs.add(new Fireball(new Point(fbX, fbY), speed, fbFrames));
+
+            // NEW: if this player's sprite path indicates a water skin, swap to WaterShot
+            if (isWaterSkin()) { // NEW
+                fireballs.remove(fireballs.size() - 1); // NEW: remove the Fireball we just added
+                fireballs.add(new WaterShot(new Point(fbX, fbY), speed, fbFrames)); 
+            } // NEW
         }
         if (Keyboard.isKeyUp(FIREBALL_KEY)) {
             keyLocker.unlockKey(FIREBALL_KEY);
@@ -470,6 +484,13 @@ public class Player1 extends MapEntity {
                 bounds.getWidth(),
                 hitboxHeight);
     }
+
+    // NEW: detect if this player's skin is the water one (filename contains "water")
+    private boolean isWaterSkin() { // NEW
+        if (characterSpritePathUsed == null) return false; // NEW
+        String p = characterSpritePathUsed.toLowerCase();  // NEW
+        return p.contains("water");                        // NEW (covers "Water droplet.png")
+    } // NEW
 
     @Override
     public HashMap<String, Frame[]> loadAnimations(SpriteSheet spriteSheet) {

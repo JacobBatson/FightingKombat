@@ -17,6 +17,9 @@ import Utils.Direction;
 import java.util.HashMap;
 import GameObject.Rectangle;
 
+// NEW
+import Enemies.WaterShot; // NEW: water projectile that uses your droplet image
+
 // Player2 - Uses arrow key controls for movement
 public class Player2 extends MapEntity {
     // Fireball support
@@ -60,6 +63,9 @@ public class Player2 extends MapEntity {
     protected final int MAX_PUNCH_DURATION = 20; // frames
     protected PlayerState previousNonPunchState = PlayerState.STANDING;
 
+    // NEW: remember which sprite path this player was created with (to detect "water" skin)
+    private String characterSpritePathUsed; // NEW
+
     public Player2(float x, float y, String characterSpritePath, int spriteWidth, int spriteHeight) {
         super(x, y, new SpriteSheet(ImageLoader.load(characterSpritePath), spriteWidth, spriteHeight), "STAND_RIGHT");
         facingDirection = Direction.RIGHT;
@@ -67,6 +73,8 @@ public class Player2 extends MapEntity {
         previousAirGroundState = airGroundState;
         playerState = PlayerState.STANDING;
         previousPlayerState = playerState;
+
+        this.characterSpritePathUsed = characterSpritePath; // NEW
     }
 
     public Player2(float x, float y) {
@@ -101,10 +109,15 @@ public class Player2 extends MapEntity {
             int fbFrames = 60;
             Utils.Point offset = getFireballSpawnOffset();
             float fbX = this.x + (facingDirection == Direction.RIGHT ? 50 : 50);
-            ;
             float fbY = this.y + offset.y;
             float speed = facingDirection == Direction.RIGHT ? fbSpeed : -fbSpeed;
             fireballs.add(new Fireball(new Point(fbX, fbY), speed, fbFrames));
+
+            // NEW: if this player's sprite path indicates a water skin, swap to WaterShot
+            if (isWaterSkin()) { // NEW
+                fireballs.remove(fireballs.size() - 1); // NEW: remove the Fireball we just added
+                fireballs.add(new WaterShot(new Point(fbX, fbY), speed, fbFrames)); // NEW: add water projectile
+            } // NEW
         }
         if (Keyboard.isKeyUp(FIREBALL_KEY)) {
             keyLocker.unlockKey(FIREBALL_KEY);
@@ -412,7 +425,6 @@ public class Player2 extends MapEntity {
         // No carryover between hearts
         heartHP -= amount;
 
-        
         if (heartHP <= 0 && hearts > 1) {
             hearts--;
             heartHP = HEART_HP;
@@ -456,6 +468,13 @@ public class Player2 extends MapEntity {
                 bounds.getWidth(),
                 hitboxHeight);
     }
+
+    // NEW: detect if this player's skin is the water one (filename contains "water")
+    private boolean isWaterSkin() { // NEW
+        if (characterSpritePathUsed == null) return false; // NEW
+        String p = characterSpritePathUsed.toLowerCase();  // NEW
+        return p.contains("water");                        // NEW (covers "Water_Sprite.png", etc.)
+    } // NEW
 
     @Override
     public HashMap<String, Frame[]> loadAnimations(SpriteSheet spriteSheet) {
