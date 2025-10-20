@@ -31,6 +31,11 @@ public class ScreenManager {
         currentScreen.draw(graphicsHandler);
     }
 
+    // expose current screen for callers that need to query runtime state
+    public Screen getCurrentScreen() {
+        return currentScreen;
+    }
+
     // gets width of currentScreen -- can be called from anywhere in an application
     public static int getScreenWidth() {
         return screenBounds.getWidth();
