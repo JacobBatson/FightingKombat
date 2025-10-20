@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Map1 extends Map {
 
     public Map1() {
-        super("map4.txt", new CommonTileset());
+        super("test_map.txt", new CommonTileset());
         // default player start position left as (0,0) or set via getMapTile when needed
     }
 

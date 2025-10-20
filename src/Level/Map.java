@@ -103,6 +103,8 @@ public abstract class Map {
 
     // reads in a map file to create the map's tilemap
     private void loadMapFile() {
+        final int EMPTY_TILE = 18; // '.' maps to this tile id
+
         Scanner fileInput;
         try {
             // open map file that is located in the MAP_FILES_PATH directory
@@ -129,19 +131,52 @@ public abstract class Map {
         this.mapTiles = new MapTile[this.height * this.width];
         fileInput.nextLine();
 
-        // read in each tile index from the map file, use the defined tileset to get the associated MapTile to that tileset, and place it in the array
+        // read each row; support either dot rows or numeric rows
         for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                int tileIndex = fileInput.nextInt();
-                int xLocation = j * tileset.getScaledSpriteWidth();
-                int yLocation = i * tileset.getScaledSpriteHeight();
-                MapTile tile = tileset.getTile(tileIndex).build(xLocation, yLocation);
-                tile.setMap(this);
-                setMapTile(j, i, tile);
+            // read a non-empty line
+            String line = "";
+            while (line.isEmpty() && fileInput.hasNextLine()) {
+                line = fileInput.nextLine().trim();
+            }
 
-                if (tile.isAnimated()) {
-                    animatedMapTiles.add(tile);
+            if (line.contains(".")) {
+                // DOT ROW: treat each char, '.' => EMPTY_TILE
+                if (line.length() < width) {
+                    StringBuilder sb = new StringBuilder(line);
+                    while (sb.length() < width) sb.append('.');
+                    line = sb.toString();
+                } else if (line.length() > width) {
+                    line = line.substring(0, width);
                 }
+
+                for (int j = 0; j < width; j++) {
+                    int tileIndex = (line.charAt(j) == '.') ? EMPTY_TILE : EMPTY_TILE;
+                    int xLocation = j * tileset.getScaledSpriteWidth();
+                    int yLocation = i * tileset.getScaledSpriteHeight();
+                    MapTile tile = tileset.getTile(tileIndex).build(xLocation, yLocation);
+                    tile.setMap(this);
+                    setMapTile(j, i, tile);
+
+                    if (tile.isAnimated()) {
+                        animatedMapTiles.add(tile);
+                    }
+                }
+            } else {
+                // NUMERIC ROW: space-separated ints
+                Scanner row = new Scanner(line);
+                for (int j = 0; j < width; j++) {
+                    int tileIndex = row.hasNextInt() ? row.nextInt() : EMPTY_TILE;
+                    int xLocation = j * tileset.getScaledSpriteWidth();
+                    int yLocation = i * tileset.getScaledSpriteHeight();
+                    MapTile tile = tileset.getTile(tileIndex).build(xLocation, yLocation);
+                    tile.setMap(this);
+                    setMapTile(j, i, tile);
+
+                    if (tile.isAnimated()) {
+                        animatedMapTiles.add(tile);
+                    }
+                }
+                row.close();
             }
         }
 

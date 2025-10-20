@@ -7,6 +7,7 @@ import Game.ScreenCoordinator;
 import Level.Map;
 import Level.PlayerListener;
 import Maps.Map1;
+import Maps.Map2;
 import Players.Player1; // WASD/E controls
 import Players.Player2; // Arrow/Enter controls
                         // ...existing code...
@@ -45,7 +46,15 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     @Override
     public void initialize() {
         // Map
-        this.map = new Map1();
+        String key = screenCoordinator.getSelectedMapKey();
+        if ("WATER".equals(key)) {
+            this.map = new Map2();
+        } else {
+            this.map = new Map1();
+            map.getCamera().moveY(100);
+        }
+        // < bring the camera down to the platforms >>>
+   
 
         // Read both picks from the selection screen
         String p1Pick = CharacterSelectionScreen.getP1SelectedCharacter();
