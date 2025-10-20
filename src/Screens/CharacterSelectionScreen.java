@@ -211,7 +211,7 @@ public class CharacterSelectionScreen extends Screen {
                     p2SelectedIndex = characterSelected;
                     p2SelectedCharacter = characterNames.get(characterSelected);
                     System.out.println("[Select] P2 chose: " + p2SelectedCharacter);
-                    screenCoordinator.setGameState(GameState.LEVEL);
+                    screenCoordinator.setGameState(GameState.MAP_SELECT);
                     return;
                 }
             }

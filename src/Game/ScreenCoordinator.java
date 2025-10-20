@@ -9,6 +9,7 @@ import Screens.MenuScreen;
 import Screens.ControlsScreen;
 import Screens.PlayLevelScreen;
 import Screens.CharacterSelectionScreen;
+import Screens.MapSelectionScreen;
 
 public class ScreenCoordinator extends Screen {
     // currently shown Screen
@@ -20,6 +21,10 @@ public class ScreenCoordinator extends Screen {
 
     // Music manager for handling background music
     protected MusicManager musicManager;
+
+    private String selectedMapKey = "FIRE";
+    public void setSelectedMapKey(String key) { this.selectedMapKey = key; }
+    public String getSelectedMapKey() { return selectedMapKey; }
 
     public GameState getGameState() {
         return gameState;
@@ -58,16 +63,19 @@ public class ScreenCoordinator extends Screen {
                         currentScreen = new CharacterSelectionScreen(this);
                         musicManager.playMusicForScreen("CHARACTER_SELECT");
                         break;
+                    case MAP_SELECT:
+                        currentScreen = new MapSelectionScreen(this);
+                        musicManager.playMusicForScreen("CHARACTER_SELECT");
+                        break;
                     case LEVEL:
                         currentScreen = new PlayLevelScreen(this);
-                        // Play fighting music for the fighting screen
                         musicManager.playMusicForScreen("LEVEL");
                         break;
                     case CREDITS:
                         currentScreen = new CreditsScreen(this);
                         musicManager.playMusicForScreen("CREDITS");
                         break;
-                    case Controls: // <--- new case
+                    case Controls:
                         currentScreen = new ControlsScreen(this);
                         musicManager.playMusicForScreen("CONTROLS");
                         break;
