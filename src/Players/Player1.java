@@ -98,7 +98,7 @@ public class Player1 extends MapEntity {
             float fbSpeed = 4.0f;
             int fbFrames = 60;
             Utils.Point offset = getFireballSpawnOffset();
-            float fbX = this.x + offset.x;
+            float fbX = this.x + (facingDirection == Direction.RIGHT ? 50 : 50);
             float fbY = this.y + offset.y;
             float speed = (facingDirection == Direction.RIGHT) ? fbSpeed : -fbSpeed;
 
