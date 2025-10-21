@@ -434,4 +434,107 @@ public abstract class Map {
 
     public int getEndBoundX() { return endBoundX; }
     public int getEndBoundY() { return endBoundY; }
+
+    // Returns a random safe spawn position (pixel coordinates) on a passable tile.
+    // If none found, falls back to player start position.
+    public Utils.Point getRandomSafeSpawnPosition() {
+        java.util.Random rand = new java.util.Random();
+        if (mapTiles == null || mapTiles.length == 0) {
+            return playerStartPosition;
+        }
+
+        // Try a reasonable number of times to find a passable tile
+        for (int attempts = 0; attempts < 200; attempts++) {
+            int tx = rand.nextInt(Math.max(1, width));
+            int ty = rand.nextInt(Math.max(1, height));
+            MapTile tile = getMapTile(tx, ty);
+            if (tile != null) {
+                TileType type = tile.getTileType();
+                if (type == TileType.PASSABLE || type == TileType.JUMP_THROUGH_PLATFORM) {
+                    // return pixel position of that tile
+                    return getPositionByTileIndex(tx, ty);
+                }
+            }
+        }
+
+        // fallback
+        return playerStartPosition;
+    }
+
+    // Returns a random safe spawn pixel position within the current camera view.
+    // If camera is null or no suitable tile found, falls back to getRandomSafeSpawnPosition().
+    public Utils.Point getRandomSafeSpawnPositionInCamera() {
+        if (camera == null) return getRandomSafeSpawnPosition();
+
+        int tileW = tileset.getScaledSpriteWidth();
+        int tileH = tileset.getScaledSpriteHeight();
+
+        int camX = Math.round(camera.getX());
+        int camY = Math.round(camera.getY());
+        int camEndX = Math.round(camera.getEndBoundX());
+        int camEndY = Math.round(camera.getEndBoundY());
+
+        int txMin = Math.max(0, camX / tileW);
+        int tyMin = Math.max(0, camY / tileH);
+        int txMax = Math.min(width - 1, camEndX / tileW);
+        int tyMax = Math.min(height - 1, camEndY / tileH);
+
+        java.util.Random rand = new java.util.Random();
+        if (txMin > txMax || tyMin > tyMax) return getRandomSafeSpawnPosition();
+
+        for (int attempts = 0; attempts < 200; attempts++) {
+            int tx = txMin + rand.nextInt(txMax - txMin + 1);
+            int ty = tyMin + rand.nextInt(tyMax - tyMin + 1);
+            MapTile tile = getMapTile(tx, ty);
+            if (tile != null) {
+                TileType type = tile.getTileType();
+                if (type == TileType.PASSABLE || type == TileType.JUMP_THROUGH_PLATFORM) {
+                    return getPositionByTileIndex(tx, ty);
+                }
+            }
+        }
+
+        return getRandomSafeSpawnPosition();
+    }
+
+    // Returns a random tile index (tx,ty) inside the current camera view, applying pixel padding.
+    // The returned Point.x = tx, Point.y = ty (tile indices). If none found, returns (-1,-1).
+    public Utils.Point getRandomSafeSpawnTileInCamera(int paddingPixels) {
+        if (camera == null) return new Utils.Point(-1, -1);
+
+        int tileW = tileset.getScaledSpriteWidth();
+        int tileH = tileset.getScaledSpriteHeight();
+
+        int camX = Math.round(camera.getX()) + paddingPixels;
+        int camY = Math.round(camera.getY()) + paddingPixels;
+        int camEndX = Math.round(camera.getEndBoundX()) - paddingPixels;
+        int camEndY = Math.round(camera.getEndBoundY()) - paddingPixels;
+
+        if (camEndX <= camX || camEndY <= camY) return new Utils.Point(-1, -1);
+
+        int txMin = Math.max(0, camX / tileW);
+        int tyMin = Math.max(0, camY / tileH);
+        int txMax = Math.min(width - 1, camEndX / tileW);
+        int tyMax = Math.min(height - 1, camEndY / tileH);
+
+        java.util.Random rand = new java.util.Random();
+        for (int attempts = 0; attempts < 300; attempts++) {
+            int tx = txMin + rand.nextInt(txMax - txMin + 1);
+            int ty = tyMin + rand.nextInt(tyMax - tyMin + 1);
+            MapTile tile = getMapTile(tx, ty);
+            if (tile == null) continue;
+            // Prefer tiles that are passable but have a solid tile below, or solid tiles themselves
+            TileType t = tile.getTileType();
+            MapTile below = getMapTile(tx, ty + 1);
+            boolean belowSolid = (below != null) && (below.getTileType() == TileType.NOT_PASSABLE || below.getTileType() == TileType.JUMP_THROUGH_PLATFORM);
+            if (t == TileType.NOT_PASSABLE) {
+                return new Utils.Point(tx, ty);
+            } else if ((t == TileType.PASSABLE || t == TileType.JUMP_THROUGH_PLATFORM) && belowSolid) {
+                return new Utils.Point(tx, ty);
+            }
+        }
+
+        // no suitable tile found
+        return new Utils.Point(-1, -1);
+    }
 }

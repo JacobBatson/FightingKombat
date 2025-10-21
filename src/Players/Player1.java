@@ -150,6 +150,7 @@ public class Player1 extends MapEntity {
             case STANDING: playerStanding(); break;
             case WALKING: playerWalking(); break;
             case JUMPING: playerJumping(); break;
+            case CROUCHING: break;
             case PUNCHING: playerPunching(); break;
         }
     }
@@ -307,6 +308,8 @@ public class Player1 extends MapEntity {
 
     public void takeDamage(int amount) {
         if (amount <= 0 || invulnFrames > 0) return;
+
+        int prevHearts = hearts;
         heartHP -= amount;
         if (heartHP <= 0 && hearts > 1) {
             hearts--; heartHP = HEART_HP;
@@ -315,6 +318,33 @@ public class Player1 extends MapEntity {
         }
         if (hearts < 0) hearts = 0;
         if (heartHP < 0) heartHP = 0;
+
+        // If a full heart was lost, respawn at a random safe position on the map
+        if (hearts < prevHearts && map != null) {
+            // pick a spawn tile inside camera with padding (10% of screen or 32px min)
+            int padding = Math.max(32, Math.round(Engine.ScreenManager.getScreenWidth() * 0.10f));
+            Utils.Point tile = map.getRandomSafeSpawnTileInCamera(padding);
+            if (tile.x >= 0) {
+                Utils.Point pos = map.getPositionByTileIndex(Math.round(tile.x), Math.round(tile.y));
+                this.setX(pos.x);
+                // place player on top of tile so they don't fall through
+                this.setY(pos.y - this.getHeight());
+            } else {
+                Utils.Point spawn = map.getRandomSafeSpawnPositionInCamera();
+                this.setX(spawn.x);
+                this.setY(spawn.y);
+            }
+            // reset motion to avoid falling through tiles or carrying momentum
+            this.momentumY = 0;
+            this.jumpForce = 0;
+            this.moveAmountX = 0;
+            this.moveAmountY = 0;
+            this.previousX = this.getX();
+            this.previousY = this.getY();
+            // short invulnerability after respawn
+            this.invulnFrames = 60;
+        }
+
         invulnFrames = 3;
     }
 
