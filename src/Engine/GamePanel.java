@@ -1,5 +1,7 @@
 package Engine;
 
+import Game.ScreenCoordinator;
+import Game.GameState;
 import GameObject.Rectangle;
 import SpriteFont.SpriteFont;
 import Utils.Colors;
@@ -75,9 +77,15 @@ public class GamePanel extends JPanel {
 		// set pause menu activation callback to open settings overlay when selected
 		pauseMenu.setOnActivate(idx -> {
 			switch (idx) {
-				case 0: unPauseSelected(); break;
-				case 1: onSettingsSelected(); break;
-				case 2: onQuitSelected(); break;
+				case 0: 
+					unPauseSelected(); 
+					break;
+				case 1: 
+					onSettingsSelected(); 
+					break;
+				case 2: 
+					onQuitSelected(); 
+					break;
 			}
 		});
 
@@ -256,6 +264,26 @@ public class GamePanel extends JPanel {
 
 	private void onQuitSelected() {
 		System.out.println("Quit selected");
+		try {
+			Object curr = screenManager.getCurrentScreen();
+			if (curr instanceof ScreenCoordinator) {
+				((ScreenCoordinator) curr).setGameState(GameState.MENU);
+			} else if (curr instanceof Screens.PlayLevelScreen) {
+				((Screens.PlayLevelScreen) curr).goBackToMenu();
+			} else {
+				System.err.println("Warning: Quit to Menu requested but current screen is neither ScreenCoordinator nor PlayLevelScreen.");
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		isGamePaused = false;
+		if (controlsOverlay != null) controlsOverlay.setVisible(false);
+		keyLocker.unlockKey(pauseKey);
+		menuKeyLocker.unlockKey(Key.ENTER);
+		menuKeyLocker.unlockKey(Key.UP);
+		menuKeyLocker.unlockKey(Key.DOWN);
+		this.requestFocusInWindow();
 	}
 
 	private void updateShowFPSState() {

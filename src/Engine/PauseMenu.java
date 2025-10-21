@@ -67,7 +67,7 @@ public class PauseMenu {
     public void moveSelection(int delta) {
         if (items == null || items.isEmpty()) return;
         int n = items.size();
-        selection = ((selection + delta) % n + n) % n;
+        selection = ((selection + delta) % n + n) % n; //Loops to the top of the pause screen
         updateHighlight();
     }
 

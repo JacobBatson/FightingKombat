@@ -353,7 +353,6 @@ public class Player1 extends MapEntity {
     public Engine.Key getJumpKey() { return JUMP_KEY; }
     public Engine.Key getMoveLeftKey() { return MOVE_LEFT_KEY; }
     public Engine.Key getMoveRightKey() { return MOVE_RIGHT_KEY; }
-    public Engine.Key getCrouchKey() { return null; }
     public Engine.Key getPunchKey() { return PUNCH_KEY; }
     public Engine.Key getFireballKey() { return FIREBALL_KEY; }
 }
