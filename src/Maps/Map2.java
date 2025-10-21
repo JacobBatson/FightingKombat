@@ -8,7 +8,7 @@ package Maps;
     public class Map2 extends Map {
     
         public Map2() {
-            super("map4.txt", new CommonTileset());
+            super("map2.txt", new CommonTileset());
             // default player start position left as (0,0) or set via getMapTile when needed
         }
     
