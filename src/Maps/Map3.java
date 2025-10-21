@@ -4,10 +4,10 @@ import Level.*;
 import Tilesets.CommonTileset;
 import java.util.ArrayList;
 
-public class Map1 extends Map {
+public class Map3 extends Map {
 
-    public Map1() {
-        super("Map1.txt", new CommonTileset());
+    public Map3() {
+        super("Map3.txt", new CommonTileset());
         // default player start position left as (0,0) or set via getMapTile when needed
     }
 
