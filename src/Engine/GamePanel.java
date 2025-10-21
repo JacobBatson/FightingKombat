@@ -57,7 +57,7 @@ public class GamePanel extends JPanel {
 		pauseLabel = new SpriteFont("UNPAUSE", 0, 0, "Arial", 24, Color.white);
 		pauseLabel.setOutlineColor(Color.black);
 		pauseLabel.setOutlineThickness(2.0f);
-		settingsLabel = new SpriteFont("Settings", pauseLabel.getX(), pauseLabel.getY() + 30, "Arial", 24, Color.white);
+		settingsLabel = new SpriteFont("Controls", pauseLabel.getX(), pauseLabel.getY() + 30, "Arial", 24, Color.white);
 		settingsLabel.setOutlineColor(Color.black);
 		settingsLabel.setOutlineThickness(2.0f);
 		quitLabel = new SpriteFont("Quit to Menu", settingsLabel.getX(), settingsLabel.getY() + 30, "Arial", 24, Color.white);
@@ -81,7 +81,7 @@ public class GamePanel extends JPanel {
 					unPauseSelected(); 
 					break;
 				case 1: 
-					onSettingsSelected(); 
+					onControlsSelected(); 
 					break;
 				case 2: 
 					onQuitSelected(); 
@@ -229,7 +229,7 @@ public class GamePanel extends JPanel {
 		if (pauseMenuSelection == 0) {
 			unPauseSelected();
 		} else if (pauseMenuSelection == 1) { 
-			onSettingsSelected();
+			onControlsSelected();
 		} else if (pauseMenuSelection == 2) {
 			onQuitSelected();
 		}
@@ -246,7 +246,7 @@ public class GamePanel extends JPanel {
 		this.requestFocusInWindow();
 	}
 
-	private void onSettingsSelected() {
+	private void onControlsSelected() {
 		//Opens settings so then you can see keybinds
 		try {
 			Screens.PlayLevelScreen pls = (Screens.PlayLevelScreen) screenManager.getCurrentScreen();

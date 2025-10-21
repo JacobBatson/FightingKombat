@@ -19,7 +19,7 @@ public class ControlsOverlay {
     private List<SpriteFont> rightActionLabels = new ArrayList<>();
     private List<SpriteFont> rightValueLabels = new ArrayList<>();
     private SpriteFont footer;
-    // Bounds of player to draw labels under
+    // bounds of player to draw labels under
     private Rectangle p1BoundsForLabels = null;
     private Rectangle p2BoundsForLabels = null;
 
@@ -29,7 +29,7 @@ public class ControlsOverlay {
         header1 = new SpriteFont("Player 1", 0, 0, "Arial", 20, Color.white);
         header2 = new SpriteFont("Player 2", 0, 0, "Arial", 20, Color.white);
         footer = new SpriteFont("Press P or ESC to return", 0, 0, "Arial", 14, Color.white);
-        //The two headers and footer
+        // the two headers and footer
         header1.setOutlineColor(Color.black);
         header1.setOutlineThickness(2f);
         header2.setOutlineColor(Color.black);
