@@ -64,6 +64,7 @@ public class CharacterSelectionScreen extends Screen {
 
     private BufferedImage fireDudeThumb;
     private BufferedImage waterDudeThumb;
+    private BufferedImage rockDudeThumb;
 
     public CharacterSelectionScreen(ScreenCoordinator screenCoordinator) {
         this.screenCoordinator = screenCoordinator;
@@ -72,9 +73,10 @@ public class CharacterSelectionScreen extends Screen {
 
     private void initializeCharacters() {
         characterNames = new ArrayList<>();
-        // 4 × 5 = 20 slots; first two are real, rest are placeholders
+        // 4 × 5 = 20 slots; first three are real, rest are placeholders
         characterNames.add("Fire Dude");
         characterNames.add("Water Dude");   // directly under Fire Dude
+        characterNames.add("Rock Dude");    // third character
         characterNames.add("Bug");
         characterNames.add("Dinosaur");
         characterNames.add("Walrus");
@@ -136,6 +138,10 @@ public class CharacterSelectionScreen extends Screen {
         BufferedImage waterSheet = ImageLoader.load("Water_Sprite.png");
         if (waterSheet != null) {
             waterDudeThumb = cropFrame(waterSheet, WATER_THUMB_COL, WATER_THUMB_ROW, TILE_W, TILE_H);
+        }
+        BufferedImage earthSheet = ImageLoader.load("Earth_Sprite.png");
+        if (earthSheet != null) {
+            rockDudeThumb = cropFrame(earthSheet, FIRE_THUMB_COL, FIRE_THUMB_ROW, TILE_W, TILE_H);
         }
     }
 
@@ -327,6 +333,9 @@ public class CharacterSelectionScreen extends Screen {
         if ("Water Dude".equals(characterName) && waterDudeThumb != null) {
             g.drawImage(waterDudeThumb, drawX, drawY, THUMB_SIZE, THUMB_SIZE);
         }
+        if ("Rock Dude".equals(characterName) && rockDudeThumb != null) {
+            g.drawImage(rockDudeThumb, drawX, drawY, THUMB_SIZE, THUMB_SIZE);
+        }
 
         // labels
         int textX = x + 8;
@@ -345,12 +354,13 @@ public class CharacterSelectionScreen extends Screen {
     }
 
     private boolean isSelectable(String name) {
-        return "Fire Dude".equals(name) || "Water Dude".equals(name);
+        return "Fire Dude".equals(name) || "Water Dude".equals(name) || "Rock Dude".equals(name);
     }
 
     private String roleFor(String name) {
         if ("Fire Dude".equals(name))  return "Fire User";
         if ("Water Dude".equals(name)) return "Water User";
+        if ("Rock Dude".equals(name))  return "Earth User";
         return "Coming Soon";
     }
 

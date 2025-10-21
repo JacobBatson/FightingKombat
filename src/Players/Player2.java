@@ -10,6 +10,7 @@ import GameObject.SpriteSheet;
 import Level.MapEntity;
 import Enemies.Fireball;
 import Enemies.WaterShot;
+import Enemies.RockShot;
 import Utils.Point;
 import Level.PlayerState;
 import Utils.AirGroundState;
@@ -108,9 +109,14 @@ public class Player2 extends MapEntity {
             float fbY = this.y + offset.y;
             float speed = (facingDirection == Direction.RIGHT) ? fbSpeed : -fbSpeed;
 
-            Fireball shot = isWaterSkin()
-                    ? new WaterShot(new Point(fbX, fbY), speed, fbFrames)
-                    : new Fireball(new Point(fbX, fbY), speed, fbFrames);
+            Fireball shot;
+            if (isWaterSkin()) {
+                shot = new WaterShot(new Point(fbX, fbY), speed, fbFrames);
+            } else if (isRockSkin()) {
+                shot = new RockShot(new Point(fbX, fbY), speed, fbFrames);
+            } else {
+                shot = new Fireball(new Point(fbX, fbY), speed, fbFrames);
+            }
 
             // critical: make projectile camera-aware
             shot.setMap(this.map);
@@ -359,6 +365,12 @@ public class Player2 extends MapEntity {
         if (characterSpritePathUsed == null) return false;
         String p = characterSpritePathUsed.toLowerCase();
         return p.contains("water");
+    }
+
+    private boolean isRockSkin() {
+        if (characterSpritePathUsed == null) return false;
+        String p = characterSpritePathUsed.toLowerCase();
+        return p.contains("earth");
     }
 
     @Override
