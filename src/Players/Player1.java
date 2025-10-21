@@ -30,6 +30,10 @@ public class Player1 extends MapEntity {
     private int heartHP = HEART_HP;
     private int invulnFrames = 0;
 
+    private int damageDealt = 0;
+    private int maxDamage = 50;
+    private boolean canUseSuperMove = false;
+
     protected int punchDuration = 0;
     protected final int MAX_PUNCH_DURATION = 20;
     protected PlayerState previousNonPunchState = PlayerState.STANDING;
@@ -92,8 +96,9 @@ public class Player1 extends MapEntity {
         updateLockedKeys();
 
         // Projectile firing
-        if (Keyboard.isKeyDown(FIREBALL_KEY) && !keyLocker.isKeyLocked(FIREBALL_KEY)) {
+        if (Keyboard.isKeyDown(FIREBALL_KEY) && !keyLocker.isKeyLocked(FIREBALL_KEY) && canUseSuperMove) {
             keyLocker.lockKey(FIREBALL_KEY);
+            useSuperMove(); // Reset the damage bar after using super move
 
             float fbSpeed = 4.0f;
             int fbFrames = 60;
@@ -140,21 +145,34 @@ public class Player1 extends MapEntity {
         float dy = (this.getHeight() * 0.40f);
 
         String anim = (this.currentAnimationName == null) ? "" : this.currentAnimationName;
-        if (anim.contains("PUNCH")) dy -= 6f;
-        if (anim.contains("JUMP") || anim.contains("FALL")) dy -= 10f;
+        if (anim.contains("PUNCH"))
+            dy -= 6f;
+        if (anim.contains("JUMP") || anim.contains("FALL"))
+            dy -= 10f;
 
         return new Utils.Point(Math.round(dx), Math.round(dy));
     }
 
-    protected void applyGravity() { moveAmountY += gravity + momentumY; }
+    protected void applyGravity() {
+        moveAmountY += gravity + momentumY;
+    }
 
     protected void handlePlayerState() {
         switch (playerState) {
-            case STANDING: playerStanding(); break;
-            case WALKING: playerWalking(); break;
-            case JUMPING: playerJumping(); break;
-            case CROUCHING: break;
-            case PUNCHING: playerPunching(); break;
+            case STANDING:
+                playerStanding();
+                break;
+            case WALKING:
+                playerWalking();
+                break;
+            case JUMPING:
+                playerJumping();
+                break;
+            case CROUCHING:
+                break;
+            case PUNCHING:
+                playerPunching();
+                break;
         }
     }
 
@@ -208,17 +226,22 @@ public class Player1 extends MapEntity {
             if (jumpForce > 0) {
                 moveAmountY -= jumpForce;
                 jumpForce -= jumpDegrade;
-                if (jumpForce < 0) jumpForce = 0;
+                if (jumpForce < 0)
+                    jumpForce = 0;
             }
         } else if (airGroundState == AirGroundState.AIR) {
             if (jumpForce > 0) {
                 moveAmountY -= jumpForce;
                 jumpForce -= jumpDegrade;
-                if (jumpForce < 0) jumpForce = 0;
+                if (jumpForce < 0)
+                    jumpForce = 0;
             }
-            if (Keyboard.isKeyDown(MOVE_LEFT_KEY)) moveAmountX -= walkSpeed;
-            else if (Keyboard.isKeyDown(MOVE_RIGHT_KEY)) moveAmountX += walkSpeed;
-            if (moveAmountY > 0) increaseMomentum();
+            if (Keyboard.isKeyDown(MOVE_LEFT_KEY))
+                moveAmountX -= walkSpeed;
+            else if (Keyboard.isKeyDown(MOVE_RIGHT_KEY))
+                moveAmountX += walkSpeed;
+            if (moveAmountY > 0)
+                increaseMomentum();
         } else if (previousAirGroundState == AirGroundState.AIR && airGroundState == AirGroundState.GROUND) {
             playerState = PlayerState.STANDING;
         }
@@ -241,12 +264,15 @@ public class Player1 extends MapEntity {
 
     protected void increaseMomentum() {
         momentumY += momentumYIncrease;
-        if (momentumY > terminalVelocityY) momentumY = terminalVelocityY;
+        if (momentumY > terminalVelocityY)
+            momentumY = terminalVelocityY;
     }
 
     protected void updateLockedKeys() {
-        if (Keyboard.isKeyUp(JUMP_KEY)) keyLocker.unlockKey(JUMP_KEY);
-        if (Keyboard.isKeyUp(PUNCH_KEY)) keyLocker.unlockKey(PUNCH_KEY);
+        if (Keyboard.isKeyUp(JUMP_KEY))
+            keyLocker.unlockKey(JUMP_KEY);
+        if (Keyboard.isKeyUp(PUNCH_KEY))
+            keyLocker.unlockKey(PUNCH_KEY);
     }
 
     protected void handlePlayerAnimation() {
@@ -263,7 +289,8 @@ public class Player1 extends MapEntity {
     }
 
     @Override
-    public void onEndCollisionCheckX(boolean hasCollided, Direction direction, MapEntity entityCollidedWith) {}
+    public void onEndCollisionCheckX(boolean hasCollided, Direction direction, MapEntity entityCollidedWith) {
+    }
 
     @Override
     public void onEndCollisionCheckY(boolean hasCollided, Direction direction, MapEntity entityCollidedWith) {
@@ -287,14 +314,60 @@ public class Player1 extends MapEntity {
         }
     }
 
-    public int getMaxHearts() { return maxHearts; }
-    public int getHearts() { return hearts; }
-    public int getHeartHP() { return heartHP; }
-    public int getHeartHpMax() { return HEART_HP; }
-    public boolean isKO() { return hearts <= 0 && heartHP <= 0; }
+    public int getMaxHearts() {
+        return maxHearts;
+    }
+
+    public int getHearts() {
+        return hearts;
+    }
+
+    public int getHeartHP() {
+        return heartHP;
+    }
+
+    // Damage bar methods
+    public int getDamageDealt() {
+        return damageDealt;
+    }
+
+    public int getMaxDamage() {
+        return maxDamage;
+    }
+
+    public void addDamageDealt(int amount) {
+        damageDealt += amount;
+        if (damageDealt > maxDamage)
+            damageDealt = maxDamage;
+
+        // Check if super move is ready
+        if (damageDealt >= maxDamage) {
+            canUseSuperMove = true;
+        }
+    }
+
+    public boolean canUseSuperMove() {
+        return canUseSuperMove;
+    }
+
+    public void useSuperMove() {
+        if (canUseSuperMove) {
+            damageDealt = 0;
+            canUseSuperMove = false;
+        }
+    }
+
+    public int getHeartHpMax() {
+        return HEART_HP;
+    }
+
+    public boolean isKO() {
+        return hearts <= 0 && heartHP <= 0;
+    }
 
     public Rectangle getPunchHitbox() {
-        if (playerState != PlayerState.PUNCHING) return null;
+        if (playerState != PlayerState.PUNCHING)
+            return null;
         Rectangle bounds = getBounds();
         float punchRange = 40f;
         float punchHeight = 30f;
@@ -305,22 +378,35 @@ public class Player1 extends MapEntity {
         return new Rectangle(punchX, punchY, (int) punchRange, (int) punchHeight);
     }
 
-    public java.util.List<Fireball> getFireballs() { return this.fireballs; }
-    public PlayerState getPlayerState() { return playerState; }
-    public int getPunchDuration() { return punchDuration; }
+    public java.util.List<Fireball> getFireballs() {
+        return this.fireballs;
+    }
+
+    public PlayerState getPlayerState() {
+        return playerState;
+    }
+
+    public int getPunchDuration() {
+        return punchDuration;
+    }
 
     public void takeDamage(int amount) {
-        if (amount <= 0 || invulnFrames > 0) return;
+        if (amount <= 0 || invulnFrames > 0)
+            return;
 
         int prevHearts = hearts;
         heartHP -= amount;
         if (heartHP <= 0 && hearts > 1) {
-            hearts--; heartHP = HEART_HP;
+            hearts--;
+            heartHP = HEART_HP;
         } else if (heartHP <= 0 && hearts == 1) {
-            hearts = 0; heartHP = 0;
+            hearts = 0;
+            heartHP = 0;
         }
-        if (hearts < 0) hearts = 0;
-        if (heartHP < 0) heartHP = 0;
+        if (hearts < 0)
+            hearts = 0;
+        if (heartHP < 0)
+            heartHP = 0;
 
         // If a full heart was lost, respawn at a random safe position on the map
         if (hearts < prevHearts && map != null) {
@@ -361,37 +447,55 @@ public class Player1 extends MapEntity {
     }
 
     private boolean isWaterSkin() {
-        if (characterSpritePathUsed == null) return false;
+        if (characterSpritePathUsed == null)
+            return false;
         String p = characterSpritePathUsed.toLowerCase();
         return p.contains("water");
     }
 
     private boolean isRockSkin() {
-        if (characterSpritePathUsed == null) return false;
+        if (characterSpritePathUsed == null)
+            return false;
         String p = characterSpritePathUsed.toLowerCase();
         return p.contains("earth");
     }
 
     @Override
     public HashMap<String, Frame[]> loadAnimations(SpriteSheet spriteSheet) {
-        return new HashMap<String, Frame[]>() {{
-            put("STAND_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0, 3, 30, false));
-            put("STAND_LEFT",  SpriteSheet.createSequentialFrames(spriteSheet, 0, 0, 3, 30, true));
-            put("WALK_RIGHT",  SpriteSheet.createSequentialFrames(spriteSheet, 1, 0, 3, 30, false));
-            put("WALK_LEFT",   SpriteSheet.createSequentialFrames(spriteSheet, 1, 0, 3, 30, true));
-            put("JUMP_RIGHT",  SpriteSheet.createSequentialFrames(spriteSheet, 2, 0, 3, 20, false));
-            put("JUMP_LEFT",   SpriteSheet.createSequentialFrames(spriteSheet, 2, 0, 3, 20, true));
-            put("FALL_RIGHT",  SpriteSheet.createSequentialFrames(spriteSheet, 3, 0, 3, 20, false));
-            put("FALL_LEFT",   SpriteSheet.createSequentialFrames(spriteSheet, 3, 0, 3, 20, true));
-            put("PUNCH_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 1, 15, false));
-            put("PUNCH_LEFT",  SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 1, 15, true));
-        }};
+        return new HashMap<String, Frame[]>() {
+            {
+                put("STAND_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0, 3, 30, false));
+                put("STAND_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 0, 0, 3, 30, true));
+                put("WALK_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 1, 0, 3, 30, false));
+                put("WALK_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 1, 0, 3, 30, true));
+                put("JUMP_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 0, 3, 20, false));
+                put("JUMP_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 2, 0, 3, 20, true));
+                put("FALL_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 3, 0, 3, 20, false));
+                put("FALL_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 3, 0, 3, 20, true));
+                put("PUNCH_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 1, 15, false));
+                put("PUNCH_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 1, 15, true));
+            }
+        };
     }
 
     // Keybind getters
-    public Engine.Key getJumpKey() { return JUMP_KEY; }
-    public Engine.Key getMoveLeftKey() { return MOVE_LEFT_KEY; }
-    public Engine.Key getMoveRightKey() { return MOVE_RIGHT_KEY; }
-    public Engine.Key getPunchKey() { return PUNCH_KEY; }
-    public Engine.Key getFireballKey() { return FIREBALL_KEY; }
+    public Engine.Key getJumpKey() {
+        return JUMP_KEY;
+    }
+
+    public Engine.Key getMoveLeftKey() {
+        return MOVE_LEFT_KEY;
+    }
+
+    public Engine.Key getMoveRightKey() {
+        return MOVE_RIGHT_KEY;
+    }
+
+    public Engine.Key getPunchKey() {
+        return PUNCH_KEY;
+    }
+
+    public Engine.Key getFireballKey() {
+        return FIREBALL_KEY;
+    }
 }

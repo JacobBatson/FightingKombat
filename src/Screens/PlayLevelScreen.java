@@ -14,6 +14,7 @@ import Players.Player2; // Arrow/Enter controls
 import SpriteFont.SpriteFont; // Importing SpriteFont for timer display
 import UI.HeartsHUD;
 import UI.HealthBar;
+import UI.DamageBar;
 import java.awt.Color;
 import Enemies.Fireball;
 import Engine.ScreenManager;
@@ -38,6 +39,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     private HeartsHUD p2HUD;
     private HealthBar p1HealthBar;
     private HealthBar p2HealthBar;
+    private DamageBar p1DamageBar;
+    private DamageBar p2DamageBar;
 
     public PlayLevelScreen(ScreenCoordinator screenCoordinator) {
         this.screenCoordinator = screenCoordinator;
@@ -54,8 +57,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             map.getCamera().moveY(100);
         }
         // < bring the camera down to the platforms >>>
-   
-
+        
         // Read both picks from the selection screen
         String p1Pick = CharacterSelectionScreen.getP1SelectedCharacter();
         String p2Pick = CharacterSelectionScreen.getP2SelectedCharacter();
@@ -85,6 +87,10 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         this.p1HealthBar = new HealthBar(new Color(0, 192, 64), new Color(0, 0, 0, 160));
         this.p2HealthBar = new HealthBar(new Color(192, 32, 32), new Color(0, 0, 0, 160));
 
+        // Damage bars
+        this.p1DamageBar = new DamageBar(new Color(255, 165, 0), new Color(0, 0, 0, 160));
+        this.p2DamageBar = new DamageBar(new Color(255, 100, 0), new Color(0, 0, 0, 160));
+
         levelClearedScreen = new LevelClearedScreen();
         levelLoseScreen = new LevelLoseScreen(this);
 
@@ -110,7 +116,6 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             return "Water_Sprite.png";
         if ("Rock Dude".equals(name))
             return "Earth_Sprite.png";
-        // default/fallback
         return "Fire_Sprite.png";
     }
 
@@ -120,7 +125,6 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             case RUNNING:
                 player1.update();
                 player2.update();
-                // projectile collision checks
                 java.util.Iterator<Fireball> it1 = player1.getFireballs().iterator();
                 while (it1.hasNext()) {
                     Fireball fb = it1.next();
@@ -151,13 +155,13 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     }
                 }
 
-                // Punch collision checks
                 // Player 1 punching Player 2
                 if (player1.getPlayerState() == Level.PlayerState.PUNCHING &&
-                        player1.getPunchDuration() == 5) { 
+                        player1.getPunchDuration() == 5) {
                     if (player1.getPunchHitbox() != null && player2.getCustomHitboxBounds() != null) {
                         if (player1.getPunchHitbox().intersects(player2.getCustomHitboxBounds())) {
-                            player2.takeDamage(10); 
+                            player2.takeDamage(10);
+                            player1.addDamageDealt(10);
                         }
                     }
                 }
@@ -168,6 +172,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     if (player2.getPunchHitbox() != null && player1.getCustomHitboxBounds() != null) {
                         if (player2.getPunchHitbox().intersects(player1.getCustomHitboxBounds())) {
                             player1.takeDamage(10);
+                            player2.addDamageDealt(10);
                         }
                     }
                 }
@@ -275,6 +280,23 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     int y = 12 + 20 + 6;
                     p2HealthBar.draw(graphicsHandler, x, y, w, h, player2.getHeartHP(), player2.getHeartHpMax(), true);
                 }
+
+                if (p1DamageBar != null) {
+                    int x = 12;
+                    int y = 12 + 20 + 6 + 12 + 3;
+                    int w = 120;
+                    int h = 8;
+                    p1DamageBar.draw(graphicsHandler, x, y, w, h, player1.getDamageDealt(), player1.getMaxDamage(),
+                            false);
+                }
+                if (p2DamageBar != null) {
+                    int w = 120;
+                    int h = 8;
+                    int x = screenW - 12 - w;
+                    int y = 12 + 20 + 6 + 12 + 3;
+                    p2DamageBar.draw(graphicsHandler, x, y, w, h, player2.getDamageDealt(), player2.getMaxDamage(),
+                            true);
+                }
                 break;
             case LEVEL_COMPLETED:
                 levelClearedScreen.draw(graphicsHandler);
@@ -312,6 +334,24 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     int y = 12 + 20 + 6;
                     p2HealthBar.draw(graphicsHandler, x, y, w, h, player2.getHeartHP(), player2.getHeartHpMax(), true);
                 }
+
+                
+                if (p1DamageBar != null) {
+                    int x = 12;
+                    int y = 12 + 20 + 6 + 12 + 3;
+                    int w = 120;
+                    int h = 8;
+                    p1DamageBar.draw(graphicsHandler, x, y, w, h, player1.getDamageDealt(), player1.getMaxDamage(),
+                            false);
+                }
+                if (p2DamageBar != null) {
+                    int w = 120;
+                    int h = 8;
+                    int x = screenW2 - 12 - w;
+                    int y = 12 + 20 + 6 + 12 + 3;
+                    p2DamageBar.draw(graphicsHandler, x, y, w, h, player2.getDamageDealt(), player2.getMaxDamage(),
+                            true);
+                }
                 break;
         }
     }
@@ -320,7 +360,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         return playLevelScreenState;
     }
 
-    //Players getters for UI
+    // Getter for Player UI
     public Player1 getPlayer1() {
         return player1;
     }
