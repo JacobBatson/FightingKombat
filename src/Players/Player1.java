@@ -378,4 +378,11 @@ public class Player1 extends MapEntity {
             put("PUNCH_LEFT",  SpriteSheet.createSequentialFrames(spriteSheet, 4, 0, 1, 15, true));
         }};
     }
+
+    // Keybind getters
+    public Engine.Key getJumpKey() { return JUMP_KEY; }
+    public Engine.Key getMoveLeftKey() { return MOVE_LEFT_KEY; }
+    public Engine.Key getMoveRightKey() { return MOVE_RIGHT_KEY; }
+    public Engine.Key getPunchKey() { return PUNCH_KEY; }
+    public Engine.Key getFireballKey() { return FIREBALL_KEY; }
 }

@@ -68,6 +68,13 @@ public class Player2 extends MapEntity {
         this.characterSpritePathUsed = characterSpritePath;
     }
 
+    // Keybind getters
+    public Engine.Key getJumpKey() { return JUMP_KEY; }
+    public Engine.Key getMoveLeftKey() { return MOVE_LEFT_KEY; }
+    public Engine.Key getMoveRightKey() { return MOVE_RIGHT_KEY; }
+    public Engine.Key getPunchKey() { return PUNCH_KEY; }
+    public Engine.Key getFireballKey() { return FIREBALL_KEY; }
+
     public Player2(float x, float y) {
         this(x, y, "Fire_Sprite.png", 64, 64);
     }

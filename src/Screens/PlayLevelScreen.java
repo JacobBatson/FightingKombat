@@ -318,6 +318,15 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         return playLevelScreenState;
     }
 
+    //Players getters for UI
+    public Player1 getPlayer1() {
+        return player1;
+    }
+
+    public Player2 getPlayer2() {
+        return player2;
+    }
+
     @Override
     public void onLevelCompleted() {
         if (playLevelScreenState != PlayLevelScreenState.LEVEL_COMPLETED) {
