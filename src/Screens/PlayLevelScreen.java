@@ -108,6 +108,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     private String spriteFor(String name) {
         if ("Water Dude".equals(name))
             return "Water_Sprite.png";
+        if ("Rock Dude".equals(name))
+            return "Earth_Sprite.png";
         // default/fallback
         return "Fire_Sprite.png";
     }
