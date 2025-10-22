@@ -30,10 +30,10 @@ public class Player1 extends MapEntity {
     private int heartHP = HEART_HP;
     private int invulnFrames = 0;
 
-    // Invincibility after respawn 
+    // Invincibility after respawn
     private boolean isInvincible = false;
-    private int invincibleTimer = 0; 
-    private int invincibleBlinkTimer = 0; 
+    private int invincibleTimer = 0;
+    private int invincibleBlinkTimer = 0;
 
     private int damageDealt = 0;
     private int maxDamage = 50;
@@ -145,7 +145,7 @@ public class Player1 extends MapEntity {
         // Invincibility timer handling (after respawn)
         if (isInvincible) {
             invincibleTimer--;
-            invincibleBlinkTimer = (invincibleBlinkTimer + 1) % 10; 
+            invincibleBlinkTimer = (invincibleBlinkTimer + 1) % 10;
             if (invincibleTimer <= 0) {
                 isInvincible = false;
                 invincibleBlinkTimer = 0;
@@ -327,7 +327,7 @@ public class Player1 extends MapEntity {
         java.awt.Composite oldComposite = null;
         boolean appliedAlpha = false;
         if (isInvincible && g2 != null) {
-    
+
             if (invincibleBlinkTimer < 5) {
                 oldComposite = g2.getComposite();
                 g2.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, 0.5f));
@@ -425,6 +425,9 @@ public class Player1 extends MapEntity {
         if (amount <= 0 || invulnFrames > 0 || isInvincible)
             return;
 
+        // Set short invincibility frames immediately
+        invulnFrames = 3;
+
         int prevHearts = hearts;
         heartHP -= amount;
         if (heartHP <= 0 && hearts > 1) {
@@ -461,7 +464,8 @@ public class Player1 extends MapEntity {
             this.moveAmountY = 0;
             this.previousX = this.getX();
             this.previousY = this.getY();
-            // short invulnerability after respawn (hit-stun) and a longer invincibility window
+            // short invulnerability after respawn (hit-stun) and a longer invincibility
+            // window
             this.invulnFrames = 60;
             this.isInvincible = true;
             this.invincibleTimer = 180; // 3 seconds at 60 FPS

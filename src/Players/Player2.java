@@ -32,8 +32,8 @@ public class Player2 extends MapEntity {
 
     // Invincibility after respawn
     private boolean isInvincible = false;
-    private int invincibleTimer = 0; 
-    private int invincibleBlinkTimer = 0; 
+    private int invincibleTimer = 0;
+    private int invincibleBlinkTimer = 0;
 
     private int damageDealt = 0;
     private int maxDamage = 50;
@@ -440,9 +440,13 @@ public class Player2 extends MapEntity {
     }
 
     public void takeDamage(int amount) {
-        // Ignore damage if non-positive, in short invuln frames, or full respawn invincibility
+        // Ignore damage if non-positive, in short invuln frames, or full respawn
+        // invincibility
         if (amount <= 0 || invulnFrames > 0 || isInvincible)
             return;
+
+        // Set short invincibility frames immediately
+        invulnFrames = 3;
 
         int prevHearts = hearts;
         heartHP -= amount;
@@ -480,11 +484,9 @@ public class Player2 extends MapEntity {
             this.previousY = this.getY();
             this.invulnFrames = 60;
             this.isInvincible = true;
-            this.invincibleTimer = 180; // 3 seconds 
+            this.invincibleTimer = 180; // 3 seconds
             this.invincibleBlinkTimer = 0;
         }
-
-        invulnFrames = 3;
     }
 
     public Rectangle getCustomHitboxBounds() {
