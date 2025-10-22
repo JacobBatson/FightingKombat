@@ -51,7 +51,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             this.map = new Map2();
         } else {
             this.map = new Map1();
-            map.getCamera().moveY(100);
+            map.getCamera().moveY(0);
         }
         // < bring the camera down to the platforms >>>
    

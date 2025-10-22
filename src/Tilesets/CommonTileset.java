@@ -388,6 +388,285 @@ public class CommonTileset extends Tileset {
 
         mapTiles.add(Bubbles2Tile);
 
+//Map 3 earth tilesset
+
+        // Earth background block
+        Frame EarthBackgroundFrame = new FrameBuilder(getSubImage(6, 0))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder EarthBackgroundTile = new MapTileBuilder(EarthBackgroundFrame);
+
+        mapTiles.add(EarthBackgroundTile);
+
+
+        //Earth block 1
+        Frame Earth1Frame = new FrameBuilder(getSubImage(6, 1))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Earth1Tile = new MapTileBuilder(Earth1Frame);
+
+        mapTiles.add(Earth1Tile);
+
+
+        //Earth block 2
+        Frame Earth2Frame = new FrameBuilder(getSubImage(6, 2))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Earth2Tile = new MapTileBuilder(Earth2Frame);
+
+        mapTiles.add(Earth2Tile);
+
+
+        //Earth waterfallbottom
+        Frame Earth3Frame = new FrameBuilder(getSubImage(6, 3))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Earth3Tile = new MapTileBuilder(Earth3Frame);
+
+        mapTiles.add(Earth3Tile);
+
+
+        //Earth waterfalltop1
+        Frame Earth4Frame = new FrameBuilder(getSubImage(6, 4))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Earth4Tile = new MapTileBuilder(Earth4Frame)
+                .withTileType(TileType.NOT_PASSABLE);
+
+        mapTiles.add(Earth4Tile);
+
+
+        //Earth waterfalltop2
+        Frame Earth5Frame = new FrameBuilder(getSubImage(6, 5))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Earth5Tile = new MapTileBuilder(Earth5Frame)
+                .withTileType(TileType.NOT_PASSABLE);
+        mapTiles.add(Earth5Tile);
+
+
+        //left corner earth platform
+        Frame LeftearthplatFrame = new FrameBuilder(getSubImage(7, 0))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder LeftearthplatTile = new MapTileBuilder(LeftearthplatFrame)
+                .withTileType(TileType.NOT_PASSABLE);
+
+        mapTiles.add(LeftearthplatTile);
+
+
+        //middle earth platform 1
+        Frame Earthplat1Frame = new FrameBuilder(getSubImage(7, 1))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Earthplat1Tile = new MapTileBuilder(Earthplat1Frame)
+                .withTileType(TileType.NOT_PASSABLE);
+        mapTiles.add(Earthplat1Tile);
+
+
+        //middle earth platform 2
+        Frame Earthplat2Frame = new FrameBuilder(getSubImage(7, 2))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Earthplat2Tile = new MapTileBuilder(Earthplat2Frame)
+                .withTileType(TileType.NOT_PASSABLE);
+        mapTiles.add(Earthplat2Tile);           
+
+        //middle earth platform 3
+        Frame Earthplat3Frame = new FrameBuilder(getSubImage(7, 3))
+                .withScale(tileScale)
+                .build();       
+
+        MapTileBuilder Earthplat3Tile = new MapTileBuilder(Earthplat3Frame)
+                .withTileType(TileType.NOT_PASSABLE);
+        mapTiles.add(Earthplat3Tile);
+
+
+        //right corner earth platform
+        Frame RightearthplatFrame = new FrameBuilder(getSubImage(7, 4))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder RightearthplatTile = new MapTileBuilder(RightearthplatFrame)
+                .withTileType(TileType.NOT_PASSABLE);
+        mapTiles.add(RightearthplatTile);       
+
+
+        //earth small floating platform
+        Frame SmallearthplatFrame = new FrameBuilder(getSubImage(7, 5))
+               .withScale(tileScale)
+               .withBounds(0, 6, 16, 4)
+               .build();
+
+       MapTileBuilder SmallearthplatTile = new MapTileBuilder(SmallearthplatFrame)
+               .withTileType(TileType.NOT_PASSABLE);
+       mapTiles.add(SmallearthplatTile);
+
+
+       //Earth Big Platform left
+       Frame EarthBigPlatLeftFrame = new FrameBuilder(getSubImage(8, 0  ))
+               .withScale(tileScale)
+               .withBounds(0, 6, 16, 4)
+               .build();
+
+       MapTileBuilder EarthBigPlatLeftTile = new MapTileBuilder(EarthBigPlatLeftFrame)
+               .withTileType(TileType.JUMP_THROUGH_PLATFORM);
+       mapTiles.add(EarthBigPlatLeftTile);
+
+
+       //Earth Big Platform Middle
+        Frame EarthBigPlatMiddleFrame = new FrameBuilder(getSubImage(8, 1  ))
+                 .withScale(tileScale)
+                 .withBounds(0, 6, 16, 4)
+                 .build();
+
+       MapTileBuilder EarthBigPlatMiddleTile = new MapTileBuilder(EarthBigPlatMiddleFrame)
+               .withTileType(TileType.JUMP_THROUGH_PLATFORM);
+       mapTiles.add(EarthBigPlatMiddleTile);
+
+
+        //Earth Big Platform Right
+        Frame EarthBigPlatRightFrame = new FrameBuilder(getSubImage(8, 2  ))
+                .withScale(tileScale)
+                .withBounds(0, 6, 16, 4)
+                .build();
+
+        MapTileBuilder EarthBigPlatRightTile = new MapTileBuilder(EarthBigPlatRightFrame)
+                .withTileType(TileType.JUMP_THROUGH_PLATFORM);
+        mapTiles.add(EarthBigPlatRightTile);
+
+
+        //Earth Magic thrown background
+        Frame EarthMagicFrame = new FrameBuilder(getSubImage(8, 3))
+                .withScale(tileScale)
+                .build();
+
+       MapTileBuilder EarthMagicTile = new MapTileBuilder(EarthMagicFrame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(EarthMagicTile);
+
+
+       //earth map cloud left
+        Frame EarthCloudLeftFrame = new FrameBuilder(getSubImage(8, 4))
+                .withScale(tileScale)
+                .build();
+
+       MapTileBuilder EarthCloudLeftTile = new MapTileBuilder(EarthCloudLeftFrame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(EarthCloudLeftTile);
+
+
+       //earth map cloud right
+       Frame EarthCloudRightFrame = new FrameBuilder(getSubImage(8, 5))
+               .withScale(tileScale)
+               .build();
+        MapTileBuilder EarthCloudRightTile = new MapTileBuilder(EarthCloudRightFrame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(EarthCloudRightTile);
+
+       //Hell throne top
+        Frame HellThroneTopFrame = new FrameBuilder(getSubImage(9, 0))
+                .withScale(tileScale)
+                .build();
+
+       MapTileBuilder HellThroneTopTile = new MapTileBuilder(HellThroneTopFrame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(HellThroneTopTile);
+
+
+        //Hell cross top
+        Frame HellCrossTopFrame = new FrameBuilder(getSubImage(9, 1))
+                .withScale(tileScale)
+                .build();
+
+       MapTileBuilder HellCrossTopTile = new MapTileBuilder(HellCrossTopFrame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(HellCrossTopTile);
+
+
+       //Watermap trident top
+        Frame TridentTopFrame = new FrameBuilder(getSubImage(9, 2))
+                .withScale(tileScale)
+                .build();
+
+       MapTileBuilder TridentTopTile = new MapTileBuilder(TridentTopFrame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(TridentTopTile);
+
+
+       //Watermap Piller top
+        Frame PillerTopFrame = new FrameBuilder(getSubImage(9, 3))
+                .withScale(tileScale)
+                .build();
+
+       MapTileBuilder PillerTopTile = new MapTileBuilder(PillerTopFrame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(PillerTopTile);     
+
+
+       //Watermap Piller bottom
+        Frame PillerBottomFrame = new FrameBuilder(getSubImage(10, 3))
+                 .withScale(tileScale)
+                 .build();
+
+       MapTileBuilder PillerBottomTile = new MapTileBuilder(PillerBottomFrame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(PillerBottomTile);
+
+       
+        //Watermap trident bottom
+         Frame TridentBottomFrame = new FrameBuilder(getSubImage(10, 2))
+                  .withScale(tileScale)
+                  .build();
+
+       MapTileBuilder TridentBottomTile = new MapTileBuilder(TridentBottomFrame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(TridentBottomTile);
+
+       //Hell cross bottom
+        Frame HellCrossBottomFrame = new FrameBuilder(getSubImage(10, 1))
+                .withScale(tileScale)
+                .build();
+
+       MapTileBuilder HellCrossBottomTile = new MapTileBuilder(HellCrossBottomFrame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(HellCrossBottomTile);       
+
+
+       //hell throne bottom
+        Frame HellThroneBottomFrame = new FrameBuilder(getSubImage(10,0))
+                .withScale(tileScale)
+                .build();
+
+       MapTileBuilder HellThroneBottomTile = new MapTileBuilder(HellThroneBottomFrame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(HellThroneBottomTile);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         return mapTiles;
 
