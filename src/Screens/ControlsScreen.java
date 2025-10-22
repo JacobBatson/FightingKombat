@@ -47,7 +47,7 @@ public class ControlsScreen extends Screen {
         // Player 2 lines (Up = jump; Left/Down/Right move; Enter special; attack not assigned)
         p2Move    = new SpriteFont("Move:    Left / Down / Right Arrows", 420, 150, "Arial", 24, Color.WHITE);
         p2Jump    = new SpriteFont("Jump:    Up Arrow",                   420, 180, "Arial", 24, Color.WHITE);
-        p2Attack  = new SpriteFont("Attack:  L",               420, 210, "Arial", 24, Color.WHITE);
+        p2Attack  = new SpriteFont("Attack:  Shift",               420, 210, "Arial", 24, Color.WHITE);
         p2Special = new SpriteFont("Special: Enter",                      420, 240, "Arial", 24, Color.WHITE);
 
         // Footer / hint
