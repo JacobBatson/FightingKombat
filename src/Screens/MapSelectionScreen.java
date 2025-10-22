@@ -29,7 +29,7 @@ public class MapSelectionScreen extends Screen {
     private static final String[] MAP_LABELS = {"Air", "Earth", "Water", "Fire", "Random"};
     private static final String[] MAP_KEYS    = {"AIR",  "EARTH", "WATER", "FIRE", "RANDOM"};
 
-    private static final boolean[] LOCKED = { true, true, false, false, false };
+    private static final boolean[] LOCKED = { true, false, false, false, false };
 
     private int hovered = 0;
 
@@ -63,7 +63,7 @@ public class MapSelectionScreen extends Screen {
         if (!Keyboard.isKeyDown(Key.ESC))   keyLocker.unlockKey(Key.ESC);
 
         loadMapImage("AIR",    "/maps/air.png");
-        loadMapImage("EARTH",  "/maps/earth.png");
+        putMapImageFromResources("EARTH",  "rock map.png");
         putMapImageFromResources("WATER",  "water pic.png");
         putMapImageFromResources("FIRE",   "Fire pic.png");
         putMapImageFromResources("RANDOM", "dice pic.png");
