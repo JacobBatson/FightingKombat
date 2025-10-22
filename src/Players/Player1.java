@@ -30,6 +30,11 @@ public class Player1 extends MapEntity {
     private int heartHP = HEART_HP;
     private int invulnFrames = 0;
 
+    // Invincibility after respawn 
+    private boolean isInvincible = false;
+    private int invincibleTimer = 0; 
+    private int invincibleBlinkTimer = 0; 
+
     private int damageDealt = 0;
     private int maxDamage = 50;
     private boolean canUseSuperMove = false;
@@ -135,6 +140,16 @@ public class Player1 extends MapEntity {
 
         if (invulnFrames > 0) {
             invulnFrames--;
+        }
+
+        // Invincibility timer handling (after respawn)
+        if (isInvincible) {
+            invincibleTimer--;
+            invincibleBlinkTimer = (invincibleBlinkTimer + 1) % 10; 
+            if (invincibleTimer <= 0) {
+                isInvincible = false;
+                invincibleBlinkTimer = 0;
+            }
         }
 
         super.update();
@@ -308,7 +323,23 @@ public class Player1 extends MapEntity {
     }
 
     public void draw(GraphicsHandler graphicsHandler) {
+        java.awt.Graphics2D g2 = graphicsHandler.getGraphics();
+        java.awt.Composite oldComposite = null;
+        boolean appliedAlpha = false;
+        if (isInvincible && g2 != null) {
+    
+            if (invincibleBlinkTimer < 5) {
+                oldComposite = g2.getComposite();
+                g2.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, 0.5f));
+                appliedAlpha = true;
+            }
+        }
+
         super.draw(graphicsHandler);
+
+        if (appliedAlpha && g2 != null && oldComposite != null) {
+            g2.setComposite(oldComposite);
+        }
         for (Fireball fb : fireballs) {
             fb.draw(graphicsHandler);
         }
@@ -391,7 +422,7 @@ public class Player1 extends MapEntity {
     }
 
     public void takeDamage(int amount) {
-        if (amount <= 0 || invulnFrames > 0)
+        if (amount <= 0 || invulnFrames > 0 || isInvincible)
             return;
 
         int prevHearts = hearts;
@@ -430,8 +461,11 @@ public class Player1 extends MapEntity {
             this.moveAmountY = 0;
             this.previousX = this.getX();
             this.previousY = this.getY();
-            // short invulnerability after respawn
+            // short invulnerability after respawn (hit-stun) and a longer invincibility window
             this.invulnFrames = 60;
+            this.isInvincible = true;
+            this.invincibleTimer = 180; // 3 seconds at 60 FPS
+            this.invincibleBlinkTimer = 0;
         }
 
         invulnFrames = 3;
