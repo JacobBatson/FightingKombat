@@ -421,9 +421,9 @@ public class Player1 extends MapEntity {
         return punchDuration;
     }
 
-    public void takeDamage(int amount) {
+    public boolean takeDamage(int amount) {
         if (amount <= 0 || invulnFrames > 0 || isInvincible)
-            return;
+            return false;
 
         // Set short invincibility frames immediately
         invulnFrames = 3;
@@ -473,6 +473,7 @@ public class Player1 extends MapEntity {
         }
 
         invulnFrames = 3;
+        return true;
     }
 
     public Rectangle getCustomHitboxBounds() {

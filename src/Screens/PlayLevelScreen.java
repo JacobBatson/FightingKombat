@@ -61,7 +61,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             map.getCamera().moveY(0);
         }
         // < bring the camera down to the platforms >>>
-        
+
         // Read both picks from the selection screen
         String p1Pick = CharacterSelectionScreen.getP1SelectedCharacter();
         String p2Pick = CharacterSelectionScreen.getP2SelectedCharacter();
@@ -164,8 +164,9 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                         player1.getPunchDuration() == 5) {
                     if (player1.getPunchHitbox() != null && player2.getCustomHitboxBounds() != null) {
                         if (player1.getPunchHitbox().intersects(player2.getCustomHitboxBounds())) {
-                            player2.takeDamage(10);
-                            player1.addDamageDealt(10);
+                            if (player2.takeDamage(10)) {
+                                player1.addDamageDealt(10);
+                            }
                         }
                     }
                 }
@@ -175,8 +176,9 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                         player2.getPunchDuration() == 5) {
                     if (player2.getPunchHitbox() != null && player1.getCustomHitboxBounds() != null) {
                         if (player2.getPunchHitbox().intersects(player1.getCustomHitboxBounds())) {
-                            player1.takeDamage(10);
-                            player2.addDamageDealt(10);
+                            if (player1.takeDamage(10)) {
+                                player2.addDamageDealt(10);
+                            }
                         }
                     }
                 }
@@ -339,7 +341,6 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     p2HealthBar.draw(graphicsHandler, x, y, w, h, player2.getHeartHP(), player2.getHeartHpMax(), true);
                 }
 
-                
                 if (p1DamageBar != null) {
                     int x = 12;
                     int y = 12 + 20 + 6 + 12 + 3;

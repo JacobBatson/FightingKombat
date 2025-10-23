@@ -439,11 +439,11 @@ public class Player2 extends MapEntity {
         return punchDuration;
     }
 
-    public void takeDamage(int amount) {
+    public boolean takeDamage(int amount) {
         // Ignore damage if non-positive, in short invuln frames, or full respawn
         // invincibility
         if (amount <= 0 || invulnFrames > 0 || isInvincible)
-            return;
+            return false;
 
         // Set short invincibility frames immediately
         invulnFrames = 3;
@@ -487,6 +487,7 @@ public class Player2 extends MapEntity {
             this.invincibleTimer = 180; // 3 seconds
             this.invincibleBlinkTimer = 0;
         }
+        return true;
     }
 
     public Rectangle getCustomHitboxBounds() {
