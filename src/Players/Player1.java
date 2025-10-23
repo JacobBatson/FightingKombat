@@ -396,6 +396,10 @@ public class Player1 extends MapEntity {
         return hearts <= 0 && heartHP <= 0;
     }
 
+    public boolean isInvincible() {
+        return isInvincible;
+    }
+
     public Rectangle getPunchHitbox() {
         if (playerState != PlayerState.PUNCHING)
             return null;

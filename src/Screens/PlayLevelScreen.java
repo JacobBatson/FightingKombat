@@ -123,6 +123,23 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         return "Fire_Sprite.png";
     }
 
+    // Map based elemental damage bonus
+    private int getElementalDamageBonus(String characterName, String mapKey) {
+        if ("Fire Dude".equals(characterName) && "FIRE".equals(mapKey)) {
+            System.out.println("[Elemental] Fire Dude on Fire map - +5 damage bonus!");
+            return 5; // fire dude on fire map
+        }
+        if ("Water Dude".equals(characterName) && "WATER".equals(mapKey)) {
+            System.out.println("[Elemental] Water Dude on Water map - +5 damage bonus!");
+            return 5; // water dude on water map
+        }
+        if ("Rock Dude".equals(characterName) && "EARTH".equals(mapKey)) {
+            System.out.println("[Elemental] Rock Dude on Earth map - +5 damage bonus!");
+            return 5; // rock dude on earth map
+        }
+        return 0; // No bonus
+    }
+
     @Override
     public void update() {
         switch (playLevelScreenState) {
@@ -135,7 +152,14 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     try {
                         if (fb.getBounds() != null && player2.getCustomHitboxBounds() != null) {
                             if (fb.getBounds().intersects(player2.getCustomHitboxBounds())) {
-                                player2.takeDamage(20);
+                                if (!player1.isInvincible()) {
+                                    String p1Character = CharacterSelectionScreen.getP1SelectedCharacter();
+                                    String mapKey = screenCoordinator.getSelectedMapKey();
+                                    int baseDamage = 20;
+                                    int elementalBonus = getElementalDamageBonus(p1Character, mapKey);
+                                    int totalDamage = baseDamage + elementalBonus;
+                                    player2.takeDamage(totalDamage);
+                                }
                                 fb.handleMapEntityCollision(player2);
                                 it1.remove();
                             }
@@ -150,7 +174,14 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     try {
                         if (fb.getBounds() != null && player1.getCustomHitboxBounds() != null) {
                             if (fb.getBounds().intersects(player1.getCustomHitboxBounds())) {
-                                player1.takeDamage(20);
+                                if (!player2.isInvincible()) {
+                                    String p2Character = CharacterSelectionScreen.getP2SelectedCharacter();
+                                    String mapKey = screenCoordinator.getSelectedMapKey();
+                                    int baseDamage = 20;
+                                    int elementalBonus = getElementalDamageBonus(p2Character, mapKey);
+                                    int totalDamage = baseDamage + elementalBonus;
+                                    player1.takeDamage(totalDamage);
+                                }
                                 fb.handleMapEntityCollision(player1);
                                 it2.remove();
                             }
@@ -164,8 +195,15 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                         player1.getPunchDuration() == 5) {
                     if (player1.getPunchHitbox() != null && player2.getCustomHitboxBounds() != null) {
                         if (player1.getPunchHitbox().intersects(player2.getCustomHitboxBounds())) {
-                            if (player2.takeDamage(10)) {
-                                player1.addDamageDealt(10);
+                            if (!player1.isInvincible()) {
+                                String p1Character = CharacterSelectionScreen.getP1SelectedCharacter();
+                                String mapKey = screenCoordinator.getSelectedMapKey();
+                                int baseDamage = 10;
+                                int elementalBonus = getElementalDamageBonus(p1Character, mapKey);
+                                int totalDamage = baseDamage + elementalBonus;
+                                if (player2.takeDamage(totalDamage)) {
+                                    player1.addDamageDealt(totalDamage);
+                                }
                             }
                         }
                     }
@@ -176,8 +214,15 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                         player2.getPunchDuration() == 5) {
                     if (player2.getPunchHitbox() != null && player1.getCustomHitboxBounds() != null) {
                         if (player2.getPunchHitbox().intersects(player1.getCustomHitboxBounds())) {
-                            if (player1.takeDamage(10)) {
-                                player2.addDamageDealt(10);
+                            if (!player2.isInvincible()) {
+                                String p2Character = CharacterSelectionScreen.getP2SelectedCharacter();
+                                String mapKey = screenCoordinator.getSelectedMapKey();
+                                int baseDamage = 10;
+                                int elementalBonus = getElementalDamageBonus(p2Character, mapKey);
+                                int totalDamage = baseDamage + elementalBonus;
+                                if (player1.takeDamage(totalDamage)) {
+                                    player2.addDamageDealt(totalDamage);
+                                }
                             }
                         }
                     }
