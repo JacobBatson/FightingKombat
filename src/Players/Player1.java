@@ -400,6 +400,14 @@ public class Player1 extends MapEntity {
         return isInvincible;
     }
 
+    // Initiates invincibility for player one
+    public void grantInvincibility(int frames) {
+        if (frames <= 0) return;
+        this.isInvincible = true;
+        this.invincibleTimer = frames;
+        this.invincibleBlinkTimer = 0;
+    }
+
     public Rectangle getPunchHitbox() {
         if (playerState != PlayerState.PUNCHING)
             return null;
