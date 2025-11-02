@@ -131,6 +131,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             return "Water_Sprite.png";
         if ("Rock Dude".equals(name))
             return "Earth_Sprite.png";
+        if ("Air Dude".equals(name))
+            return "Air_Sprite.png";
         return "Fire_Sprite.png";
     }
 
