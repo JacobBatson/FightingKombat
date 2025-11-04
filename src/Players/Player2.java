@@ -43,7 +43,7 @@ public class Player2 extends MapEntity {
     protected final int MAX_PUNCH_DURATION = 20;
     protected PlayerState previousNonPunchState = PlayerState.STANDING;
 
-    protected float walkSpeed = 4.0f;
+    protected float walkSpeed = 2.3f;
     protected float gravity = 0.5f;
     protected float jumpHeight = 14.5f;
     protected float jumpDegrade = 0.5f;
@@ -418,6 +418,14 @@ public class Player2 extends MapEntity {
         return isInvincible;
     }
 
+    // Initiates invincibility for player two
+    public void grantInvincibility(int frames) {
+        if (frames <= 0) return;
+        this.isInvincible = true;
+        this.invincibleTimer = frames;
+        this.invincibleBlinkTimer = 0;
+    }
+
     public Rectangle getPunchHitbox() {
         if (playerState != PlayerState.PUNCHING)
             return null;
@@ -444,12 +452,6 @@ public class Player2 extends MapEntity {
     }
 
     public boolean takeDamage(int amount) {
-        // fallback: delegate to overload with attacker at our X
-        return takeDamage(amount, this.getX());
-    }
-
-    // New overload: take damage with attacker X position so knockback is away from attacker
-    public boolean takeDamage(int amount, float attackerX) {
         // Ignore damage if non-positive, in short invuln frames, or full respawn
         // invincibility
         if (amount <= 0 || invulnFrames > 0 || isInvincible)
@@ -459,7 +461,6 @@ public class Player2 extends MapEntity {
         invulnFrames = 3;
 
         int prevHearts = hearts;
-        int prevHeartHP = heartHP;
         heartHP -= amount;
         if (heartHP <= 0 && hearts > 1) {
             hearts--;
@@ -473,23 +474,6 @@ public class Player2 extends MapEntity {
         if (heartHP < 0)
             heartHP = 0;
 
-        // If any health decreased (even slightly), apply knockback away from attacker
-        boolean healthDecreased = (heartHP < prevHeartHP) || (hearts < prevHearts);
-        if (healthDecreased) {
-            // increased knockback
-            float kbPixels = 20f;
-            if (attackerX < this.getX()) {
-                this.setX(this.getX() + kbPixels);
-            } else {
-                this.setX(this.getX() - kbPixels);
-            }
-            // Give a single-frame upward impulse rather than setting persistent momentum
-            this.jumpForce = 0; // cancel any active jump force
-            this.moveAmountY -= 8f; // one-frame upward move; gravity will pull back next frames
-            this.previousX = this.getX();
-            this.previousY = this.getY();
-        }
-
         // If a full heart was lost, respawn at a random safe position on the map
         if (hearts < prevHearts && map != null) {
             int padding = Math.max(32, Math.round(Engine.ScreenManager.getScreenWidth() * 0.10f));
@@ -497,7 +481,6 @@ public class Player2 extends MapEntity {
             if (tile.x >= 0) {
                 Utils.Point pos = map.getPositionByTileIndex(Math.round(tile.x), Math.round(tile.y));
                 this.setX(pos.x);
-                // place player on top of tile so they don't fall through
                 this.setY(pos.y - this.getHeight());
             } else {
                 Utils.Point spawn = map.getRandomSafeSpawnPositionInCamera();

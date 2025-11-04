@@ -43,7 +43,7 @@ public class Player1 extends MapEntity {
     protected final int MAX_PUNCH_DURATION = 20;
     protected PlayerState previousNonPunchState = PlayerState.STANDING;
 
-    protected float walkSpeed = 4.0f;
+    protected float walkSpeed = 2.3f;
     protected float gravity = 0.5f;
     protected float jumpHeight = 14.5f;
     protected float jumpDegrade = 0.5f;
@@ -400,6 +400,14 @@ public class Player1 extends MapEntity {
         return isInvincible;
     }
 
+    // Initiates invincibility for player one
+    public void grantInvincibility(int frames) {
+        if (frames <= 0) return;
+        this.isInvincible = true;
+        this.invincibleTimer = frames;
+        this.invincibleBlinkTimer = 0;
+    }
+
     public Rectangle getPunchHitbox() {
         if (playerState != PlayerState.PUNCHING)
             return null;
@@ -426,12 +434,6 @@ public class Player1 extends MapEntity {
     }
 
     public boolean takeDamage(int amount) {
-        // fallback: assume attacker is to the left of victim (use own x) - delegate
-        return takeDamage(amount, this.getX());
-    }
-
-    // New overload: take damage with attacker X position so knockback is away from attacker
-    public boolean takeDamage(int amount, float attackerX) {
         if (amount <= 0 || invulnFrames > 0 || isInvincible)
             return false;
 
@@ -439,7 +441,6 @@ public class Player1 extends MapEntity {
         invulnFrames = 3;
 
         int prevHearts = hearts;
-        int prevHeartHP = heartHP;
         heartHP -= amount;
         if (heartHP <= 0 && hearts > 1) {
             hearts--;
@@ -452,24 +453,6 @@ public class Player1 extends MapEntity {
             hearts = 0;
         if (heartHP < 0)
             heartHP = 0;
-
-        // If any health decreased (even slightly), apply knockback away from attacker
-        boolean healthDecreased = (heartHP < prevHeartHP) || (hearts < prevHearts);
-        if (healthDecreased) {
-            // increased knockback
-            float kbPixels = 20f;
-            // determine direction: if attacker is left of us, push right; otherwise push left
-            if (attackerX < this.getX()) {
-                this.setX(this.getX() + kbPixels);
-            } else {
-                this.setX(this.getX() - kbPixels);
-            }
-            // Give a single-frame upward impulse rather than setting persistent momentum
-            this.jumpForce = 0; // cancel any active jump force
-            this.moveAmountY -= 8f; // one-frame upward move; gravity will pull back next frames
-            this.previousX = this.getX();
-            this.previousY = this.getY();
-        }
 
         // If a full heart was lost, respawn at a random safe position on the map
         if (hearts < prevHearts && map != null) {
