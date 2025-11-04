@@ -43,7 +43,7 @@ public class Player1 extends MapEntity {
     protected final int MAX_PUNCH_DURATION = 20;
     protected PlayerState previousNonPunchState = PlayerState.STANDING;
 
-    protected float walkSpeed = 2.3f;
+    protected float walkSpeed = 4.0f;
     protected float gravity = 0.5f;
     protected float jumpHeight = 14.5f;
     protected float jumpDegrade = 0.5f;
@@ -398,14 +398,6 @@ public class Player1 extends MapEntity {
 
     public boolean isInvincible() {
         return isInvincible;
-    }
-
-    // Initiates invincibility for player one
-    public void grantInvincibility(int frames) {
-        if (frames <= 0) return;
-        this.isInvincible = true;
-        this.invincibleTimer = frames;
-        this.invincibleBlinkTimer = 0;
     }
 
     public Rectangle getPunchHitbox() {
