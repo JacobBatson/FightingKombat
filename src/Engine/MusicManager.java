@@ -27,7 +27,7 @@ public class MusicManager {
     }
 
     private void initializeScreenMusic() {
-        String defaultMusic = "Resources/Baby Keem, Kendrick Lamar - family ties (Clean - Lyrics) (2).wav";
+        String defaultMusic = "Resources/Headlines (Clean) - Drake.wav";
 
         screenMusicMap.put("MENU", defaultMusic);
         screenMusicMap.put("CHARACTER_SELECT", defaultMusic);
