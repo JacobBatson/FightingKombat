@@ -26,10 +26,10 @@ public class MapSelectionScreen extends Screen {
     private static final int SCREEN_H = 600;
     private static final int IMAGE_PADDING = 8;
 
-    private static final String[] MAP_LABELS = {"Air", "Earth", "Water", "Fire", "Random"};
-    private static final String[] MAP_KEYS    = {"AIR",  "EARTH", "WATER", "FIRE", "RANDOM"};
+    private static final String[] MAP_LABELS = {"Random", "Earth", "Water", "Fire", "Air"};
+    private static final String[] MAP_KEYS    = {"RANDOM", "EARTH", "WATER", "FIRE", "AIR"};
 
-    private static final boolean[] LOCKED = { true, false, false, false, false };
+    private static final boolean[] LOCKED = { false, false, false, false, true };
 
     private int hovered = 0;
 
