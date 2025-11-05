@@ -22,9 +22,11 @@ public class MenuScreen extends Screen {
     protected int menuItemSelected = -1;
     protected SpriteFont playGame;
     protected SpriteFont credits;
-    protected SpriteFont controls; // <-- added
+    protected SpriteFont controls;
+    protected SpriteFont music;
 
-    // Keep original map to preserve engine/camera/input state, but we will NOT draw it.
+    // Keep original map to preserve engine/camera/input state, but we will NOT draw
+    // it.
     protected Map backgroundMap;
 
     // Our PNG background as a sprite (pre-scaled once)
@@ -47,7 +49,7 @@ public class MenuScreen extends Screen {
 
     @Override
     public void initialize() {
-    // --- Title text (cursive-like) ---
+        // --- Title text (cursive-like) ---
         titleText = new SpriteFont("Fighting Kombat", 120, 60, "Brush Script MT", 100, new Color(255, 215, 0));
         titleText.setOutlineColor(Color.black);
         titleText.setOutlineThickness(4);
@@ -66,6 +68,10 @@ public class MenuScreen extends Screen {
         controls.setOutlineColor(Color.black);
         controls.setOutlineThickness(3);
 
+        music = new SpriteFont("MUSIC", 300, 359, "Arial", 30, new Color(49, 207, 240));
+        music.setOutlineColor(Color.black);
+        music.setOutlineThickness(3);
+
         // --- Create original TitleScreenMap ONLY to preserve engine state ---
         backgroundMap = new TitleScreenMap();
         backgroundMap.setAdjustCamera(false);
@@ -75,7 +81,7 @@ public class MenuScreen extends Screen {
             BufferedImage src = ImageIO.read(new File("Resources/mainpage.png"));
 
             // Calculate width and height for scaling
-            int w = (GamePanel.WIDTH  >= 320) ? GamePanel.WIDTH  : FALLBACK_W;
+            int w = (GamePanel.WIDTH >= 320) ? GamePanel.WIDTH : FALLBACK_W;
             int h = (GamePanel.HEIGHT >= 240) ? GamePanel.HEIGHT : FALLBACK_H;
             BufferedImage scaled = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2 = scaled.createGraphics();
@@ -97,7 +103,8 @@ public class MenuScreen extends Screen {
     }
 
     public void update() {
-        // Preserve engine state updates from the original map (animations, camera/input setup, etc.)
+        // Preserve engine state updates from the original map (animations, camera/input
+        // setup, etc.)
         if (backgroundMap != null) {
             backgroundMap.update(null);
         }
@@ -110,45 +117,63 @@ public class MenuScreen extends Screen {
             keyPressTimer = 14;
             currentMenuItemHovered--;
         } else {
-            if (keyPressTimer > 0) keyPressTimer--;
+            if (keyPressTimer > 0)
+                keyPressTimer--;
         }
 
-        // wrap over 3 items (0,1,2)
-        if (currentMenuItemHovered > 2) currentMenuItemHovered = 0;
-        else if (currentMenuItemHovered < 0) currentMenuItemHovered = 2;
+        if (currentMenuItemHovered > 3)
+            currentMenuItemHovered = 0;
+        else if (currentMenuItemHovered < 0)
+            currentMenuItemHovered = 3;
 
         // highlight hovered item + pointer position
         if (currentMenuItemHovered == 0) {
             playGame.setColor(new Color(255, 215, 0));
             credits.setColor(new Color(49, 207, 240));
             controls.setColor(new Color(49, 207, 240));
-            pointerLocationX = 270; pointerLocationY = 205;
+            music.setColor(new Color(49, 207, 240));
+            pointerLocationX = 270;
+            pointerLocationY = 205;
         } else if (currentMenuItemHovered == 1) {
             playGame.setColor(new Color(49, 207, 240));
             credits.setColor(new Color(255, 215, 0));
             controls.setColor(new Color(49, 207, 240));
-            pointerLocationX = 270; pointerLocationY = 260;
-        } else { // 2 = CONTROLS
+            music.setColor(new Color(49, 207, 240));
+            pointerLocationX = 270;
+            pointerLocationY = 260;
+        } else if (currentMenuItemHovered == 2) { // CONTROLS
             playGame.setColor(new Color(49, 207, 240));
             credits.setColor(new Color(49, 207, 240));
             controls.setColor(new Color(255, 215, 0));
-            pointerLocationX = 270; pointerLocationY = 315; // aligned with CONTROLS line
+            music.setColor(new Color(49, 207, 240));
+            pointerLocationX = 270;
+            pointerLocationY = 315;
+        } else { // 3 = MUSIC
+            playGame.setColor(new Color(49, 207, 240));
+            credits.setColor(new Color(49, 207, 240));
+            controls.setColor(new Color(49, 207, 240));
+            music.setColor(new Color(255, 215, 0));
+            pointerLocationX = 270;
+            pointerLocationY = 368;
         }
 
         // selection behavior unchanged (Controls does nothing yet)
-        if (Keyboard.isKeyUp(Key.SPACE)) keyLocker.unlockKey(Key.SPACE);
+        if (Keyboard.isKeyUp(Key.SPACE))
+            keyLocker.unlockKey(Key.SPACE);
         if (!keyLocker.isKeyLocked(Key.SPACE) && Keyboard.isKeyDown(Key.SPACE)) {
             menuItemSelected = currentMenuItemHovered;
             if (menuItemSelected == 0) {
                 screenCoordinator.setGameState(GameState.CHARACTER_SELECT);
             } else if (menuItemSelected == 1) {
                 screenCoordinator.setGameState(GameState.CREDITS);
-            } } else if (menuItemSelected == 2) {           // <-- add this block
-                screenCoordinator.setGameState(GameState.Controls);
             }
-           
+        } else if (menuItemSelected == 2) { // <-- add this block
+            screenCoordinator.setGameState(GameState.Controls);
+        } else if (menuItemSelected == 3) {
+            screenCoordinator.setGameState(GameState.MUSIC_SELECT);
         }
-    
+
+    }
 
     public void draw(GraphicsHandler graphicsHandler) {
         // *** IMPORTANT: draw ONLY our PNG background, NOT the TitleScreenMap. ***
@@ -162,11 +187,11 @@ public class MenuScreen extends Screen {
         // Original menu UI + new CONTROLS
         playGame.draw(graphicsHandler);
         credits.draw(graphicsHandler);
-        controls.draw(graphicsHandler); // new line
+        controls.draw(graphicsHandler);
+        music.draw(graphicsHandler);
 
         graphicsHandler.drawFilledRectangleWithBorder(
                 pointerLocationX, pointerLocationY, 20, 20,
-                new Color(49, 207, 240), Color.black, 2
-        );
+                new Color(49, 207, 240), Color.black, 2);
     }
 }

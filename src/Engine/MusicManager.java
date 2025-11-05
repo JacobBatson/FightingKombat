@@ -14,6 +14,8 @@ public class MusicManager {
 
     private Map<String, String> screenMusicMap;
 
+    private String manuallySelectedSong = null;
+
     private MusicManager() {
         screenMusicMap = new HashMap<>();
         initializeScreenMusic();
@@ -44,7 +46,23 @@ public class MusicManager {
             return;
         }
 
-        String musicFile = screenMusicMap.get(screenName);
+        if ("LEVEL".equals(screenName)) {
+            String musicFile = screenMusicMap.get(screenName);
+            if (musicFile != null && !musicFile.equals(currentTrack)) {
+                stopCurrentMusic();
+                playMusic(musicFile);
+                currentTrack = musicFile;
+            }
+            return;
+        }
+
+        String musicFile;
+        if (manuallySelectedSong != null) {
+            musicFile = manuallySelectedSong;
+        } else {
+            musicFile = screenMusicMap.get(screenName);
+        }
+
         if (musicFile != null && !musicFile.equals(currentTrack)) {
             stopCurrentMusic();
             playMusic(musicFile);
@@ -162,6 +180,14 @@ public class MusicManager {
      */
     public boolean isMusicEnabled() {
         return isMusicEnabled;
+    }
+
+    public void setManuallySelectedSong(String musicFilePath) {
+        this.manuallySelectedSong = musicFilePath;
+    }
+
+    public String getManuallySelectedSong() {
+        return manuallySelectedSong;
     }
 
     /**

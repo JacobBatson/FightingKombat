@@ -4,12 +4,13 @@ import Engine.DefaultScreen;
 import Engine.GraphicsHandler;
 import Engine.MusicManager;
 import Engine.Screen;
-import Screens.CreditsScreen;
-import Screens.MenuScreen;
-import Screens.ControlsScreen;
-import Screens.PlayLevelScreen;
 import Screens.CharacterSelectionScreen;
+import Screens.ControlsScreen;
+import Screens.CreditsScreen;
 import Screens.MapSelectionScreen;
+import Screens.MenuScreen;
+import Screens.MusicSelectionScreen;
+import Screens.PlayLevelScreen;
 
 public class ScreenCoordinator extends Screen {
     // currently shown Screen
@@ -78,6 +79,10 @@ public class ScreenCoordinator extends Screen {
                     case Controls:
                         currentScreen = new ControlsScreen(this);
                         musicManager.playMusicForScreen("CONTROLS");
+                        break;
+                    case MUSIC_SELECT:
+                        currentScreen = new MusicSelectionScreen(this);
+                        musicManager.playMusicForScreen("MENU");
                         break;
                 }
                 currentScreen.initialize();
