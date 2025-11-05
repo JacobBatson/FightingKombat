@@ -1,6 +1,7 @@
 package Level;
 
 import Engine.Config;
+import GameObject.GameObject;
 import Engine.GraphicsHandler;
 import Engine.ScreenManager;
 import Utils.Point;
@@ -368,6 +369,29 @@ public abstract class Map {
             adjustMovementX(player);
         }
         camera.update(player);
+    }
+
+  
+    public void enforcePlayerBounds(GameObject player) {
+        if (player == null || camera == null) return;
+
+        // camera world bounds
+        float camX = camera.getX();
+        float camY = camera.getY();
+        float camEndX = camera.getEndBoundX();
+        float camEndY = camera.getEndBoundY();
+
+       
+        float minPlayerX = camX;
+        float maxPlayerX = camEndX - player.getWidth();
+        float minPlayerY = camY;
+        float maxPlayerY = camEndY - player.getHeight();
+
+       
+        if (player.getX() < minPlayerX) player.setX(minPlayerX);
+        if (player.getX() > maxPlayerX) player.setX(maxPlayerX);
+        if (player.getY() < minPlayerY) player.setY(minPlayerY);
+        if (player.getY() > maxPlayerY) player.setY(maxPlayerY);
     }
 
     // based on the player's current X position (which in a level can potentially be updated each frame),

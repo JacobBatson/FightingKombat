@@ -66,6 +66,13 @@ public class Player2 extends MapEntity {
     protected Key MOVE_LEFT_KEY = Key.LEFT;
     protected Key MOVE_RIGHT_KEY = Key.RIGHT;
 
+    // Flamethrower special state (Fire character only)
+    private boolean flamethrowerActive = false;
+    private int flamethrowerTimer = 0; 
+    private final int FLAMETHROWER_DURATION_FRAMES = 1 * 60; 
+    private final int FLAMETHROWER_SPAWN_INTERVAL = 4; 
+    private int flamethrowerSpawnCooldown = 0;
+
     private String characterSpritePathUsed;
 
     public Player2(float x, float y, String characterSpritePath, int spriteWidth, int spriteHeight) {
@@ -121,33 +128,62 @@ public class Player2 extends MapEntity {
         handlePlayerAnimation();
         updateLockedKeys();
 
-        // Shoot (Enter)
+        // Shoot (Enter) / Super move activation
         if (Keyboard.isKeyDown(FIREBALL_KEY) && !keyLocker.isKeyLocked(FIREBALL_KEY) && canUseSuperMove) {
             keyLocker.lockKey(FIREBALL_KEY);
             useSuperMove();
 
-            float fbSpeed = 4.0f;
-            int fbFrames = 60;
-            Utils.Point offset = getFireballSpawnOffset();
-            float fbX = this.x + (facingDirection == Direction.RIGHT ? 50 : 50);
-            float fbY = this.y + offset.y;
-            float speed = (facingDirection == Direction.RIGHT) ? fbSpeed : -fbSpeed;
-
-            Fireball shot;
-            if (isWaterSkin()) {
-                shot = new WaterShot(new Point(fbX, fbY), speed, fbFrames);
-            } else if (isRockSkin()) {
-                shot = new RockShot(new Point(fbX, fbY), speed, fbFrames);
+            if (isFireSkin()) {
+                flamethrowerActive = true;
+                flamethrowerTimer = FLAMETHROWER_DURATION_FRAMES;
+                flamethrowerSpawnCooldown = 0;
             } else {
-                shot = new Fireball(new Point(fbX, fbY), speed, fbFrames);
-            }
+                float fbSpeed = 4.0f;
+                int fbFrames = 60;
+                Utils.Point offset = getFireballSpawnOffset();
+                float fbX = this.x + (facingDirection == Direction.RIGHT ? 50 : 50);
+                float fbY = this.y + offset.y;
+                float speed = (facingDirection == Direction.RIGHT) ? fbSpeed : -fbSpeed;
 
-            // critical: make projectile camera-aware
-            shot.setMap(this.map);
-            fireballs.add(shot);
+                Fireball shot;
+                if (isWaterSkin()) {
+                    shot = new WaterShot(new Point(fbX, fbY), speed, fbFrames);
+                } else if (isRockSkin()) {
+                    shot = new RockShot(new Point(fbX, fbY), speed, fbFrames);
+                } else {
+                    shot = new Fireball(new Point(fbX, fbY), speed, fbFrames);
+                }
+
+                // critical: make projectile camera-aware
+                shot.setMap(this.map);
+                fireballs.add(shot);
+            }
         }
         if (Keyboard.isKeyUp(FIREBALL_KEY)) {
             keyLocker.unlockKey(FIREBALL_KEY);
+        }
+
+        // Flamethrower logic: 
+        if (flamethrowerActive) {
+            if (flamethrowerTimer > 0) {
+                flamethrowerSpawnCooldown--;
+                if (flamethrowerSpawnCooldown <= 0) {
+                    float fbSpeed = 5.0f;
+                    int fbFrames = 40;
+                    Utils.Point offset = getFireballSpawnOffset();
+                    float fbX = this.x + (facingDirection == Direction.RIGHT ? 50 : 50);
+                    float fbY = this.y + offset.y;
+                    float speed = (facingDirection == Direction.RIGHT) ? fbSpeed : -fbSpeed;
+                    int flamethrowerDamage = 4;
+                    Fireball shot = new Fireball(new Point(fbX, fbY), speed, fbFrames, flamethrowerDamage);
+                    shot.setMap(this.map);
+                    fireballs.add(shot);
+                    flamethrowerSpawnCooldown = FLAMETHROWER_SPAWN_INTERVAL;
+                }
+                flamethrowerTimer--;
+            } else {
+                flamethrowerActive = false;
+            }
         }
 
         // Update shots
@@ -552,6 +588,13 @@ public class Player2 extends MapEntity {
             return false;
         String p = characterSpritePathUsed.toLowerCase();
         return p.contains("earth");
+    }
+
+    private boolean isFireSkin() {
+        if (characterSpritePathUsed == null)
+            return false;
+        String p = characterSpritePathUsed.toLowerCase();
+        return p.contains("fire");
     }
 
     @Override

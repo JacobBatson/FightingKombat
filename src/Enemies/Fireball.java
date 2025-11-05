@@ -19,6 +19,7 @@ import java.util.HashMap;
 public class Fireball extends Enemy {
     private float movementSpeed;
     private int existenceFrames;
+    private int damage = 20;
 
     public Fireball(Point location, float movementSpeed, int existenceFrames) {
         super(location.x, location.y, new SpriteSheet(ImageLoader.load("Fireball.png"), 7, 7), "DEFAULT");
@@ -28,6 +29,15 @@ public class Fireball extends Enemy {
         this.existenceFrames = existenceFrames;
 
         initialize();
+    }
+
+    public Fireball(Point location, float movementSpeed, int existenceFrames, int damage) {
+        this(location, movementSpeed, existenceFrames);
+        this.damage = damage;
+    }
+
+    public int getDamage() {
+        return damage;
     }
 
     @Override

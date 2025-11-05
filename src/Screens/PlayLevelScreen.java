@@ -158,6 +158,12 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             case RUNNING:
                 player1.update();
                 player2.update();
+
+                
+                if (map != null) {
+                    map.enforcePlayerBounds(player1);
+                    map.enforcePlayerBounds(player2);
+                }
                 java.util.Iterator<Fireball> it1 = player1.getFireballs().iterator();
                 while (it1.hasNext()) {
                     Fireball fb = it1.next();
@@ -167,7 +173,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                                 // Attacker invincibility should NOT prevent dealing damage.
                                 String p1Character = CharacterSelectionScreen.getP1SelectedCharacter();
                                 String mapKey = screenCoordinator.getSelectedMapKey();
-                                int baseDamage = 20;
+                                int baseDamage = fb.getDamage();
                                 int elementalBonus = getElementalDamageBonus(p1Character, mapKey);
                                 int totalDamage = baseDamage + elementalBonus;
                                 player2.takeDamage(totalDamage, fb.getX());
@@ -188,7 +194,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                                 // Attacker invincibility should NOT prevent dealing damage.
                                 String p2Character = CharacterSelectionScreen.getP2SelectedCharacter();
                                 String mapKey = screenCoordinator.getSelectedMapKey();
-                                int baseDamage = 20;
+                                int baseDamage = fb.getDamage();
                                 int elementalBonus = getElementalDamageBonus(p2Character, mapKey);
                                 int totalDamage = baseDamage + elementalBonus;
                                 player1.takeDamage(totalDamage, fb.getX());
