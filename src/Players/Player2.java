@@ -5,6 +5,7 @@ import Engine.ImageLoader;
 import Engine.Key;
 import Engine.KeyLocker;
 import Engine.Keyboard;
+import Engine.MusicManager;
 import GameObject.Frame;
 import GameObject.SpriteSheet;
 import Level.MapEntity;
@@ -68,9 +69,9 @@ public class Player2 extends MapEntity {
 
     // Flamethrower special state (Fire character only)
     private boolean flamethrowerActive = false;
-    private int flamethrowerTimer = 0; 
-    private final int FLAMETHROWER_DURATION_FRAMES = 1 * 60; 
-    private final int FLAMETHROWER_SPAWN_INTERVAL = 4; 
+    private int flamethrowerTimer = 0;
+    private final int FLAMETHROWER_DURATION_FRAMES = 1 * 60;
+    private final int FLAMETHROWER_SPAWN_INTERVAL = 4;
     private int flamethrowerSpawnCooldown = 0;
 
     private String characterSpritePathUsed;
@@ -137,6 +138,7 @@ public class Player2 extends MapEntity {
                 flamethrowerActive = true;
                 flamethrowerTimer = FLAMETHROWER_DURATION_FRAMES;
                 flamethrowerSpawnCooldown = 0;
+                MusicManager.getInstance().playSoundEffect("Resources/Fahh Sound Effect.wav");
             } else {
                 float fbSpeed = 4.0f;
                 int fbFrames = 60;
@@ -163,7 +165,7 @@ public class Player2 extends MapEntity {
             keyLocker.unlockKey(FIREBALL_KEY);
         }
 
-        // Flamethrower logic: 
+        // Flamethrower logic:
         if (flamethrowerActive) {
             if (flamethrowerTimer > 0) {
                 flamethrowerSpawnCooldown--;
@@ -456,7 +458,8 @@ public class Player2 extends MapEntity {
 
     // Initiates invincibility for player two
     public void grantInvincibility(int frames) {
-        if (frames <= 0) return;
+        if (frames <= 0)
+            return;
         this.isInvincible = true;
         this.invincibleTimer = frames;
         this.invincibleBlinkTimer = 0;
@@ -526,7 +529,8 @@ public class Player2 extends MapEntity {
         if (healthDecreased) {
             // increased knockback
             float kbPixels = 20f;
-            // determine direction: if attacker is left of us, push right; otherwise push left
+            // determine direction: if attacker is left of us, push right; otherwise push
+            // left
             if (attackerX < this.getX()) {
                 this.setX(this.getX() + kbPixels);
             } else {

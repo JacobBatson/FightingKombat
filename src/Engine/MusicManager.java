@@ -191,6 +191,37 @@ public class MusicManager {
     }
 
     /**
+     * Play a sound effect once (does not loop)
+     * 
+     * @param soundFilePath
+     */
+    public void playSoundEffect(String soundFilePath) {
+        try {
+            File file = new File(soundFilePath);
+            if (!file.exists()) {
+                System.out.println("Sound effect file not found: " + soundFilePath);
+                return;
+            }
+
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioStream);
+
+            if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+                FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+                float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
+                gainControl.setValue(dB);
+            }
+
+            clip.start();
+
+        } catch (Exception e) {
+            System.out.println("Error playing sound effect: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Clean up resources
      */
     public void cleanup() {

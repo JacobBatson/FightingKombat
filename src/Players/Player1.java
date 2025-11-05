@@ -5,6 +5,7 @@ import Engine.ImageLoader;
 import Engine.Key;
 import Engine.KeyLocker;
 import Engine.Keyboard;
+import Engine.MusicManager;
 import GameObject.Frame;
 import GameObject.SpriteSheet;
 import Level.MapEntity;
@@ -70,7 +71,7 @@ public class Player1 extends MapEntity {
     private boolean flamethrowerActive = false;
     private int flamethrowerTimer = 0; // frames remaining
     private final int FLAMETHROWER_DURATION_FRAMES = 1 * 60; // 1 second
-    private final int FLAMETHROWER_SPAWN_INTERVAL = 4; 
+    private final int FLAMETHROWER_SPAWN_INTERVAL = 4;
     private int flamethrowerSpawnCooldown = 0;
 
     private String characterSpritePathUsed;
@@ -112,11 +113,11 @@ public class Player1 extends MapEntity {
             keyLocker.lockKey(FIREBALL_KEY);
             useSuperMove(); // Reset the damage bar after using super move
 
-           
             if (isFireSkin()) {
                 flamethrowerActive = true;
                 flamethrowerTimer = FLAMETHROWER_DURATION_FRAMES;
                 flamethrowerSpawnCooldown = 0;
+                MusicManager.getInstance().playSoundEffect("Resources/Fahh Sound Effect.wav");
             } else {
                 float fbSpeed = 4.0f;
                 int fbFrames = 60;
@@ -139,13 +140,13 @@ public class Player1 extends MapEntity {
             }
         }
 
-        // Flamethrower logic: 
+        // Flamethrower logic:
         if (flamethrowerActive) {
             if (flamethrowerTimer > 0) {
                 flamethrowerSpawnCooldown--;
                 if (flamethrowerSpawnCooldown <= 0) {
-                    float fbSpeed = 5.0f; 
-                    int fbFrames = 40;    
+                    float fbSpeed = 5.0f;
+                    int fbFrames = 40;
                     Utils.Point offset = getFireballSpawnOffset();
                     float fbX = this.x + (facingDirection == Direction.RIGHT ? 50 : 50);
                     float fbY = this.y + offset.y;
@@ -438,7 +439,8 @@ public class Player1 extends MapEntity {
 
     // Initiates invincibility for player one
     public void grantInvincibility(int frames) {
-        if (frames <= 0) return;
+        if (frames <= 0)
+            return;
         this.isInvincible = true;
         this.invincibleTimer = frames;
         this.invincibleBlinkTimer = 0;
@@ -506,7 +508,8 @@ public class Player1 extends MapEntity {
         if (healthDecreased) {
             // increased knockback
             float kbPixels = 20f;
-            // determine direction: if attacker is left of us, push right; otherwise push left
+            // determine direction: if attacker is left of us, push right; otherwise push
+            // left
             if (attackerX < this.getX()) {
                 this.setX(this.getX() + kbPixels);
             } else {
