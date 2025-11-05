@@ -170,7 +170,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                                 int baseDamage = 20;
                                 int elementalBonus = getElementalDamageBonus(p1Character, mapKey);
                                 int totalDamage = baseDamage + elementalBonus;
-                                player2.takeDamage(totalDamage);
+                                player2.takeDamage(totalDamage, fb.getX());
                                 fb.handleMapEntityCollision(player2);
                                 it1.remove();
                             }
@@ -191,7 +191,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                                 int baseDamage = 20;
                                 int elementalBonus = getElementalDamageBonus(p2Character, mapKey);
                                 int totalDamage = baseDamage + elementalBonus;
-                                player1.takeDamage(totalDamage);
+                                player1.takeDamage(totalDamage, fb.getX());
                                 fb.handleMapEntityCollision(player1);
                                 it2.remove();
                             }
@@ -210,7 +210,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                             int baseDamage = 10;
                             int elementalBonus = getElementalDamageBonus(p1Character, mapKey);
                             int totalDamage = baseDamage + elementalBonus;
-                            if (player2.takeDamage(totalDamage)) {
+                            if (player2.takeDamage(totalDamage, player1.getX())) {
                                 player1.addDamageDealt(totalDamage);
                             }
                         }
@@ -227,7 +227,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                             int baseDamage = 10;
                             int elementalBonus = getElementalDamageBonus(p2Character, mapKey);
                             int totalDamage = baseDamage + elementalBonus;
-                            if (player1.takeDamage(totalDamage)) {
+                            if (player1.takeDamage(totalDamage, player2.getX())) {
                                 player2.addDamageDealt(totalDamage);
                             }
                         }

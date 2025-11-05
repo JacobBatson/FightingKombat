@@ -452,6 +452,16 @@ public class Player2 extends MapEntity {
     }
 
     public boolean takeDamage(int amount) {
+        // Fallback: use facing direction to estimate attacker position so existing
+        // callers that don't provide an attacker X get reasonable knockback.
+        float fallbackAttackerX = this.getX() + (facingDirection == Direction.RIGHT ? 1f : -1f);
+        return takeDamage(amount, fallbackAttackerX);
+    }
+
+    // Attacker-aware overload: applies knockback away from attackerX when health
+    // decreases (even slightly). Keeps the original behavior and adds the
+    // one-frame upward impulse plus a horizontal nudge.
+    public boolean takeDamage(int amount, float attackerX) {
         // Ignore damage if non-positive, in short invuln frames, or full respawn
         // invincibility
         if (amount <= 0 || invulnFrames > 0 || isInvincible)
@@ -460,6 +470,7 @@ public class Player2 extends MapEntity {
         // Set short invincibility frames immediately
         invulnFrames = 3;
 
+        int prevHeartHP = heartHP;
         int prevHearts = hearts;
         heartHP -= amount;
         if (heartHP <= 0 && hearts > 1) {
@@ -473,6 +484,24 @@ public class Player2 extends MapEntity {
             hearts = 0;
         if (heartHP < 0)
             heartHP = 0;
+
+        // If any health decreased (even slightly), apply knockback away from attacker
+        boolean healthDecreased = (heartHP < prevHeartHP) || (hearts < prevHearts);
+        if (healthDecreased) {
+            // increased knockback
+            float kbPixels = 20f;
+            // determine direction: if attacker is left of us, push right; otherwise push left
+            if (attackerX < this.getX()) {
+                this.setX(this.getX() + kbPixels);
+            } else {
+                this.setX(this.getX() - kbPixels);
+            }
+            // Give a single-frame upward impulse rather than setting persistent momentum
+            this.jumpForce = 0; // cancel any active jump force
+            this.moveAmountY -= 8f; // one-frame upward move; gravity will pull back next frames
+            this.previousX = this.getX();
+            this.previousY = this.getY();
+        }
 
         // If a full heart was lost, respawn at a random safe position on the map
         if (hearts < prevHearts && map != null) {
