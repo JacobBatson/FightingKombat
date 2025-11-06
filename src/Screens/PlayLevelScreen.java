@@ -12,6 +12,7 @@ import Level.PowerUp;
 import Maps.Map1; // WASD/E controls
 import Maps.Map2; // Arrow/Enter controls
 import Maps.Map3; // Importing SpriteFont for timer display
+import Maps.Map4;
 import Players.Player1;
 import Players.Player2;
 import SpriteFont.SpriteFont;
@@ -44,11 +45,12 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     private DamageBar p1DamageBar;
     private DamageBar p2DamageBar;
 
-    // Power-up: spawns every 30s (including at start) and grants 5s of invincibility
+    // Power-up: spawns every 30s (including at start) and grants 5s of
+    // invincibility
     private PowerUp powerUp = null;
-    private int powerUpSpawnTimer = 0; 
-    private final int POWERUP_SPAWN_INTERVAL_FRAMES = 20 * 60; 
-    private final int POWERUP_INVINCIBLE_FRAMES = 5 * 60; 
+    private int powerUpSpawnTimer = 0;
+    private final int POWERUP_SPAWN_INTERVAL_FRAMES = 20 * 60;
+    private final int POWERUP_INVINCIBLE_FRAMES = 5 * 60;
 
     public PlayLevelScreen(ScreenCoordinator screenCoordinator) {
         this.screenCoordinator = screenCoordinator;
@@ -62,6 +64,9 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             this.map = new Map2();
         } else if ("EARTH".equals(key)) {
             this.map = new Map3();
+            map.getCamera().moveY(0);
+        } else if ("AIR".equals(key)) {
+            this.map = new Map4();
             map.getCamera().moveY(0);
         } else {
             this.map = new Map1();
@@ -120,8 +125,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         gameOverFont.setOutlineColor(java.awt.Color.BLACK);
         gameOverFont.setOutlineThickness(3f);
 
-    // start countdown to first power-up spawn (20 seconds)
-    powerUpSpawnTimer = POWERUP_SPAWN_INTERVAL_FRAMES;
+        // start countdown to first power-up spawn (20 seconds)
+        powerUpSpawnTimer = POWERUP_SPAWN_INTERVAL_FRAMES; 
     }
 
     // Map character name -> sprite file
@@ -149,6 +154,10 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             System.out.println("[Elemental] Rock Dude on Earth map - +5 damage bonus!");
             return 5; // rock dude on earth map
         }
+        if ("Air Dude".equals(characterName) && "AIR".equals(mapKey)) {
+            System.out.println("[Elemental] Air Dude on Air map - +5 damage bonus!");
+            return 5; // air dude on air map
+        }
         return 0; // No bonus
     }
 
@@ -159,7 +168,6 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 player1.update();
                 player2.update();
 
-                
                 if (map != null) {
                     map.enforcePlayerBounds(player1);
                     map.enforcePlayerBounds(player2);
@@ -299,7 +307,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                                 powerUpSpawnTimer = POWERUP_SPAWN_INTERVAL_FRAMES;
                             }
                             // player 2 picks up
-                            else if (player2.getBounds() != null && powerUp.getBounds().intersects(player2.getBounds())) {
+                            else if (player2.getBounds() != null
+                                    && powerUp.getBounds().intersects(player2.getBounds())) {
                                 player2.grantInvincibility(POWERUP_INVINCIBLE_FRAMES);
                                 powerUp = null;
                                 powerUpSpawnTimer = POWERUP_SPAWN_INTERVAL_FRAMES;
@@ -452,12 +461,13 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
     // Spawn a power-up somewhere on the map
     private void spawnPowerUp() {
-        if (map == null) return;
-        PowerUp pu = new PowerUp(0,0);
+        if (map == null)
+            return;
+        PowerUp pu = new PowerUp(0, 0);
         pu.setMap(map);
         // Place the power up at a random location within the current camera view
         try {
-            
+
             Level.Camera cam = map.getCamera();
             float camX = cam.getX();
             float camY = cam.getY();

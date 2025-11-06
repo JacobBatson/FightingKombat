@@ -2,19 +2,18 @@ package Screens;
 
 import Engine.GraphicsHandler;
 import Engine.ImageLoader;
-import Engine.Keyboard;
 import Engine.Key;
 import Engine.KeyLocker;
+import Engine.Keyboard;
 import Engine.Screen;
 import Game.GameState;
 import Game.ScreenCoordinator;
 import SpriteFont.SpriteFont;
-
-import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
+import javax.imageio.ImageIO;
 
 public class MapSelectionScreen extends Screen {
     private final ScreenCoordinator screenCoordinator;
@@ -26,19 +25,19 @@ public class MapSelectionScreen extends Screen {
     private static final int SCREEN_H = 600;
     private static final int IMAGE_PADDING = 8;
 
-    private static final String[] MAP_LABELS = {"Random", "Earth", "Water", "Fire", "Air"};
-    private static final String[] MAP_KEYS    = {"RANDOM", "EARTH", "WATER", "FIRE", "AIR"};
+    private static final String[] MAP_LABELS = { "Random", "Earth", "Water", "Fire", "Air" };
+    private static final String[] MAP_KEYS = { "RANDOM", "EARTH", "WATER", "FIRE", "AIR" };
 
-    private static final boolean[] LOCKED = { false, false, false, false, true };
+    private static final boolean[] LOCKED = { false, false, false, false, false };
 
     private int hovered = 0;
 
-    private final Color bgDim       = new Color(10, 10, 16);
-    private final Color cardBG      = new Color(20, 20, 28);
-    private final Color cardBorder  = new Color(60, 60, 80);
+    private final Color bgDim = new Color(10, 10, 16);
+    private final Color cardBG = new Color(20, 20, 28);
+    private final Color cardBorder = new Color(60, 60, 80);
     private final Color hoverBorder = new Color(255, 200, 80);
-    private final Color disabled    = new Color(90, 90, 110);
-    private final Color hintColor   = new Color(200, 200, 220);
+    private final Color disabled = new Color(90, 90, 110);
+    private final Color hintColor = new Color(200, 200, 220);
 
     private SpriteFont title;
     private SpriteFont hint;
@@ -54,25 +53,30 @@ public class MapSelectionScreen extends Screen {
     @Override
     public void initialize() {
         title = new SpriteFont("Select a Map", 260, 96, "Comic Sans", 30, Color.WHITE);
-        hint  = new SpriteFont("←/→ move  •  Space select  •  Esc back",
+        hint = new SpriteFont("←/→ move  •  Space select  •  Esc back",
                 180, 520, "Comic Sans", 18, hintColor);
 
-        if (!Keyboard.isKeyDown(Key.LEFT))  keyLocker.unlockKey(Key.LEFT);
-        if (!Keyboard.isKeyDown(Key.RIGHT)) keyLocker.unlockKey(Key.RIGHT);
-        if (!Keyboard.isKeyDown(Key.SPACE)) keyLocker.unlockKey(Key.SPACE);
-        if (!Keyboard.isKeyDown(Key.ESC))   keyLocker.unlockKey(Key.ESC);
+        if (!Keyboard.isKeyDown(Key.LEFT))
+            keyLocker.unlockKey(Key.LEFT);
+        if (!Keyboard.isKeyDown(Key.RIGHT))
+            keyLocker.unlockKey(Key.RIGHT);
+        if (!Keyboard.isKeyDown(Key.SPACE))
+            keyLocker.unlockKey(Key.SPACE);
+        if (!Keyboard.isKeyDown(Key.ESC))
+            keyLocker.unlockKey(Key.ESC);
 
-        loadMapImage("AIR",    "/maps/air.png");
-        putMapImageFromResources("EARTH",  "rock map.png");
-        putMapImageFromResources("WATER",  "water pic.png");
-        putMapImageFromResources("FIRE",   "Fire pic.png");
+        putMapImageFromResources("AIR", "airmap.png");
+        putMapImageFromResources("EARTH", "rock map.png");
+        putMapImageFromResources("WATER", "water pic.png");
+        putMapImageFromResources("FIRE", "Fire pic.png");
         putMapImageFromResources("RANDOM", "dice pic.png");
     }
 
     private void loadMapImage(String key, String resourcePath) {
         try {
             BufferedImage img = ImageIO.read(getClass().getResourceAsStream(resourcePath));
-            if (img != null) mapImages.put(key, img);
+            if (img != null)
+                mapImages.put(key, img);
         } catch (Exception e) {
             System.err.println("Failed to load map image: " + resourcePath + " -> " + e.getMessage());
         }
@@ -81,7 +85,8 @@ public class MapSelectionScreen extends Screen {
     private void putMapImageFromResources(String key, String fileName) {
         try {
             BufferedImage img = ImageLoader.load(fileName);
-            if (img != null) mapImages.put(key, img);
+            if (img != null)
+                mapImages.put(key, img);
         } catch (RuntimeException e) {
             System.err.println("Failed to load map image from Resources: " + fileName + " -> " + e.getMessage());
         }
@@ -111,7 +116,7 @@ public class MapSelectionScreen extends Screen {
             if ("RANDOM".equals(key)) {
                 String[] pool = unlockedChoices();
                 if (pool.length > 0) {
-                    key = pool[(int)(Math.random() * pool.length)];
+                    key = pool[(int) (Math.random() * pool.length)];
                 }
             }
 
@@ -153,8 +158,7 @@ public class MapSelectionScreen extends Screen {
                     x, y, CARD_W, CARD_H,
                     cardBG,
                     locked ? disabled : border,
-                    borderWidth
-            );
+                    borderWidth);
 
             BufferedImage img = mapImages.get(MAP_KEYS[i]);
             int imgX = x + IMAGE_PADDING;
@@ -184,9 +188,9 @@ public class MapSelectionScreen extends Screen {
     }
 
     private BufferedImage scaleToFit(BufferedImage img, int maxW, int maxH) {
-        double ratio = Math.min((double)maxW / img.getWidth(), (double)maxH / img.getHeight());
-        int newW = (int)(img.getWidth() * ratio);
-        int newH = (int)(img.getHeight() * ratio);
+        double ratio = Math.min((double) maxW / img.getWidth(), (double) maxH / img.getHeight());
+        int newW = (int) (img.getWidth() * ratio);
+        int newH = (int) (img.getHeight() * ratio);
         BufferedImage scaled = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = scaled.createGraphics();
         g2.drawImage(img, 0, 0, newW, newH, null);
@@ -206,7 +210,8 @@ public class MapSelectionScreen extends Screen {
     private String[] unlockedChoices() {
         java.util.ArrayList<String> list = new java.util.ArrayList<>();
         for (int i = 0; i < MAP_KEYS.length; i++) {
-            if (!LOCKED[i] && !"RANDOM".equals(MAP_KEYS[i])) list.add(MAP_KEYS[i]);
+            if (!LOCKED[i] && !"RANDOM".equals(MAP_KEYS[i]))
+                list.add(MAP_KEYS[i]);
         }
         return list.toArray(new String[0]);
     }
