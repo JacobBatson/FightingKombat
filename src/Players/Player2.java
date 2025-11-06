@@ -176,7 +176,7 @@ public class Player2 extends MapEntity {
                     float fbX = this.x + (facingDirection == Direction.RIGHT ? 50 : 50);
                     float fbY = this.y + offset.y;
                     float speed = (facingDirection == Direction.RIGHT) ? fbSpeed : -fbSpeed;
-                    int flamethrowerDamage = 4;
+                    int flamethrowerDamage = 2;
                     Fireball shot = new Fireball(new Point(fbX, fbY), speed, fbFrames, flamethrowerDamage);
                     shot.setMap(this.map);
                     fireballs.add(shot);
