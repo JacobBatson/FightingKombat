@@ -612,6 +612,25 @@ public class CommonTileset extends Tileset {
                .withTileType(TileType.PASSABLE);
        mapTiles.add(PillerTopTile);     
 
+       //Cloud map cloud plat left
+        Frame CloudPlatLeftFrame = new FrameBuilder(getSubImage(9, 4  ))
+               .withScale(tileScale)
+               .withBounds(0, 6, 16, 4)
+               .build();
+
+       MapTileBuilder CloudPlatLeftTile = new MapTileBuilder(CloudPlatLeftFrame)
+               .withTileType(TileType.JUMP_THROUGH_PLATFORM);
+       mapTiles.add(CloudPlatLeftTile);
+
+        //Cloud map cloud plat right
+         Frame CloudPlatRightFrame = new FrameBuilder(getSubImage(9, 5  ))
+                 .withScale(tileScale)
+                 .withBounds(0, 6, 16, 4)
+                 .build();
+
+       MapTileBuilder CloudPlatRightTile = new MapTileBuilder(CloudPlatRightFrame)
+               .withTileType(TileType.JUMP_THROUGH_PLATFORM);
+       mapTiles.add(CloudPlatRightTile);
 
        //Watermap Piller bottom
         Frame PillerBottomFrame = new FrameBuilder(getSubImage(10, 3))
@@ -651,10 +670,163 @@ public class CommonTileset extends Tileset {
                .withTileType(TileType.PASSABLE);
        mapTiles.add(HellThroneBottomTile);
 
+       //map4 cloud background left
+       Frame AirmapCloudLeftFrame = new FrameBuilder(getSubImage(10, 4))
+                .withScale(tileScale)
+                .build();
+
+       MapTileBuilder AirmapCloudLeftTile = new MapTileBuilder(AirmapCloudLeftFrame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(AirmapCloudLeftTile);
 
 
 
 
+
+//Map 4 air tileset
+
+       //map4 cloud background right
+      Frame AirmapCloudRightFrame = new FrameBuilder(getSubImage(10, 5))
+                .withScale(tileScale)
+                .build();
+
+       MapTileBuilder AirmapCloudRightTile = new MapTileBuilder(AirmapCloudRightFrame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(AirmapCloudRightTile);
+
+       //map4 background block
+        Frame AirmapBackgroundFrame = new FrameBuilder(getSubImage(11, 0))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder AirmapBackgroundTile = new MapTileBuilder(AirmapBackgroundFrame)
+                .withTileType(TileType.PASSABLE);
+       mapTiles.add(AirmapBackgroundTile);
+
+       //air map block 1
+       Frame Air1Frame = new FrameBuilder(getSubImage(11, 1))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Air1Tile = new MapTileBuilder(Air1Frame);
+
+        mapTiles.add(Air1Tile);
+        
+        //air map block 2
+       Frame Air2Frame = new FrameBuilder(getSubImage(11, 2))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Air2Tile = new MapTileBuilder(Air2Frame);
+
+        mapTiles.add(Air2Tile);
+
+       //air map block 3
+       Frame Air3Frame = new FrameBuilder(getSubImage(11, 3))
+                .withScale(tileScale)
+                .build();
+
+       MapTileBuilder Air3Tile = new MapTileBuilder(Air3Frame);
+
+       mapTiles.add(Air3Tile);
+
+       //Airmap crystal block
+       Frame AirmapMagicrystalFrame = new FrameBuilder(getSubImage(11, 4))
+                .withScale(tileScale)
+                .build();
+
+       MapTileBuilder AirmapMagicrystalTile = new MapTileBuilder(AirmapMagicrystalFrame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(AirmapMagicrystalTile);
+       
+       //Airmap background guss
+       Frame AirmapBgGussFrame = new FrameBuilder(getSubImage(11, 5))
+                .withScale(tileScale)
+                .build();
+
+       MapTileBuilder AirmapBgGussTile = new MapTileBuilder(AirmapBgGussFrame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(AirmapBgGussTile);
+
+       //Airmap main plateform left
+        Frame LeftAirmapPlatFrame = new FrameBuilder(getSubImage(12, 0))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder LeftAirmapPlatTile = new MapTileBuilder(LeftAirmapPlatFrame)
+                .withTileType(TileType.NOT_PASSABLE);
+
+        mapTiles.add(LeftAirmapPlatTile);
+
+        //Airmap main plateform middle 1
+        Frame AirmapPlat1Frame = new FrameBuilder(getSubImage(12, 1))
+                .withScale(tileScale)
+                .build();                                                                                                             
+
+        MapTileBuilder AirmapPlat1Tile = new MapTileBuilder(AirmapPlat1Frame)
+                .withTileType(TileType.NOT_PASSABLE);
+        mapTiles.add(AirmapPlat1Tile);
+
+        //Airmap main plateform right 
+        Frame RightAirmapPlatFrame = new FrameBuilder(getSubImage(12, 2))
+                .withScale(tileScale)
+                .build();               
+
+        MapTileBuilder RightAirmapPlatTile = new MapTileBuilder(RightAirmapPlatFrame)
+                .withTileType(TileType.NOT_PASSABLE);                   
+
+        mapTiles.add(RightAirmapPlatTile);      
+
+        //Airmap small floating platform
+        Frame SmallAirmapPlatFrame = new FrameBuilder(getSubImage(12, 3))
+               .withScale(tileScale)
+               .withBounds(0, 6, 16, 4)
+               .build();
+
+       MapTileBuilder SmallAirmapPlatTile = new MapTileBuilder(SmallAirmapPlatFrame)
+               .withTileType(TileType.NOT_PASSABLE);
+       mapTiles.add(SmallAirmapPlatTile);       
+
+
+       //Air map crystal block 2
+       Frame AirmapMagicrystal2Frame = new FrameBuilder(getSubImage(12, 4))
+                .withScale(tileScale)
+                .build();
+
+       MapTileBuilder AirmapMagicrystal2Tile = new MapTileBuilder(AirmapMagicrystal2Frame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(AirmapMagicrystal2Tile);    
+
+       //Air map guss block 2
+        Frame AirmapBgGuss2Frame = new FrameBuilder(getSubImage(12, 5))
+                .withScale(tileScale)
+                .build();
+
+       MapTileBuilder AirmapBgGuss2Tile = new MapTileBuilder(AirmapBgGuss2Frame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(AirmapBgGuss2Tile); 
+
+
+       //Air map jump platform left
+       Frame AirmapBigPlatLeftFrame = new FrameBuilder(getSubImage(13, 0  ))
+               .withScale(tileScale)
+               .withBounds(0, 6, 16, 4)
+               .build();
+
+       MapTileBuilder AirmapBigPlatLeftTile = new MapTileBuilder(AirmapBigPlatLeftFrame)
+               .withTileType(TileType.JUMP_THROUGH_PLATFORM);
+       mapTiles.add(AirmapBigPlatLeftTile);
+
+
+       //Air map jump plateform right
+       Frame AirmapBigPlatRightFrame = new FrameBuilder(getSubImage(13, 1  ))
+               .withScale(tileScale)
+               .withBounds(0, 6, 16, 4)
+               .build();
+
+       MapTileBuilder AirmapBigPlatRightTile = new MapTileBuilder(AirmapBigPlatRightFrame)
+               .withTileType(TileType.JUMP_THROUGH_PLATFORM);
+       mapTiles.add(AirmapBigPlatRightTile);
 
 
 
