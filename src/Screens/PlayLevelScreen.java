@@ -19,6 +19,7 @@ import UI.DamageBar;
 import UI.HealthBar;
 import UI.HeartsHUD;
 import java.awt.Color;
+import java.util.Random;
 
 public class PlayLevelScreen extends Screen implements PlayerListener {
     protected ScreenCoordinator screenCoordinator;
@@ -119,9 +120,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         gameOverFont.setOutlineColor(java.awt.Color.BLACK);
         gameOverFont.setOutlineThickness(3f);
 
-        // spawn power up immediately at level start
-        powerUpSpawnTimer = 0;
-        spawnPowerUp();
+    // start countdown to first power-up spawn (20 seconds)
+    powerUpSpawnTimer = POWERUP_SPAWN_INTERVAL_FRAMES;
     }
 
     // Map character name -> sprite file
@@ -455,9 +455,37 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         if (map == null) return;
         PowerUp pu = new PowerUp(0,0);
         pu.setMap(map);
-        // Place the power-up at absolute coordinates (350,350) as requested
-        pu.setX(350);
-        pu.setY(350);
+        // Place the power up at a random location within the current camera view
+        try {
+            
+            Level.Camera cam = map.getCamera();
+            float camX = cam.getX();
+            float camY = cam.getY();
+            float camEndX = cam.getEndBoundX();
+            float camEndY = cam.getEndBoundY();
+
+            // power up sprite size
+            int puW = pu.getWidth();
+            int puH = pu.getHeight();
+
+            // compute max positions so the power up remains fully on-screen
+            float maxX = Math.max(camX, camEndX - puW);
+            float maxY = Math.max(camY, camEndY - puH);
+
+            Random rand = new Random();
+            int rangeX = Math.max(1, Math.round(maxX - camX));
+            int rangeY = Math.max(1, Math.round(maxY - camY));
+
+            float x = camX + rand.nextInt(rangeX);
+            float y = camY + rand.nextInt(rangeY);
+
+            pu.setX(x);
+            pu.setY(y);
+        } catch (Exception ex) {
+            // fallback t o the previous fixed location if anything goes wrong
+            pu.setX(350);
+            pu.setY(350);
+        }
         this.powerUp = pu;
         // make sure next spawn isn't immediate
         this.powerUpSpawnTimer = POWERUP_SPAWN_INTERVAL_FRAMES;
