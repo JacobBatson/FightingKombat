@@ -16,7 +16,6 @@ import Utils.Point;
 import Level.PlayerState;
 import Utils.AirGroundState;
 import Utils.Direction;
-
 import java.util.HashMap;
 import GameObject.Rectangle;
 
@@ -494,6 +493,7 @@ public class Player1 extends MapEntity {
         if (heartHP <= 0 && hearts > 1) {
             hearts--;
             heartHP = HEART_HP;
+            MusicManager.getInstance().playSoundEffect("Resources/my-leg!-made-with-Voicemod.wav", 10.0f);
         } else if (heartHP <= 0 && hearts == 1) {
             hearts = 0;
             heartHP = 0;

@@ -515,6 +515,7 @@ public class Player2 extends MapEntity {
         if (heartHP <= 0 && hearts > 1) {
             hearts--;
             heartHP = HEART_HP;
+            MusicManager.getInstance().playSoundEffect("Resources/my-leg!-made-with-Voicemod.wav", 10.0f);
         } else if (heartHP <= 0 && hearts == 1) {
             hearts = 0;
             heartHP = 0;

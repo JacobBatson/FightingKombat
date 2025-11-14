@@ -129,11 +129,6 @@ public class MusicManager {
         }
     }
 
-    /**
-     * Set the volume (0.0 to 1.0)
-     * 
-     * @param volume Volume level
-     */
     public void setVolume(float volume) {
         this.volume = Math.max(0.0f, Math.min(1.0f, volume));
         if (currentClip != null && currentClip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
@@ -190,12 +185,11 @@ public class MusicManager {
         return manuallySelectedSong;
     }
 
-    /**
-     * Play a sound effect once (does not loop)
-     * 
-     * @param soundFilePath
-     */
     public void playSoundEffect(String soundFilePath) {
+        playSoundEffect(soundFilePath, volume);
+    }
+
+    public void playSoundEffect(String soundFilePath, float customVolume) {
         try {
             File file = new File(soundFilePath);
             if (!file.exists()) {
@@ -209,7 +203,8 @@ public class MusicManager {
 
             if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
                 FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-                float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
+                float clampedVolume = Math.max(0.0f, Math.min(1.0f, customVolume));
+                float dB = (float) (Math.log(clampedVolume) / Math.log(10.0) * 20.0);
                 gainControl.setValue(dB);
             }
 
