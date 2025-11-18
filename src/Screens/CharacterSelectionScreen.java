@@ -66,6 +66,7 @@ public class CharacterSelectionScreen extends Screen {
     private BufferedImage waterDudeThumb;
     private BufferedImage rockDudeThumb;
     private BufferedImage airDudeThumb;
+    private BufferedImage alexThumb;
 
     public CharacterSelectionScreen(ScreenCoordinator screenCoordinator) {
         this.screenCoordinator = screenCoordinator;
@@ -79,6 +80,7 @@ public class CharacterSelectionScreen extends Screen {
         characterNames.add("Water Dude");   // directly under Fire Dude
         characterNames.add("Rock Dude");    // third character
         characterNames.add("Air Dude");      // fourth character
+        characterNames.add("Alex");         // fifth character in first row
         characterNames.add("Dinosaur");
         characterNames.add("Walrus");
         characterNames.add("Fireball");
@@ -147,6 +149,15 @@ public class CharacterSelectionScreen extends Screen {
         BufferedImage airSheet = ImageLoader.load("Air_Sprite.png");
         if (airSheet != null) {
             airDudeThumb = cropFrame(airSheet, FIRE_THUMB_COL, FIRE_THUMB_ROW, TILE_W, TILE_H);
+        }
+        BufferedImage alexImage = ImageLoader.load("Alex.png");
+        if (alexImage != null) {
+            // If Alex.png is a sprite sheet, crop it; otherwise use the whole image
+            if (alexImage.getWidth() >= TILE_W && alexImage.getHeight() >= TILE_H) {
+                alexThumb = cropFrame(alexImage, FIRE_THUMB_COL, FIRE_THUMB_ROW, TILE_W, TILE_H);
+            } else {
+                alexThumb = alexImage;
+            }
         }
     }
 
@@ -344,6 +355,9 @@ public class CharacterSelectionScreen extends Screen {
         if ("Air Dude".equals(characterName) && airDudeThumb != null) {
             g.drawImage(airDudeThumb, drawX, drawY, THUMB_SIZE, THUMB_SIZE);
         }
+        if ("Alex".equals(characterName) && alexThumb != null) {
+            g.drawImage(alexThumb, drawX, drawY, THUMB_SIZE, THUMB_SIZE);
+        }
 
         // labels
         int textX = x + 8;
@@ -362,7 +376,7 @@ public class CharacterSelectionScreen extends Screen {
     }
 
     private boolean isSelectable(String name) {
-        return "Fire Dude".equals(name) || "Water Dude".equals(name) || "Rock Dude".equals(name) || "Air Dude".equals(name);
+        return "Fire Dude".equals(name) || "Water Dude".equals(name) || "Rock Dude".equals(name) || "Air Dude".equals(name) || "Alex".equals(name);
     }
 
     private String roleFor(String name) {
@@ -370,6 +384,7 @@ public class CharacterSelectionScreen extends Screen {
         if ("Water Dude".equals(name)) return "Water User";
         if ("Rock Dude".equals(name))  return "Earth User";
         if ("Air Dude".equals(name))   return "Air User";
+        if ("Alex".equals(name))       return "Fighter";
         return "Coming Soon";
     }
 

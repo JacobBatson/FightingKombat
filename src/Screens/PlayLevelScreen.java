@@ -1,26 +1,24 @@
 package Screens;
 
-import Enemies.Fireball;
 import Engine.GraphicsHandler;
 import Engine.Screen;
-import Engine.ScreenManager;
 import Game.GameState;
 import Game.ScreenCoordinator;
 import Level.Map;
 import Level.PlayerListener;
-import Level.PowerUp;
-import Maps.Map1; // WASD/E controls
-import Maps.Map2; // Arrow/Enter controls
-import Maps.Map3; // Importing SpriteFont for timer display
-import Maps.Map4;
-import Players.Player1;
-import Players.Player2;
-import SpriteFont.SpriteFont;
-import UI.DamageBar;
-import UI.HealthBar;
+import Maps.Map1;
+import Maps.Map2;
+import Maps.Map3;
+import Players.Player1; // WASD/E controls
+import Players.Player2; // Arrow/Enter controls
+                        // ...existing code...
+import SpriteFont.SpriteFont; // Importing SpriteFont for timer display
 import UI.HeartsHUD;
+import UI.HealthBar;
+import UI.DamageBar;
 import java.awt.Color;
-import java.util.Random;
+import Enemies.Fireball;
+import Engine.ScreenManager;
 
 public class PlayLevelScreen extends Screen implements PlayerListener {
     protected ScreenCoordinator screenCoordinator;
@@ -45,13 +43,6 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     private DamageBar p1DamageBar;
     private DamageBar p2DamageBar;
 
-    // Power-up: spawns every 30s (including at start) and grants 5s of
-    // invincibility
-    private PowerUp powerUp = null;
-    private int powerUpSpawnTimer = 0;
-    private final int POWERUP_SPAWN_INTERVAL_FRAMES = 20 * 60;
-    private final int POWERUP_INVINCIBLE_FRAMES = 5 * 60;
-
     public PlayLevelScreen(ScreenCoordinator screenCoordinator) {
         this.screenCoordinator = screenCoordinator;
     }
@@ -64,9 +55,6 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             this.map = new Map2();
         } else if ("EARTH".equals(key)) {
             this.map = new Map3();
-            map.getCamera().moveY(0);
-        } else if ("AIR".equals(key)) {
-            this.map = new Map4();
             map.getCamera().moveY(0);
         } else {
             this.map = new Map1();
@@ -124,9 +112,6 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         gameOverFont = new SpriteFont("Time's Up!", gameOverCenterX, 180, "Arial", 64, java.awt.Color.RED);
         gameOverFont.setOutlineColor(java.awt.Color.BLACK);
         gameOverFont.setOutlineThickness(3f);
-
-        // start countdown to first power-up spawn (20 seconds)
-        powerUpSpawnTimer = POWERUP_SPAWN_INTERVAL_FRAMES; 
     }
 
     // Map character name -> sprite file
@@ -135,8 +120,9 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             return "Water_Sprite.png";
         if ("Rock Dude".equals(name))
             return "Earth_Sprite.png";
-        if ("Air Dude".equals(name))
-            return "Air_Sprite.png";
+        if ("Alex".equals(name))
+            return "Alex.png";
+       
         return "Fire_Sprite.png";
     }
 
@@ -154,10 +140,6 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             System.out.println("[Elemental] Rock Dude on Earth map - +5 damage bonus!");
             return 5; // rock dude on earth map
         }
-        if ("Air Dude".equals(characterName) && "AIR".equals(mapKey)) {
-            System.out.println("[Elemental] Air Dude on Air map - +5 damage bonus!");
-            return 5; // air dude on air map
-        }
         return 0; // No bonus
     }
 
@@ -167,24 +149,20 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             case RUNNING:
                 player1.update();
                 player2.update();
-
-                if (map != null) {
-                    map.enforcePlayerBounds(player1);
-                    map.enforcePlayerBounds(player2);
-                }
                 java.util.Iterator<Fireball> it1 = player1.getFireballs().iterator();
                 while (it1.hasNext()) {
                     Fireball fb = it1.next();
                     try {
                         if (fb.getBounds() != null && player2.getCustomHitboxBounds() != null) {
                             if (fb.getBounds().intersects(player2.getCustomHitboxBounds())) {
-                                // Attacker invincibility should NOT prevent dealing damage.
-                                String p1Character = CharacterSelectionScreen.getP1SelectedCharacter();
-                                String mapKey = screenCoordinator.getSelectedMapKey();
-                                int baseDamage = fb.getDamage();
-                                int elementalBonus = getElementalDamageBonus(p1Character, mapKey);
-                                int totalDamage = baseDamage + elementalBonus;
-                                player2.takeDamage(totalDamage, fb.getX());
+                                if (!player1.isInvincible()) {
+                                    String p1Character = CharacterSelectionScreen.getP1SelectedCharacter();
+                                    String mapKey = screenCoordinator.getSelectedMapKey();
+                                    int baseDamage = 20;
+                                    int elementalBonus = getElementalDamageBonus(p1Character, mapKey);
+                                    int totalDamage = baseDamage + elementalBonus;
+                                    player2.takeDamage(totalDamage, player1.getX());
+                                }
                                 fb.handleMapEntityCollision(player2);
                                 it1.remove();
                             }
@@ -199,13 +177,14 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     try {
                         if (fb.getBounds() != null && player1.getCustomHitboxBounds() != null) {
                             if (fb.getBounds().intersects(player1.getCustomHitboxBounds())) {
-                                // Attacker invincibility should NOT prevent dealing damage.
-                                String p2Character = CharacterSelectionScreen.getP2SelectedCharacter();
-                                String mapKey = screenCoordinator.getSelectedMapKey();
-                                int baseDamage = fb.getDamage();
-                                int elementalBonus = getElementalDamageBonus(p2Character, mapKey);
-                                int totalDamage = baseDamage + elementalBonus;
-                                player1.takeDamage(totalDamage, fb.getX());
+                                if (!player2.isInvincible()) {
+                                    String p2Character = CharacterSelectionScreen.getP2SelectedCharacter();
+                                    String mapKey = screenCoordinator.getSelectedMapKey();
+                                    int baseDamage = 20;
+                                    int elementalBonus = getElementalDamageBonus(p2Character, mapKey);
+                                    int totalDamage = baseDamage + elementalBonus;
+                                    player1.takeDamage(totalDamage, player2.getX());
+                                }
                                 fb.handleMapEntityCollision(player1);
                                 it2.remove();
                             }
@@ -219,13 +198,15 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                         player1.getPunchDuration() == 5) {
                     if (player1.getPunchHitbox() != null && player2.getCustomHitboxBounds() != null) {
                         if (player1.getPunchHitbox().intersects(player2.getCustomHitboxBounds())) {
-                            String p1Character = CharacterSelectionScreen.getP1SelectedCharacter();
-                            String mapKey = screenCoordinator.getSelectedMapKey();
-                            int baseDamage = 10;
-                            int elementalBonus = getElementalDamageBonus(p1Character, mapKey);
-                            int totalDamage = baseDamage + elementalBonus;
-                            if (player2.takeDamage(totalDamage, player1.getX())) {
-                                player1.addDamageDealt(totalDamage);
+                            if (!player1.isInvincible()) {
+                                String p1Character = CharacterSelectionScreen.getP1SelectedCharacter();
+                                String mapKey = screenCoordinator.getSelectedMapKey();
+                                int baseDamage = 10;
+                                int elementalBonus = getElementalDamageBonus(p1Character, mapKey);
+                                int totalDamage = baseDamage + elementalBonus;
+                                if (player2.takeDamage(totalDamage, player1.getX())) {
+                                    player1.addDamageDealt(totalDamage);
+                                }
                             }
                         }
                     }
@@ -236,13 +217,15 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                         player2.getPunchDuration() == 5) {
                     if (player2.getPunchHitbox() != null && player1.getCustomHitboxBounds() != null) {
                         if (player2.getPunchHitbox().intersects(player1.getCustomHitboxBounds())) {
-                            String p2Character = CharacterSelectionScreen.getP2SelectedCharacter();
-                            String mapKey = screenCoordinator.getSelectedMapKey();
-                            int baseDamage = 10;
-                            int elementalBonus = getElementalDamageBonus(p2Character, mapKey);
-                            int totalDamage = baseDamage + elementalBonus;
-                            if (player1.takeDamage(totalDamage, player2.getX())) {
-                                player2.addDamageDealt(totalDamage);
+                            if (!player2.isInvincible()) {
+                                String p2Character = CharacterSelectionScreen.getP2SelectedCharacter();
+                                String mapKey = screenCoordinator.getSelectedMapKey();
+                                int baseDamage = 10;
+                                int elementalBonus = getElementalDamageBonus(p2Character, mapKey);
+                                int totalDamage = baseDamage + elementalBonus;
+                                if (player1.takeDamage(totalDamage, player2.getX())) {
+                                    player2.addDamageDealt(totalDamage);
+                                }
                             }
                         }
                     }
@@ -288,36 +271,6 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     gameOverFont.setText(winnerText);
                     gameOverFont.setX(centerX - winnerText.length() * 18);
                 }
-
-                // Power-up spawn and pickup handling
-                if (powerUp == null) {
-                    // countdown to next spawn
-                    powerUpSpawnTimer--;
-                    if (powerUpSpawnTimer <= 0) {
-                        spawnPowerUp();
-                    }
-                } else {
-                    try {
-                        if (powerUp.getBounds() != null) {
-                            // player 1 picks up
-                            if (player1.getBounds() != null && powerUp.getBounds().intersects(player1.getBounds())) {
-                                player1.grantInvincibility(POWERUP_INVINCIBLE_FRAMES);
-                                // remove power up and reset spawn timer
-                                powerUp = null;
-                                powerUpSpawnTimer = POWERUP_SPAWN_INTERVAL_FRAMES;
-                            }
-                            // player 2 picks up
-                            else if (player2.getBounds() != null
-                                    && powerUp.getBounds().intersects(player2.getBounds())) {
-                                player2.grantInvincibility(POWERUP_INVINCIBLE_FRAMES);
-                                powerUp = null;
-                                powerUpSpawnTimer = POWERUP_SPAWN_INTERVAL_FRAMES;
-                            }
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
                 break;
 
             case LEVEL_COMPLETED:
@@ -351,9 +304,6 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         switch (playLevelScreenState) {
             case RUNNING:
                 map.draw(graphicsHandler);
-                if (powerUp != null) {
-                    powerUp.draw(graphicsHandler);
-                }
                 player1.draw(graphicsHandler);
                 player2.draw(graphicsHandler);
                 // Draw timer at top center
@@ -457,48 +407,6 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 }
                 break;
         }
-    }
-
-    // Spawn a power-up somewhere on the map
-    private void spawnPowerUp() {
-        if (map == null)
-            return;
-        PowerUp pu = new PowerUp(0, 0);
-        pu.setMap(map);
-        // Place the power up at a random location within the current camera view
-        try {
-
-            Level.Camera cam = map.getCamera();
-            float camX = cam.getX();
-            float camY = cam.getY();
-            float camEndX = cam.getEndBoundX();
-            float camEndY = cam.getEndBoundY();
-
-            // power up sprite size
-            int puW = pu.getWidth();
-            int puH = pu.getHeight();
-
-            // compute max positions so the power up remains fully on-screen
-            float maxX = Math.max(camX, camEndX - puW);
-            float maxY = Math.max(camY, camEndY - puH);
-
-            Random rand = new Random();
-            int rangeX = Math.max(1, Math.round(maxX - camX));
-            int rangeY = Math.max(1, Math.round(maxY - camY));
-
-            float x = camX + rand.nextInt(rangeX);
-            float y = camY + rand.nextInt(rangeY);
-
-            pu.setX(x);
-            pu.setY(y);
-        } catch (Exception ex) {
-            // fallback t o the previous fixed location if anything goes wrong
-            pu.setX(350);
-            pu.setY(350);
-        }
-        this.powerUp = pu;
-        // make sure next spawn isn't immediate
-        this.powerUpSpawnTimer = POWERUP_SPAWN_INTERVAL_FRAMES;
     }
 
     public PlayLevelScreenState getPlayLevelScreenState() {
