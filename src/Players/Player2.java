@@ -435,7 +435,8 @@ public class Player2 extends MapEntity {
         if (appliedAlpha && g2 != null && oldComposite != null) {
             g2.setComposite(oldComposite);
         }
-        for (Enemy fb : fireballs) {
+        // Draw projectiles safely (avoid ConcurrentModificationException)
+        for (Enemy fb : new java.util.ArrayList<>(fireballs)) {
             fb.draw(graphicsHandler);
         }
     }
