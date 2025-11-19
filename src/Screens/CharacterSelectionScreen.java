@@ -76,10 +76,10 @@ public class CharacterSelectionScreen extends Screen {
     private void initializeCharacters() {
         characterNames = new ArrayList<>();
         // 4 × 5 = 20 slots; first four are real, rest are placeholders
-        characterNames.add("Fire Dude");
-        characterNames.add("Water Dude");   // directly under Fire Dude
-        characterNames.add("Rock Dude");    // third character
-        characterNames.add("Air Dude");      // fourth character
+        characterNames.add("Blaze");
+        characterNames.add("RipTide");   // directly under Blaze
+        characterNames.add("Boulder");    // third character
+        characterNames.add("Aang");      // fourth character
         characterNames.add("Alex");         // fifth character in first row
         characterNames.add("Dinosaur");
         characterNames.add("Walrus");
@@ -343,16 +343,16 @@ public class CharacterSelectionScreen extends Screen {
         // tiny preview bottom-right
         int drawX = x + CARD_WIDTH - THUMB_SIZE - 8;
         int drawY = y + CARD_HEIGHT - THUMB_SIZE - 8;
-        if ("Fire Dude".equals(characterName) && fireDudeThumb != null) {
+        if ("Blaze".equals(characterName) && fireDudeThumb != null) {
             g.drawImage(fireDudeThumb, drawX, drawY, THUMB_SIZE, THUMB_SIZE);
         }
-        if ("Water Dude".equals(characterName) && waterDudeThumb != null) {
+        if ("RipTide".equals(characterName) && waterDudeThumb != null) {
             g.drawImage(waterDudeThumb, drawX, drawY, THUMB_SIZE, THUMB_SIZE);
         }
-        if ("Rock Dude".equals(characterName) && rockDudeThumb != null) {
+        if ("Boulder".equals(characterName) && rockDudeThumb != null) {
             g.drawImage(rockDudeThumb, drawX, drawY, THUMB_SIZE, THUMB_SIZE);
         }
-        if ("Air Dude".equals(characterName) && airDudeThumb != null) {
+        if ("Aang".equals(characterName) && airDudeThumb != null) {
             g.drawImage(airDudeThumb, drawX, drawY, THUMB_SIZE, THUMB_SIZE);
         }
         if ("Alex".equals(characterName) && alexThumb != null) {
@@ -376,14 +376,14 @@ public class CharacterSelectionScreen extends Screen {
     }
 
     private boolean isSelectable(String name) {
-        return "Fire Dude".equals(name) || "Water Dude".equals(name) || "Rock Dude".equals(name) || "Air Dude".equals(name) || "Alex".equals(name);
+        return "Blaze".equals(name) || "RipTide".equals(name) || "Boulder".equals(name) || "Aang".equals(name) || "Alex".equals(name);
     }
 
     private String roleFor(String name) {
-        if ("Fire Dude".equals(name))  return "Fire User";
-        if ("Water Dude".equals(name)) return "Water User";
-        if ("Rock Dude".equals(name))  return "Earth User";
-        if ("Air Dude".equals(name))   return "Air User";
+        if ("Blaze".equals(name))  return "Fire User";
+        if ("RipTide".equals(name)) return "Water User";
+        if ("Boulder".equals(name))  return "Earth User";
+        if ("Aang".equals(name))   return "Air User";
         if ("Alex".equals(name))       return "Fighter";
         return "Coming Soon";
     }

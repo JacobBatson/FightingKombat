@@ -116,10 +116,12 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
     // Map character name -> sprite file
     private String spriteFor(String name) {
-        if ("Water Dude".equals(name))
+        if ("RipTide".equals(name))
             return "Water_Sprite.png";
-        if ("Rock Dude".equals(name))
+        if ("Boulder".equals(name))
             return "Earth_Sprite.png";
+        if ("Aang".equals(name))
+            return "Air_Sprite.png";
         if ("Alex".equals(name))
             return "Alex.png";
        
@@ -128,17 +130,21 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
     // Map based elemental damage bonus
     private int getElementalDamageBonus(String characterName, String mapKey) {
-        if ("Fire Dude".equals(characterName) && "FIRE".equals(mapKey)) {
-            System.out.println("[Elemental] Fire Dude on Fire map - +5 damage bonus!");
+        if ("Blaze".equals(characterName) && "FIRE".equals(mapKey)) {
+            System.out.println("[Elemental] Blaze on Fire map - +5 damage bonus!");
             return 5; // fire dude on fire map
         }
-        if ("Water Dude".equals(characterName) && "WATER".equals(mapKey)) {
-            System.out.println("[Elemental] Water Dude on Water map - +5 damage bonus!");
-            return 5; // water dude on water map
+        if ("RipTide".equals(characterName) && "WATER".equals(mapKey)) {
+            System.out.println("[Elemental] RipTide on Water map - +5 damage bonus!");
+            return 5; // riptide on water map
         }
-        if ("Rock Dude".equals(characterName) && "EARTH".equals(mapKey)) {
-            System.out.println("[Elemental] Rock Dude on Earth map - +5 damage bonus!");
-            return 5; // rock dude on earth map
+        if ("Boulder".equals(characterName) && "EARTH".equals(mapKey)) {
+            System.out.println("[Elemental] Boulder on Earth map - +5 damage bonus!");
+            return 5; // boulder on earth map
+        }
+        if ("Aang".equals(characterName) && "AIR".equals(mapKey)) {
+            System.out.println("[Elemental] Aang on Air map - +5 damage bonus!");
+            return 5; // aang on air map
         }
         return 0; // No bonus
     }
