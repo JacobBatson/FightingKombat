@@ -7,7 +7,7 @@ import Maps.Map1;
 import Maps.Map2;
 import Maps.Map3;
 import Maps.Map4;
-
+import Maps.SpecialMap;
 import java.util.ArrayList;
 
 public class EditorMaps {
@@ -19,6 +19,7 @@ public class EditorMaps {
             add("Map2");
             add("Map3");
             add("Map4");
+            add("SpecialMap");
         }};
     }
 
@@ -36,6 +37,8 @@ public class EditorMaps {
                 return new Map3();
             case "Map4":
                 return new Map4();
+            case "SpecialMap":
+                return new SpecialMap();
             default:
                 throw new RuntimeException("Unrecognized map name");
         }

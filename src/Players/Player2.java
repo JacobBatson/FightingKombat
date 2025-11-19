@@ -504,6 +504,22 @@ public class Player2 extends MapEntity {
         this.invincibleBlinkTimer = 0;
     }
 
+    // Force a death/respawn when the player falls past the map bounds
+    public void handleFallOffMap() {
+        if (map == null || isKO()) {
+            return;
+        }
+
+        this.isInvincible = false;
+        this.invincibleTimer = 0;
+        this.invincibleBlinkTimer = 0;
+        this.invulnFrames = 0;
+        this.rockProtectionHitsRemaining = 0;
+
+        int damage = heartHP > 0 ? heartHP : HEART_HP;
+        takeDamage(Math.max(1, damage), this.getX());
+    }
+
     public Rectangle getPunchHitbox() {
         if (playerState != PlayerState.PUNCHING)
             return null;

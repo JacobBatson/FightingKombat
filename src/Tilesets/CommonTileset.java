@@ -502,14 +502,17 @@ public class CommonTileset extends Tileset {
 
 
         //earth small floating platform
-        Frame SmallearthplatFrame = new FrameBuilder(getSubImage(7, 5))
+        Frame SmallEarthplatFrame = new FrameBuilder(getSubImage(7, 5))
                .withScale(tileScale)
                .withBounds(0, 6, 16, 4)
                .build();
 
-       MapTileBuilder SmallearthplatTile = new MapTileBuilder(SmallearthplatFrame)
-               .withTileType(TileType.NOT_PASSABLE);
-       mapTiles.add(SmallearthplatTile);
+
+       MapTileBuilder SmallEarthplatTile = new MapTileBuilder(SmallEarthplatFrame)
+               .withTileType(TileType.JUMP_THROUGH_PLATFORM);
+
+
+       mapTiles.add(SmallEarthplatTile);
 
 
        //Earth Big Platform left
@@ -778,14 +781,17 @@ public class CommonTileset extends Tileset {
         mapTiles.add(RightAirmapPlatTile);      
 
         //Airmap small floating platform
-        Frame SmallAirmapPlatFrame = new FrameBuilder(getSubImage(12, 3))
+        Frame SmallAirplatFrame = new FrameBuilder(getSubImage(12, 3))
                .withScale(tileScale)
                .withBounds(0, 6, 16, 4)
                .build();
 
-       MapTileBuilder SmallAirmapPlatTile = new MapTileBuilder(SmallAirmapPlatFrame)
-               .withTileType(TileType.NOT_PASSABLE);
-       mapTiles.add(SmallAirmapPlatTile);       
+
+       MapTileBuilder SmallAirplatTile = new MapTileBuilder(SmallAirplatFrame)
+               .withTileType(TileType.JUMP_THROUGH_PLATFORM);
+
+
+       mapTiles.add(SmallAirplatTile);
 
 
        //Air map crystal block 2
@@ -829,12 +835,153 @@ public class CommonTileset extends Tileset {
        mapTiles.add(AirmapBigPlatRightTile);
 
 
+//Special map
 
+        //Special Map Background block
+        Frame SpecialmapBackgroundFrame = new FrameBuilder(getSubImage(13, 2))
+                .withScale(tileScale)
+                .build();
 
+        MapTileBuilder SpecialmapBackgroundTile = new MapTileBuilder(SpecialmapBackgroundFrame)
+                .withTileType(TileType.PASSABLE);
+       mapTiles.add(SpecialmapBackgroundTile);
 
+       //Special Map block 1
+       Frame Special1Frame = new FrameBuilder(getSubImage(13, 3))
+                .withScale(tileScale)
+                .build();
 
+        MapTileBuilder Special1Tile = new MapTileBuilder(Special1Frame);
 
+        mapTiles.add(Special1Tile);
 
+        //Special Map block 2
+       Frame Special2Frame = new FrameBuilder(getSubImage(13, 4))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Special2Tile = new MapTileBuilder(Special2Frame);
+        mapTiles.add(Special2Tile);     
+
+        //Special map Qu top
+        Frame SpecialQuTopFrame = new FrameBuilder(getSubImage(13, 5))
+                  .withScale(tileScale)
+                  .build();
+
+       MapTileBuilder SpecialQuTopTile = new MapTileBuilder(SpecialQuTopFrame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(SpecialQuTopTile);
+
+       //special map qu bottom
+       Frame SpecialquBottomFrame = new FrameBuilder(getSubImage(14, 5))
+                  .withScale(tileScale)
+                  .build();
+
+       MapTileBuilder SpecialquBottomTile = new MapTileBuilder(SpecialquBottomFrame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(SpecialquBottomTile);
+
+       //Special map left corner main
+       Frame LeftSpecialmapPlatFrame = new FrameBuilder(getSubImage(14, 0))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder LeftSpecialmapPlatTile = new MapTileBuilder(LeftSpecialmapPlatFrame)
+                .withTileType(TileType.NOT_PASSABLE);
+
+        mapTiles.add(LeftSpecialmapPlatTile);
+
+        //Special map middle main 1
+        Frame SpecialmapPlat1Frame = new FrameBuilder(getSubImage(14, 1))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder SpecialmapPlat1Tile = new MapTileBuilder(SpecialmapPlat1Frame)
+                .withTileType(TileType.NOT_PASSABLE);
+        mapTiles.add(SpecialmapPlat1Tile);
+
+        //Special map middlemain 2
+        Frame SpecialmapPlat2Frame = new FrameBuilder(getSubImage(14, 2))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder SpecialmapPlat2Tile = new MapTileBuilder(SpecialmapPlat2Frame)
+                .withTileType(TileType.NOT_PASSABLE);
+        mapTiles.add(SpecialmapPlat2Tile);
+
+        //special map middle main 3
+        Frame SpecialmapPlat3Frame = new FrameBuilder(getSubImage(14, 3))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder SpecialmapPlat3Tile = new MapTileBuilder(SpecialmapPlat3Frame)
+                .withTileType(TileType.NOT_PASSABLE);
+        mapTiles.add(SpecialmapPlat3Tile);
+
+        //Special map right corner main
+        Frame RightSpecialmapPlatFrame = new FrameBuilder(getSubImage(14, 4))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder RightSpecialmapPlatTile = new MapTileBuilder(RightSpecialmapPlatFrame)
+                .withTileType(TileType.NOT_PASSABLE);
+        mapTiles.add(RightSpecialmapPlatTile);
+
+        //Special map left floating platform
+       Frame SpecialmapBigPlatLeftFrame = new FrameBuilder(getSubImage(15, 0  ))
+               .withScale(tileScale)
+               .withBounds(0, 6, 16, 4)
+               .build();
+
+       MapTileBuilder SpecialmapBigPlatLeftTile = new MapTileBuilder(SpecialmapBigPlatLeftFrame)
+               .withTileType(TileType.JUMP_THROUGH_PLATFORM);
+       mapTiles.add(SpecialmapBigPlatLeftTile);
+
+       //special map right floating platform
+       Frame SpecialmapBigPlatRightFrame = new FrameBuilder(getSubImage(15, 1  ))
+               .withScale(tileScale)
+               .withBounds(0, 6, 16, 4)
+               .build();
+
+       MapTileBuilder SpecialmapBigPlatRightTile = new MapTileBuilder(SpecialmapBigPlatRightFrame)
+               .withTileType(TileType.JUMP_THROUGH_PLATFORM);
+       mapTiles.add(SpecialmapBigPlatRightTile);
+
+       //Special map qu block
+       Frame SpecialQmapFrame = new FrameBuilder(getSubImage(15, 2))
+                .withScale(tileScale)
+                .build();
+
+       MapTileBuilder SpecialQmapTile = new MapTileBuilder(SpecialQmapFrame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(SpecialQmapTile);
+
+       //Special Map qu block 2
+        Frame SpecialQmap2Frame = new FrameBuilder(getSubImage(15, 3))
+                .withScale(tileScale)
+                .build();
+
+       MapTileBuilder SpecialQmap2Tile = new MapTileBuilder(SpecialQmap2Frame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(SpecialQmap2Tile);
+
+       //Special map cloud block 1
+       Frame SpecialCloudFrame = new FrameBuilder(getSubImage(15, 4))
+                .withScale(tileScale)
+                .build();
+
+       MapTileBuilder SpecialCloudTile = new MapTileBuilder(SpecialCloudFrame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(SpecialCloudTile);
+
+        //Special map cloud block 2
+       Frame SpecialCloud2Frame = new FrameBuilder(getSubImage(15, 5))
+                .withScale(tileScale)
+                .build();
+
+       MapTileBuilder SpecialCloud2Tile = new MapTileBuilder(SpecialCloud2Frame)
+               .withTileType(TileType.PASSABLE);
+       mapTiles.add(SpecialCloud2Tile);
 
 
 

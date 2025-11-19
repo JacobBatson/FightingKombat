@@ -1,0 +1,28 @@
+package Maps;
+
+import Level.*;
+import Tilesets.CommonTileset;
+import java.util.ArrayList;
+
+public class SpecialMap extends Map {
+
+    public SpecialMap() {
+        super("SpecialMap.txt", new CommonTileset());
+        // default player start position left as (0,0) or set via getMapTile when needed
+    }
+
+    @Override
+    protected ArrayList<Enemy> loadEnemies() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    protected ArrayList<EnhancedMapTile> loadEnhancedMapTiles() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    protected ArrayList<NPC> loadNPCs() {
+        return new ArrayList<>();
+    }
+}

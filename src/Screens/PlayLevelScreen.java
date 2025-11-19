@@ -5,11 +5,13 @@ import Engine.Screen;
 import Game.GameState;
 import Game.ScreenCoordinator;
 import Level.Map;
+import Level.MapEntity;
 import Level.PlayerListener;
 import Maps.Map1;
 import Maps.Map2;
 import Maps.Map3;
 import Maps.Map4;
+import Maps.SpecialMap;
 import Players.Player1; // WASD/E controls
 import Players.Player2; // Arrow/Enter controls
                         // ...existing code...
@@ -23,6 +25,8 @@ import Enemies.WaterShot;
 import Engine.ScreenManager;
 
 public class PlayLevelScreen extends Screen implements PlayerListener {
+    private static final int FALL_KILL_BUFFER_PIXELS = 200;
+
     protected ScreenCoordinator screenCoordinator;
     protected Map map;
     protected Player1 player1;
@@ -63,6 +67,9 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             map.getCamera().moveY(0);
         } else if ("AIR".equals(key)) {
             this.map = new Map4();
+            map.getCamera().moveY(0);
+        } else if ("SPECIAL".equals(key)) {
+            this.map = new SpecialMap();
             map.getCamera().moveY(0);
         } else {
             this.map = new Map1();
@@ -163,6 +170,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             case RUNNING:
                 player1.update();
                 player2.update();
+                enforceVoidKills();
                 java.util.Iterator<Fireball> it1 = player1.getFireballs().iterator();
                 while (it1.hasNext()) {
                     Fireball fb = it1.next();
@@ -469,6 +477,21 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
     public void goBackToCharacterSelect() {
         screenCoordinator.setGameState(GameState.CHARACTER_SELECT);
+    }
+
+    private void enforceVoidKills() {
+        checkForFallOffMap(player1, () -> player1.handleFallOffMap());
+        checkForFallOffMap(player2, () -> player2.handleFallOffMap());
+    }
+
+    private void checkForFallOffMap(MapEntity player, Runnable fallHandler) {
+        if (player == null || fallHandler == null || map == null) {
+            return;
+        }
+        float fallThresholdY = map.getEndBoundY() + FALL_KILL_BUFFER_PIXELS;
+        if (player.getY() > fallThresholdY) {
+            fallHandler.run();
+        }
     }
 
     // This enum represents the different states this screen can be in

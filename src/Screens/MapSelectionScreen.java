@@ -25,10 +25,10 @@ public class MapSelectionScreen extends Screen {
     private static final int SCREEN_H = 600;
     private static final int IMAGE_PADDING = 8;
 
-    private static final String[] MAP_LABELS = { "Random", "Earth", "Water", "Fire", "Air" };
-    private static final String[] MAP_KEYS = { "RANDOM", "EARTH", "WATER", "FIRE", "AIR" };
+    private static final String[] MAP_LABELS = { "Random", "Earth", "Water", "Fire", "Air", "Special" };
+    private static final String[] MAP_KEYS = { "RANDOM", "EARTH", "WATER", "FIRE", "AIR", "SPECIAL" };
 
-    private static final boolean[] LOCKED = { false, false, false, false, false };
+    private static final boolean[] LOCKED = { false, false, false, false, false, false };
 
     private int hovered = 0;
 
@@ -70,6 +70,7 @@ public class MapSelectionScreen extends Screen {
         putMapImageFromResources("WATER", "water pic.png");
         putMapImageFromResources("FIRE", "Fire pic.png");
         putMapImageFromResources("RANDOM", "dice pic.png");
+        putMapImageFromResources("SPECIAL", "SpecialMap.png");
     }
 
     private void loadMapImage(String key, String resourcePath) {
