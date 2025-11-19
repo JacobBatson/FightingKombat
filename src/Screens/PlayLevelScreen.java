@@ -20,6 +20,9 @@ import UI.HeartsHUD;
 import UI.HealthBar;
 import UI.DamageBar;
 import java.awt.Color;
+import java.util.Iterator;
+
+import Enemies.Fireball;
 import Enemies.WaterShot;
 import Level.Enemy;
 import Engine.ScreenManager;
@@ -170,12 +173,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             case RUNNING:
                 player1.update();
                 player2.update();
-<<<<<<< HEAD
                 enforceVoidKills();
-                java.util.Iterator<Fireball> it1 = player1.getFireballs().iterator();
-=======
-                java.util.Iterator<Enemy> it1 = player1.getFireballs().iterator();
->>>>>>> 5f2dd18591bdaffdb7d5785b9a58dc05bc90b4e1
+                Iterator<Enemy> it1 = player1.getFireballs().iterator();
                 while (it1.hasNext()) {
                     Enemy fb = it1.next();
                     try {
