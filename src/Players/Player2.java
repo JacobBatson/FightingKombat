@@ -12,6 +12,7 @@ import Level.MapEntity;
 import Enemies.Fireball;
 import Enemies.WaterShot;
 import Enemies.RockShot;
+import Level.Enemy;
 import Utils.Point;
 import Level.PlayerState;
 import Utils.AirGroundState;
@@ -22,7 +23,7 @@ import GameObject.Rectangle;
 
 public class Player2 extends MapEntity {
     protected Key FIREBALL_KEY = Key.ENTER;
-    protected java.util.List<Fireball> fireballs = new java.util.ArrayList<>();
+    protected java.util.List<Enemy> fireballs = new java.util.ArrayList<>();
     protected Key PUNCH_KEY = Key.SHIFT; // keep it simple; broadly available
 
     private static final int HEART_HP = 100;
@@ -167,11 +168,13 @@ public class Player2 extends MapEntity {
                 float fbY = this.y + offset.y;
                 float speed = (facingDirection == Direction.RIGHT) ? fbSpeed : -fbSpeed;
 
-                Fireball shot;
+                Enemy shot;
                 if (isWaterSkin()) {
                     shot = new WaterShot(new Point(fbX, fbY), speed, fbFrames);
                 } else if (isRockSkin()) {
                     shot = new RockShot(new Point(fbX, fbY), speed, fbFrames);
+                } else if (isAirSkin()) {
+                    shot = new Enemies.AirBubble(new Point(fbX, fbY), speed, fbFrames);
                 } else {
                     shot = new Fireball(new Point(fbX, fbY), speed, fbFrames);
                 }
@@ -209,9 +212,9 @@ public class Player2 extends MapEntity {
         }
 
         // Update shots
-        java.util.Iterator<Fireball> it = fireballs.iterator();
+        java.util.Iterator<Enemy> it = fireballs.iterator();
         while (it.hasNext()) {
-            Fireball fb = it.next();
+            Enemy fb = it.next();
             fb.update(null);
             if (fb.getMapEntityStatus() == Level.MapEntityStatus.REMOVED) {
                 it.remove();
@@ -432,7 +435,7 @@ public class Player2 extends MapEntity {
         if (appliedAlpha && g2 != null && oldComposite != null) {
             g2.setComposite(oldComposite);
         }
-        for (Fireball fb : fireballs) {
+        for (Enemy fb : fireballs) {
             fb.draw(graphicsHandler);
         }
     }
@@ -517,7 +520,7 @@ public class Player2 extends MapEntity {
         return new Rectangle(punchX, punchY, (int) punchRange, (int) punchHeight);
     }
 
-    public java.util.List<Fireball> getFireballs() {
+    public java.util.List<Enemy> getFireballs() {
         return this.fireballs;
     }
 
@@ -577,20 +580,7 @@ public class Player2 extends MapEntity {
         // If any health decreased (even slightly), apply knockback away from attacker
         boolean healthDecreased = (heartHP < prevHeartHP) || (hearts < prevHearts);
         if (healthDecreased) {
-            // increased knockback
-            float kbPixels = 20f;
-            // determine direction: if attacker is left of us, push right; otherwise push
-            // left
-            if (attackerX < this.getX()) {
-                this.setX(this.getX() + kbPixels);
-            } else {
-                this.setX(this.getX() - kbPixels);
-            }
-            // Give a single-frame upward impulse rather than setting persistent momentum
-            this.jumpForce = 0; // cancel any active jump force
-            this.moveAmountY -= 8f; // one-frame upward move; gravity will pull back next frames
-            this.previousX = this.getX();
-            this.previousY = this.getY();
+            applyKnockback(attackerX, 1.0f);
         }
 
         // If a full heart was lost, respawn at a random safe position on the map
@@ -660,6 +650,13 @@ public class Player2 extends MapEntity {
             return false;
         String p = characterSpritePathUsed.toLowerCase();
         return p.contains("fire");
+    }
+
+    private boolean isAirSkin() {
+        if (characterSpritePathUsed == null)
+            return false;
+        String p = characterSpritePathUsed.toLowerCase();
+        return p.contains("air");
     }
 
     @Override
