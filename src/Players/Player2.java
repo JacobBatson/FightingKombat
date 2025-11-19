@@ -36,6 +36,10 @@ public class Player2 extends MapEntity {
     private int invincibleTimer = 0;
     private int invincibleBlinkTimer = 0;
 
+    // Freeze (can't move) state applied by water shots (frames)
+    private boolean isFrozen = false;
+    private int frozenTimer = 0; // frames remaining frozen
+
     private int damageDealt = 0;
     private int maxDamage = 50;
     private boolean canUseSuperMove = false;
@@ -119,10 +123,23 @@ public class Player2 extends MapEntity {
         moveAmountY = 0;
         applyGravity();
 
-        do {
-            previousPlayerState = playerState;
-            handlePlayerState();
-        } while (previousPlayerState != playerState);
+        // Handle frozen state: decrement timer and skip movement/state changes while frozen
+        if (frozenTimer > 0) {
+            frozenTimer--;
+            if (frozenTimer <= 0) {
+                isFrozen = false;
+                frozenTimer = 0;
+            } else {
+                // still frozen: skip player state handling so input won't move the player
+            }
+        }
+
+        if (!isFrozen) {
+            do {
+                previousPlayerState = playerState;
+                handlePlayerState();
+            } while (previousPlayerState != playerState);
+        }
 
         previousAirGroundState = airGroundState;
 
@@ -204,6 +221,7 @@ public class Player2 extends MapEntity {
         if (invulnFrames > 0)
             invulnFrames--;
 
+        
         // Invincibility timer handling
         if (isInvincible) {
             invincibleTimer--;
@@ -610,6 +628,17 @@ public class Player2 extends MapEntity {
         int hitboxY = Math.round(bounds.getY()) - (extra / 2);
         return new Rectangle(Math.round(bounds.getX()) + 10, hitboxY,
                 bounds.getWidth(), hitboxHeight);
+    }
+
+    // Freeze movement for given seconds (approx. 60 FPS frame units)
+    public void freezeMovementSeconds(int seconds) {
+        if (seconds <= 0)
+            return;
+        int frames = seconds * 60;
+        if (frames > frozenTimer) {
+            frozenTimer = frames;
+        }
+        isFrozen = true;
     }
 
     private boolean isWaterSkin() {

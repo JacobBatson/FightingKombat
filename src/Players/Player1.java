@@ -30,6 +30,9 @@ public class Player1 extends MapEntity {
     private int heartHP = HEART_HP;
     private int invulnFrames = 0;
 
+    // Freeze (can't move) state applied by water shots (frames)
+    private boolean isFrozen = false;
+    private int frozenTimer = 0; // frames remaining frozen
     // Invincibility after respawn
     private boolean isInvincible = false;
     private int invincibleTimer = 0;
@@ -97,10 +100,23 @@ public class Player1 extends MapEntity {
         moveAmountY = 0;
         applyGravity();
 
-        do {
-            previousPlayerState = playerState;
-            handlePlayerState();
-        } while (previousPlayerState != playerState);
+        // Handle frozen state: decrement timer and skip movement/state changes while frozen
+        if (frozenTimer > 0) {
+            frozenTimer--;
+            if (frozenTimer <= 0) {
+                isFrozen = false;
+                frozenTimer = 0;
+            } else {
+                // still frozen: skip player state handling so input won't move the player
+            }
+        }
+
+        if (!isFrozen) {
+            do {
+                previousPlayerState = playerState;
+                handlePlayerState();
+            } while (previousPlayerState != playerState);
+        }
 
         previousAirGroundState = airGroundState;
 
@@ -192,6 +208,18 @@ public class Player1 extends MapEntity {
         }
 
         super.update();
+    }
+
+    // Freeze movement for given seconds (approx. 60 FPS frame units)
+    public void freezeMovementSeconds(int seconds) {
+        if (seconds <= 0)
+            return;
+        int frames = seconds * 60;
+        // extend freeze if new duration is longer
+        if (frames > frozenTimer) {
+            frozenTimer = frames;
+        }
+        isFrozen = true;
     }
 
     private Utils.Point getFireballSpawnOffset() {

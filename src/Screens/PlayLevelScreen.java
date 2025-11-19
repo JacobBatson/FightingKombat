@@ -18,6 +18,7 @@ import UI.HealthBar;
 import UI.DamageBar;
 import java.awt.Color;
 import Enemies.Fireball;
+import Enemies.WaterShot;
 import Engine.ScreenManager;
 
 public class PlayLevelScreen extends Screen implements PlayerListener {
@@ -162,6 +163,10 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                         if (fb.getBounds() != null && player2.getCustomHitboxBounds() != null) {
                             if (fb.getBounds().intersects(player2.getCustomHitboxBounds())) {
                                 if (!player1.isInvincible()) {
+                                    // If the projectile is a WaterShot, freeze the hit player for 3 seconds
+                                    if (fb instanceof WaterShot) {
+                                        player2.freezeMovementSeconds(3);
+                                    }
                                     String p1Character = CharacterSelectionScreen.getP1SelectedCharacter();
                                     String mapKey = screenCoordinator.getSelectedMapKey();
                                     int baseDamage = 20;
@@ -184,6 +189,10 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                         if (fb.getBounds() != null && player1.getCustomHitboxBounds() != null) {
                             if (fb.getBounds().intersects(player1.getCustomHitboxBounds())) {
                                 if (!player2.isInvincible()) {
+                                    // If the projectile is a WaterShot, freeze the hit player for 3 seconds
+                                    if (fb instanceof WaterShot) {
+                                        player1.freezeMovementSeconds(3);
+                                    }
                                     String p2Character = CharacterSelectionScreen.getP2SelectedCharacter();
                                     String mapKey = screenCoordinator.getSelectedMapKey();
                                     int baseDamage = 20;
