@@ -48,13 +48,13 @@ public class SpriteSheet {
 	
 	//Dont know why have this method in spritesheet but might create a seperate class/file for it later
 	//This is a helped method so then you dont have to just copy and paste put submethod constantly
-	public static Frame[] createSequentialFrames(SpriteSheet spriteSheet, int column, int row, int count, int delay, boolean flip) {
+	public static Frame[] createSequentialFrames(SpriteSheet spriteSheet, int row, int column, int count, int delay, boolean flip) {
         final int out_of_bounds = 4; //The max bounds for current sprite sheet this could change if need to create new sprite sheet
         final int y_axis_bounds = 30; //Proper y-axis bounds
         final int x_axis_bounds = 16; //Proper x-axis bounds
 
         Frame[] frames = new Frame[count]; 
-        int x = column, y = row; // Row and Column in sprite sheet
+        int x = row, y = column; // Row and Column in sprite sheet
         for (int i = 0; i < count; i++) {
             FrameBuilder builder = new FrameBuilder(spriteSheet.getSprite(x, y), delay)
                     .withScale(2) // 2 is the proper scale factor for 64x64 
