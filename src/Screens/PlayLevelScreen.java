@@ -9,6 +9,7 @@ import Level.PlayerListener;
 import Maps.Map1;
 import Maps.Map2;
 import Maps.Map3;
+import Maps.Map4;
 import Players.Player1; // WASD/E controls
 import Players.Player2; // Arrow/Enter controls
                         // ...existing code...
@@ -56,6 +57,12 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             this.map = new Map2();
         } else if ("EARTH".equals(key)) {
             this.map = new Map3();
+            map.getCamera().moveY(0);
+        } else if ("FIRE".equals(key)) {
+            this.map = new Map1();
+            map.getCamera().moveY(0);
+        } else if ("AIR".equals(key)) {
+            this.map = new Map4();
             map.getCamera().moveY(0);
         } else {
             this.map = new Map1();

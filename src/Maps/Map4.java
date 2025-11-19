@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Map4 extends Map {
 
     public Map4() {
-        super("Map4.txt", new CommonTileset());
+        super("map4.txt", new CommonTileset());
     }
 
     @Override
