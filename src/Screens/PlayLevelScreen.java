@@ -20,8 +20,8 @@ import UI.HeartsHUD;
 import UI.HealthBar;
 import UI.DamageBar;
 import java.awt.Color;
-import Enemies.Fireball;
 import Enemies.WaterShot;
+import Level.Enemy;
 import Engine.ScreenManager;
 
 public class PlayLevelScreen extends Screen implements PlayerListener {
@@ -170,18 +170,27 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             case RUNNING:
                 player1.update();
                 player2.update();
+<<<<<<< HEAD
                 enforceVoidKills();
                 java.util.Iterator<Fireball> it1 = player1.getFireballs().iterator();
+=======
+                java.util.Iterator<Enemy> it1 = player1.getFireballs().iterator();
+>>>>>>> 5f2dd18591bdaffdb7d5785b9a58dc05bc90b4e1
                 while (it1.hasNext()) {
-                    Fireball fb = it1.next();
+                    Enemy fb = it1.next();
                     try {
                         if (fb.getBounds() != null && player2.getCustomHitboxBounds() != null) {
                             if (fb.getBounds().intersects(player2.getCustomHitboxBounds())) {
                                 if (!player1.isInvincible()) {
-                                    // If the projectile is a WaterShot, freeze the hit player for 3 seconds
-                                    if (fb instanceof WaterShot) {
-                                        player2.freezeMovementSeconds(3);
-                                    }
+                                        // If the projectile is a WaterShot, freeze the hit player for 3 seconds
+                                        if (fb instanceof WaterShot) {
+                                            player2.freezeMovementSeconds(3);
+                                        }
+                                        // If the projectile is an AirBubble, apply strong knockback
+                                        if (fb.getClass().getSimpleName().equals("AirBubble")) {
+                                            // apply increased knockback using existing logic
+                                            player2.applyKnockback(player1.getX(), 6.0f);
+                                        }
                                     String p1Character = CharacterSelectionScreen.getP1SelectedCharacter();
                                     String mapKey = screenCoordinator.getSelectedMapKey();
                                     int baseDamage = 20;
@@ -197,17 +206,21 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     }
                 }
 
-                java.util.Iterator<Fireball> it2 = player2.getFireballs().iterator();
+                java.util.Iterator<Enemy> it2 = player2.getFireballs().iterator();
                 while (it2.hasNext()) {
-                    Fireball fb = it2.next();
+                    Enemy fb = it2.next();
                     try {
                         if (fb.getBounds() != null && player1.getCustomHitboxBounds() != null) {
                             if (fb.getBounds().intersects(player1.getCustomHitboxBounds())) {
                                 if (!player2.isInvincible()) {
-                                    // If the projectile is a WaterShot, freeze the hit player for 3 seconds
-                                    if (fb instanceof WaterShot) {
-                                        player1.freezeMovementSeconds(3);
-                                    }
+                                        // If the projectile is a WaterShot, freeze the hit player for 3 seconds
+                                        if (fb instanceof WaterShot) {
+                                            player1.freezeMovementSeconds(3);
+                                        }
+                                        // If the projectile is an AirBubble, apply strong knockback
+                                        if (fb.getClass().getSimpleName().equals("AirBubble")) {
+                                            player1.applyKnockback(player2.getX(), 6.0f);
+                                        }
                                     String p2Character = CharacterSelectionScreen.getP2SelectedCharacter();
                                     String mapKey = screenCoordinator.getSelectedMapKey();
                                     int baseDamage = 20;

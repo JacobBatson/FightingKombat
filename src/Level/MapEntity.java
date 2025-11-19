@@ -59,4 +59,52 @@ public class MapEntity extends GameObject {
     public void setIsUpdateOffScreen(boolean isUpdateOffScreen) {
         this.isUpdateOffScreen = isUpdateOffScreen;
     }
+
+    // Apply knockback away from attackerX. multiplier scales horizontal and vertical impulse.
+    public void applyKnockback(float attackerX, float multiplier) {
+        if (multiplier <= 0)
+            multiplier = 1.0f;
+        float kbPixels = 20f * multiplier;
+        if (attackerX < this.getX()) {
+            this.setX(this.getX() + kbPixels);
+        } else {
+            this.setX(this.getX() - kbPixels);
+        }
+        // single-frame upward impulse scaled by multiplier
+        // MapEntity doesn't define jumpForce/moveAmountY directly, but GameObject has fields used by Player subclasses.
+        // If this concrete class (or its superclasses) define jumpForce/moveAmountY, update them via reflection
+        try {
+            Class<?> cur = this.getClass();
+            while (cur != null) {
+                try {
+                    java.lang.reflect.Field jf = cur.getDeclaredField("jumpForce");
+                    jf.setAccessible(true);
+                    jf.setFloat(this, 0f);
+                    break;
+                } catch (NoSuchFieldException nsf) {
+                    cur = cur.getSuperclass();
+                }
+            }
+        } catch (Exception ex) {
+            // ignore
+        }
+        try {
+            Class<?> cur = this.getClass();
+            while (cur != null) {
+                try {
+                    java.lang.reflect.Field maY = cur.getDeclaredField("moveAmountY");
+                    maY.setAccessible(true);
+                    float curVal = maY.getFloat(this);
+                    maY.setFloat(this, curVal - 8f * multiplier);
+                    break;
+                } catch (NoSuchFieldException nsf) {
+                    cur = cur.getSuperclass();
+                }
+            }
+        } catch (Exception ex) {
+            // ignore
+        }
+        this.previousX = this.getX();
+        this.previousY = this.getY();
+    }
 }

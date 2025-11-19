@@ -44,4 +44,10 @@ public class Enemy extends MapEntity {
     public void touchedPlayer(Player player) {
         player.hurtPlayer(this);
     }
+
+    // Called when this enemy collides with a MapEntity (e.g., projectile hits player).
+    // Subclasses may override to implement custom behavior (default: no-op).
+    public void handleMapEntityCollision(MapEntity mapEntity) {
+        // default: do nothing
+    }
 }

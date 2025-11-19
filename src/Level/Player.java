@@ -96,6 +96,8 @@ public abstract class Player extends GameObject {
         }
     }
 
+
+
     // add gravity to player, which is a downward force
     protected void applyGravity() {
         moveAmountY += gravity + momentumY;
