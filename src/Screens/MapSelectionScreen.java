@@ -18,12 +18,12 @@ import javax.imageio.ImageIO;
 public class MapSelectionScreen extends Screen {
     private final ScreenCoordinator screenCoordinator;
 
-    private static final int CARD_W = 136;
-    private static final int CARD_H = 96;
-    private static final int GAP = 16;
+    private static final int CARD_W = 110;
+    private static final int CARD_H = 84;
+    private static final int GAP = 12;
     private static final int SCREEN_W = 800;
     private static final int SCREEN_H = 600;
-    private static final int IMAGE_PADDING = 8;
+    private static final int IMAGE_PADDING = 6;
 
     private static final String[] MAP_LABELS = { "Random", "Earth", "Water", "Fire", "Air", "Special" };
     private static final String[] MAP_KEYS = { "RANDOM", "EARTH", "WATER", "FIRE", "AIR", "SPECIAL" };
@@ -146,7 +146,7 @@ public class MapSelectionScreen extends Screen {
 
         int totalWidth = (CARD_W * MAP_LABELS.length) + (GAP * (MAP_LABELS.length - 1));
         int startX = (SCREEN_W - totalWidth) / 2;
-        int y = 200;
+        int y = 220;
 
         for (int i = 0; i < MAP_LABELS.length; i++) {
             int x = startX + i * (CARD_W + GAP);
@@ -181,8 +181,8 @@ public class MapSelectionScreen extends Screen {
                 lock.draw(g);
             }
 
-            int labelX = x + (CARD_W / 2) - 20;
-            SpriteFont label = new SpriteFont(MAP_LABELS[i], labelX, y + CARD_H + 22, "Comic Sans", 18,
+            int labelX = x + (CARD_W / 2) - 28;
+            SpriteFont label = new SpriteFont(MAP_LABELS[i], labelX, y + CARD_H + 18, "Comic Sans", 18,
                     locked ? disabled : Color.WHITE);
             label.draw(g);
         }
