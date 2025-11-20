@@ -1,31 +1,29 @@
 package Screens;
 
+import Enemies.WaterShot;
 import Engine.GraphicsHandler;
+import Engine.MusicManager;
 import Engine.Screen;
+import Engine.ScreenManager;
 import Game.GameState;
 import Game.ScreenCoordinator;
+import Level.Enemy;
 import Level.Map;
 import Level.MapEntity;
 import Level.PlayerListener;
 import Maps.Map1;
-import Maps.Map2;
-import Maps.Map3;
-import Maps.Map4;
+import Maps.Map2; // WASD/E controls
+import Maps.Map3; // Arrow/Enter controls
+import Maps.Map4; // Importing SpriteFont for timer display
 import Maps.SpecialMap;
-import Players.Player1; // WASD/E controls
-import Players.Player2; // Arrow/Enter controls
-                        // ...existing code...
-import SpriteFont.SpriteFont; // Importing SpriteFont for timer display
-import UI.HeartsHUD;
-import UI.HealthBar;
+import Players.Player1;
+import Players.Player2;
+import SpriteFont.SpriteFont;
 import UI.DamageBar;
+import UI.HealthBar;
+import UI.HeartsHUD;
 import java.awt.Color;
 import java.util.Iterator;
-
-import Enemies.Fireball;
-import Enemies.WaterShot;
-import Level.Enemy;
-import Engine.ScreenManager;
 
 public class PlayLevelScreen extends Screen implements PlayerListener {
     private static final int FALL_KILL_BUFFER_PIXELS = 200;
@@ -142,7 +140,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             return "Air_Sprite.png";
         if ("Alex".equals(name))
             return "Alex.png";
-       
+
         return "Fire_Sprite.png";
     }
 
@@ -181,15 +179,17 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                         if (fb.getBounds() != null && player2.getCustomHitboxBounds() != null) {
                             if (fb.getBounds().intersects(player2.getCustomHitboxBounds())) {
                                 if (!player1.isInvincible()) {
-                                        // If the projectile is a WaterShot, freeze the hit player for 3 seconds
-                                        if (fb instanceof WaterShot) {
-                                            player2.freezeMovementSeconds(3);
-                                        }
-                                        // If the projectile is an AirBubble, apply strong knockback
-                                        if (fb.getClass().getSimpleName().equals("AirBubble")) {
-                                            // apply increased knockback using existing logic
-                                            player2.applyKnockback(player1.getX(), 6.0f);
-                                        }
+                                    // If the projectile is a WaterShot, freeze the hit player for 3 seconds
+                                    if (fb instanceof WaterShot) {
+                                        player2.freezeMovementSeconds(3);
+                                        MusicManager.getInstance().playSoundEffect(
+                                                "Resources/rpreplay_final1615585677.wav");
+                                    }
+                                    // If the projectile is an AirBubble, apply strong knockback
+                                    if (fb.getClass().getSimpleName().equals("AirBubble")) {
+                                        // apply increased knockback using existing logic
+                                        player2.applyKnockback(player1.getX(), 6.0f);
+                                    }
                                     String p1Character = CharacterSelectionScreen.getP1SelectedCharacter();
                                     String mapKey = screenCoordinator.getSelectedMapKey();
                                     int baseDamage = 20;
@@ -212,14 +212,16 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                         if (fb.getBounds() != null && player1.getCustomHitboxBounds() != null) {
                             if (fb.getBounds().intersects(player1.getCustomHitboxBounds())) {
                                 if (!player2.isInvincible()) {
-                                        // If the projectile is a WaterShot, freeze the hit player for 3 seconds
-                                        if (fb instanceof WaterShot) {
-                                            player1.freezeMovementSeconds(3);
-                                        }
-                                        // If the projectile is an AirBubble, apply strong knockback
-                                        if (fb.getClass().getSimpleName().equals("AirBubble")) {
-                                            player1.applyKnockback(player2.getX(), 6.0f);
-                                        }
+                                    // If the projectile is a WaterShot, freeze the hit player for 3 seconds
+                                    if (fb instanceof WaterShot) {
+                                        player1.freezeMovementSeconds(3);
+                                        MusicManager.getInstance().playSoundEffect(
+                                                "Resources/rpreplay_final1615585677.wav");
+                                    }
+                                    // If the projectile is an AirBubble, apply strong knockback
+                                    if (fb.getClass().getSimpleName().equals("AirBubble")) {
+                                        player1.applyKnockback(player2.getX(), 6.0f);
+                                    }
                                     String p2Character = CharacterSelectionScreen.getP2SelectedCharacter();
                                     String mapKey = screenCoordinator.getSelectedMapKey();
                                     int baseDamage = 20;
