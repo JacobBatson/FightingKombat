@@ -124,7 +124,8 @@ public class Player2 extends MapEntity {
         moveAmountY = 0;
         applyGravity();
 
-        // Handle frozen state: decrement timer and skip movement/state changes while frozen
+        // Handle frozen state: decrement timer and skip movement/state changes while
+        // frozen
         if (frozenTimer > 0) {
             frozenTimer--;
             if (frozenTimer <= 0) {
@@ -173,8 +174,10 @@ public class Player2 extends MapEntity {
                     shot = new WaterShot(new Point(fbX, fbY), speed, fbFrames);
                 } else if (isRockSkin()) {
                     shot = new RockShot(new Point(fbX, fbY), speed, fbFrames);
+                    MusicManager.getInstance().playSoundEffect("Resources/brick-on-metal-sound-effect12.wav", 1.0f);
                 } else if (isAirSkin()) {
                     shot = new Enemies.AirBubble(new Point(fbX, fbY), speed, fbFrames);
+                    MusicManager.getInstance().playSoundEffect("Resources/whoosh-sound-effect.wav", 1.0f);
                 } else {
                     shot = new Fireball(new Point(fbX, fbY), speed, fbFrames);
                 }
@@ -224,7 +227,6 @@ public class Player2 extends MapEntity {
         if (invulnFrames > 0)
             invulnFrames--;
 
-        
         // Invincibility timer handling
         if (isInvincible) {
             invincibleTimer--;
@@ -693,15 +695,18 @@ public class Player2 extends MapEntity {
             {
                 put("STAND_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, standing, standing, 3, 30, false));
                 put("STAND_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, standing, standing, 3, 30, true));
-                put("WALK_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, walking_row, walking_col, 3, 30, false));
-                put("WALK_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, walking_row, walking_col, 3, 30, true));
+                put("WALK_RIGHT",
+                        SpriteSheet.createSequentialFrames(spriteSheet, walking_row, walking_col, 3, 30, false));
+                put("WALK_LEFT",
+                        SpriteSheet.createSequentialFrames(spriteSheet, walking_row, walking_col, 3, 30, true));
                 put("JUMP_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, jump_row, jump_col, 3, 20, false));
                 put("JUMP_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, jump_row, jump_col, 3, 20, true));
                 put("FALL_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, fall_row, fall_col, 3, 20, false));
                 put("FALL_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, fall_row, fall_col, 3, 20, true));
                 put("PUNCH_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, punch_row, punch_col, 1, 15, false));
                 put("PUNCH_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, punch_row, punch_col, 1, 15, true));
-                // Rock-special variants for all base animations (use dedicated rows for special art)
+                // Rock-special variants for all base animations (use dedicated rows for special
+                // art)
                 put("ROCK_SPECIAL_STAND_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 5, 0, 3, 30, false));
                 put("ROCK_SPECIAL_STAND_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, 5, 0, 3, 30, true));
                 put("ROCK_SPECIAL_WALK_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, 6, 0, 3, 30, false));

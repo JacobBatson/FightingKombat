@@ -79,7 +79,7 @@ public class Player1 extends MapEntity {
     private final int FLAMETHROWER_DURATION_FRAMES = 1 * 60; // 1 second
     private final int FLAMETHROWER_SPAWN_INTERVAL = 4;
     private int flamethrowerSpawnCooldown = 0;
-    
+
     private String characterSpritePathUsed;
 
     public Player1(float x, float y, String characterSpritePath, int spriteWidth, int spriteHeight) {
@@ -101,7 +101,8 @@ public class Player1 extends MapEntity {
         moveAmountY = 0;
         applyGravity();
 
-        // Handle frozen state: decrement timer and skip movement/state changes while frozen
+        // Handle frozen state: decrement timer and skip movement/state changes while
+        // frozen
         if (frozenTimer > 0) {
             frozenTimer--;
             if (frozenTimer <= 0) {
@@ -150,8 +151,10 @@ public class Player1 extends MapEntity {
                     shot = new WaterShot(new Point(fbX, fbY), speed, fbFrames);
                 } else if (isRockSkin()) {
                     shot = new RockShot(new Point(fbX, fbY), speed, fbFrames);
+                    MusicManager.getInstance().playSoundEffect("Resources/brick-on-metal-sound-effect12.wav", 1.0f);
                 } else if (isAirSkin()) {
                     shot = new Enemies.AirBubble(new Point(fbX, fbY), speed, fbFrames);
+                    MusicManager.getInstance().playSoundEffect("Resources/whoosh-sound-effect.wav", 1.0f);
                 } else {
                     shot = new Fireball(new Point(fbX, fbY), speed, fbFrames);
                 }
@@ -375,7 +378,8 @@ public class Player1 extends MapEntity {
         else
             baseAnim = facingDirection == Direction.RIGHT ? "STAND_RIGHT" : "STAND_LEFT";
 
-        // If rock protection is active and player is rock skin, use the special animation sprite
+        // If rock protection is active and player is rock skin, use the special
+        // animation sprite
         if (rockProtectionHitsRemaining > 0 && isRockSkin()) {
             if (baseAnim != null && baseAnim.startsWith("ROCK_SPECIAL_")) {
                 currentAnimationName = baseAnim;
@@ -473,7 +477,7 @@ public class Player1 extends MapEntity {
 
             if (isRockSkin()) {
                 rockProtectionHitsRemaining = 5; // protected for 5 hits
-                
+
             }
         }
     }
@@ -541,12 +545,15 @@ public class Player1 extends MapEntity {
         return punchDuration;
     }
 
-   /*  public boolean takeDamage(int amount) {
-        // Fallback: use facing direction to estimate attacker position so existing
-        // callers that don't provide an attacker X get reasonable knockback.
-        float fallbackAttackerX = this.getX() + (facingDirection == Direction.RIGHT ? 1f : -1f);
-        return takeDamage(amount, fallbackAttackerX);
-    } */
+    /*
+     * public boolean takeDamage(int amount) {
+     * // Fallback: use facing direction to estimate attacker position so existing
+     * // callers that don't provide an attacker X get reasonable knockback.
+     * float fallbackAttackerX = this.getX() + (facingDirection == Direction.RIGHT ?
+     * 1f : -1f);
+     * return takeDamage(amount, fallbackAttackerX);
+     * }
+     */
 
     // Attacker-aware overload: applies knockback away from attackerX when health
     // decreases (even slightly). Keeps the original behavior and adds the
@@ -557,7 +564,7 @@ public class Player1 extends MapEntity {
             rockProtectionHitsRemaining--;
             invulnFrames = 3;
             if (rockProtectionHitsRemaining <= 0) {
-               
+
             }
             return false;
         }
@@ -677,8 +684,10 @@ public class Player1 extends MapEntity {
             {
                 put("STAND_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, standing, standing, 3, 30, false));
                 put("STAND_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, standing, standing, 3, 30, true));
-                put("WALK_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, walking_row, walking_col, 3, 30, false));
-                put("WALK_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, walking_row, walking_col, 3, 30, true));
+                put("WALK_RIGHT",
+                        SpriteSheet.createSequentialFrames(spriteSheet, walking_row, walking_col, 3, 30, false));
+                put("WALK_LEFT",
+                        SpriteSheet.createSequentialFrames(spriteSheet, walking_row, walking_col, 3, 30, true));
                 put("JUMP_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, jump_row, jump_col, 3, 20, false));
                 put("JUMP_LEFT", SpriteSheet.createSequentialFrames(spriteSheet, jump_row, jump_col, 3, 20, true));
                 put("FALL_RIGHT", SpriteSheet.createSequentialFrames(spriteSheet, fall_row, fall_col, 3, 20, false));
